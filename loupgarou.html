@@ -353,14 +353,26 @@
         }
 
         function afficherPassageRole() {
-            if (indexDistrib >= joueurs.length) {
-                // Tous les rôles ont été vus, commencer le jeu
-                demarrerJeu();
-                return;
-            }
+    if (indexDistrib >= joueurs.length) {
+        demarrerJeu();
+        return;
+    }
+    showScreen('screen-role');
+    document.getElementById('role-passage').textContent = '⏳ Passage dans 5 secondes...';
+    document.getElementById('screen-role').style.filter = 'blur(8px)';
+    let count = 5;
+    const interval = setInterval(() => {
+        count--;
+        if (count <= 0) {
+            clearInterval(interval);
+            document.getElementById('screen-role').style.filter = 'none';
             document.getElementById('role-passage').textContent = '👋 ' + joueurs[indexDistrib].nom + ', regarde ton rôle !';
-            showScreen('screen-role');
+        } else {
+            document.getElementById('role-passage').textContent = '⏳ Passage dans ' + count + ' secondes...';
         }
+    }, 1000);
+}
+
 
         function voirRole() {
             const j = joueurs[indexDistrib];
