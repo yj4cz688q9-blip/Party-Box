@@ -4,20 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mille Bornes</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #0d0d0d;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 100vh; padding: 20px; }
         .screen.active { display: flex; }
         h1 { font-size: 42px; color: #00e5cc; margin-bottom: 10px; }
@@ -32,50 +23,84 @@
         .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
         .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .toggle-label { font-size: 15px; color: #ddd; text-align: left; }
-        .toggle {
-            position: relative; width: 50px; height: 28px; cursor: pointer;
-        }
+        .toggle { position: relative; width: 50px; height: 28px; cursor: pointer; }
         .toggle input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333; border-radius: 28px; transition: 0.3s;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px;
-            left: 4px; bottom: 4px; background-color: white;
-            border-radius: 50%; transition: 0.3s;
-        }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; border-radius: 28px; transition: 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; border-radius: 50%; transition: 0.3s; }
         input:checked + .slider { background-color: #00e5cc; }
         input:checked + .slider:before { transform: translateX(22px); }
-
-        /* CURSEUR CHANCE */
-        .chance-slider {
-            width: 100%;
-            accent-color: #00e5cc;
-            margin: 10px 0;
-        }
+        .chance-slider { width: 100%; accent-color: #00e5cc; margin: 10px 0; }
         .chance-value { font-size: 24px; font-weight: bold; color: #00e5cc; }
         .chance-desc { font-size: 13px; color: #888; margin-top: 5px; }
-
-        /* SÉLECTEUR KM */
         .km-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 5px; }
-        .km-btn {
-            background-color: #2a2a2a;
-            border: 2px solid #333;
-            border-radius: 12px;
-            color: white;
-            padding: 8px 16px;
-            font-size: 15px;
-            cursor: pointer;
-        }
+        .km-btn { background-color: #2a2a2a; border: 2px solid #333; border-radius: 12px; color: white; padding: 8px 16px; font-size: 15px; cursor: pointer; }
         .km-btn.selected { border-color: #00e5cc; color: #00e5cc; font-weight: bold; }
-
-        /* NOMS JOUEURS */
         .player-input { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 16px; color: white; font-size: 16px; width: 100%; max-width: 340px; margin: 6px 0; }
         .player-input:focus { border-color: #00e5cc; outline: none; }
-
-        /* SECTION TITRE */
         .section-title { font-size: 13px; color: #00e5cc; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 5px; }
+
+        /* JEU */
+        .jeu-header { background-color: #1a1a1a; border-radius: 16px; padding: 12px 20px; width: 100%; max-width: 400px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .jeu-player-name { font-size: 18px; font-weight: bold; color: #00e5cc; }
+        .jeu-km { font-size: 16px; color: #aaa; }
+        .jeu-km span { color: white; font-weight: bold; }
+
+        .statuts-box { background-color: #1a1a1a; border-radius: 16px; padding: 12px; width: 100%; max-width: 400px; margin-bottom: 15px; }
+        .statuts-title { font-size: 12px; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+        .statuts-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        .statut-badge { padding: 4px 10px; border-radius: 20px; font-size: 13px; }
+        .statut-ok { background-color: #003d2e; color: #00e5cc; }
+        .statut-danger { background-color: #3d0000; color: #ff5555; }
+        .statut-neutre { background-color: #2a2a2a; color: #888; }
+
+        .main-title { font-size: 13px; color: #888; text-transform: uppercase; margin-bottom: 10px; }
+        .cartes-main { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%; max-width: 400px; margin-bottom: 20px; }
+        .carte {
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 14px;
+            padding: 10px 8px;
+            width: 80px;
+            min-height: 90px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: border-color 0.2s;
+        }
+        .carte:active { border-color: #00e5cc; background-color: #0a2a2a; }
+        .carte.selected { border-color: #00e5cc; background-color: #0a2a2a; }
+        .carte-emoji { font-size: 24px; }
+        .carte-nom { font-size: 10px; color: #aaa; line-height: 1.2; }
+        .carte-km { font-size: 16px; font-weight: bold; color: #00e5cc; }
+
+        .carte.km { border-color: #1a3a1a; }
+        .carte.attaque { border-color: #3a1a1a; }
+        .carte.parade { border-color: #1a2a3a; }
+        .carte.botte { border-color: #3a2a00; }
+
+        .actions-row { display: flex; gap: 10px; width: 100%; max-width: 400px; margin-bottom: 15px; }
+        .action-btn { flex: 1; padding: 14px; border: none; border-radius: 14px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .btn-jouer { background-color: #00e5cc; color: #0d0d0d; }
+        .btn-defausser { background-color: #2a2a2a; color: #aaa; border: 2px solid #333; }
+        .btn-passer { background-color: #1a1a1a; color: #888; border: 2px solid #222; }
+
+        .cible-title { font-size: 14px; color: #888; margin-bottom: 10px; }
+        .cibles-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; }
+        .cible-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 8px 16px; color: white; font-size: 14px; cursor: pointer; }
+        .cible-btn:active { border-color: #ff5555; }
+
+        .pioche-info { font-size: 14px; color: #888; margin-bottom: 20px; }
+        .pioche-info span { color: #00e5cc; font-weight: bold; }
+
+        /* SCORES AUTRES JOUEURS */
+        .autres-joueurs { width: 100%; max-width: 400px; margin-bottom: 15px; }
+        .autre-joueur { background-color: #1a1a1a; border-radius: 12px; padding: 10px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .autre-nom { font-size: 15px; }
+        .autre-km { font-size: 15px; color: #00e5cc; font-weight: bold; }
+        .autre-statut { font-size: 12px; color: #ff5555; }
     </style>
 </head>
 <body>
@@ -91,8 +116,6 @@
     <!-- CONFIG -->
     <div class="screen" id="screen-config">
         <h2>⚙️ Configuration</h2>
-
-        <!-- Nombre de joueurs -->
         <p class="section-title">👥 Joueurs</p>
         <div class="config-box">
             <p class="config-label">Nombre de joueurs</p>
@@ -102,8 +125,6 @@
                 <button class="counter-btn" onclick="changePlayers(1)">+</button>
             </div>
         </div>
-
-        <!-- Objectif km -->
         <p class="section-title">🏁 Objectif</p>
         <div class="config-box">
             <p class="config-label">Kilomètres à atteindre</p>
@@ -113,8 +134,6 @@
                 <button class="km-btn" onclick="selectKm(1500, this)">1500 km</button>
             </div>
         </div>
-
-        <!-- Cartes en main -->
         <div class="config-box">
             <p class="config-label">Nombre de cartes en main</p>
             <div class="counter">
@@ -123,8 +142,6 @@
                 <button class="counter-btn" onclick="changeCartes(1)">+</button>
             </div>
         </div>
-
-        <!-- Chance -->
         <p class="section-title">🎲 Chance</p>
         <div class="config-box">
             <p class="config-label">Niveau de chance</p>
@@ -132,8 +149,6 @@
             <div class="chance-value" id="chance-value">50%</div>
             <div class="chance-desc" id="chance-desc">Équilibré</div>
         </div>
-
-        <!-- Bottes -->
         <p class="section-title">🏆 Bottes</p>
         <div class="config-box">
             <div class="toggle-row">
@@ -149,8 +164,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Règles -->
         <p class="section-title">📋 Règles</p>
         <div class="config-box">
             <div class="toggle-row">
@@ -170,7 +183,6 @@
                 <label class="toggle"><input type="checkbox" id="toggle-attaques" checked><span class="slider"></span></label>
             </div>
         </div>
-
         <button class="start-btn" onclick="showPlayerNames()">Suivant ➡️</button>
         <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
     </div>
@@ -183,109 +195,369 @@
         <button class="back-btn" onclick="showScreen('screen-config')">← Retour</button>
     </div>
 
-    <!-- RÉSUMÉ CONFIG -->
-    <div class="screen" id="screen-resume">
-        <h2>🎮 Prêt à jouer !</h2>
-        <div class="config-box" style="text-align:left">
-            <div id="resume-content"></div>
+    <!-- ÉCRAN PASSAGE -->
+    <div class="screen" id="screen-passage">
+        <h2 id="passage-titre"></h2>
+        <p style="color:#888; margin-bottom:40px">Passez le téléphone à ce joueur !</p>
+        <p style="color:#555; font-size:13px; margin-bottom:40px">⚠️ Ne regardez pas la main des autres</p>
+        <button class="start-btn" onclick="afficherMain()">👀 Voir ma main</button>
+    </div>
+
+    <!-- ÉCRAN JEU -->
+    <div class="screen" id="screen-jeu">
+        <div class="jeu-header">
+            <span class="jeu-player-name" id="jeu-nom"></span>
+            <span class="jeu-km">🏁 <span id="jeu-km">0</span> / <span id="jeu-objectif">1000</span> km</span>
         </div>
-        <button class="start-btn" onclick="lancerJeu()">🚗 Lancer la partie !</button>
-        <button class="back-btn" onclick="showScreen('screen-players')">← Retour</button>
+
+        <div class="statuts-box">
+            <div class="statuts-title">Statut</div>
+            <div class="statuts-row" id="statuts-row"></div>
+        </div>
+
+        <div class="autres-joueurs" id="autres-joueurs"></div>
+
+        <p class="pioche-info">🃏 Pioche : <span id="pioche-count">0</span> cartes restantes</p>
+
+        <p class="main-title">Ta main</p>
+        <div class="cartes-main" id="cartes-main"></div>
+
+        <div class="actions-row">
+            <button class="action-btn btn-jouer" onclick="jouerCarte()">▶️ Jouer</button>
+            <button class="action-btn btn-defausser" onclick="defausserCarte()">🗑️ Défausser</button>
+        </div>
+
+        <button class="back-btn" onclick="passerTour()">⏭️ Passer mon tour</button>
+    </div>
+
+    <!-- CHOISIR CIBLE (pour attaques) -->
+    <div class="screen" id="screen-cible">
+        <h2>💥 Attaquer qui ?</h2>
+        <div class="cibles-row" id="cibles-row"></div>
+        <button class="back-btn" onclick="showScreen('screen-jeu')">← Annuler</button>
+    </div>
+
+    <!-- FIN DE PARTIE -->
+    <div class="screen" id="screen-fin">
+        <h2>🏆 Fin de partie !</h2>
+        <p style="color:#888; margin-bottom:30px" id="fin-gagnant"></p>
+        <div id="fin-scores"></div>
+        <button class="start-btn" onclick="showScreen('screen-home')" style="margin-top:30px">🏠 Accueil</button>
     </div>
 
     <script>
-        let nbPlayers = 2;
-        let objectifKm = 1000;
-        let nbCartes = 6;
-        let chanceLevel = 50;
-        let nbBottes = 1;
+        // CONFIG
+        let nbPlayers = 2, objectifKm = 1000, nbCartes = 6, chanceLevel = 50, nbBottes = 1;
+        let reglesBottes = true, reglesBonus = false, reglesLimite = true, reglesCoupefile = true, reglesAttaques = true;
+
+        // ÉTAT JEU
+        let joueurs = [], pioche = [], joueurActuel = 0, carteSelectionnee = -1;
+
+        // TYPES DE CARTES
+        const CARTES_DEF = {
+            km25:   { nom: '25 km',           emoji: '🟢', type: 'km',     valeur: 25 },
+            km50:   { nom: '50 km',           emoji: '🟡', type: 'km',     valeur: 50 },
+            km75:   { nom: '75 km',           emoji: '🟠', type: 'km',     valeur: 75 },
+            km100:  { nom: '100 km',          emoji: '🔵', type: 'km',     valeur: 100 },
+            km200:  { nom: '200 km',          emoji: '🔴', type: 'km',     valeur: 200 },
+            accident:   { nom: 'Accident',        emoji: '💥', type: 'attaque', contre: 'reparation' },
+            panne:      { nom: 'Panne essence',   emoji: '⛽', type: 'attaque', contre: 'essence' },
+            crevaison:  { nom: 'Crevaison',       emoji: '🔧', type: 'attaque', contre: 'roue' },
+            feu_rouge:  { nom: 'Feu rouge',       emoji: '🔴', type: 'attaque', contre: 'feu_vert' },
+            limite:     { nom: 'Limite vitesse',  emoji: '🚦', type: 'attaque', contre: 'fin_limite' },
+            reparation: { nom: 'Réparation',      emoji: '🔨', type: 'parade', contre: 'accident' },
+            essence:    { nom: 'Essence',         emoji: '🛢️', type: 'parade', contre: 'panne' },
+            roue:       { nom: 'Roue de secours', emoji: '🔩', type: 'parade', contre: 'crevaison' },
+            feu_vert:   { nom: 'Feu vert',        emoji: '🟢', type: 'parade', contre: 'feu_rouge' },
+            fin_limite: { nom: 'Fin de limite',   emoji: '✅', type: 'parade', contre: 'limite' },
+            as_volant:  { nom: 'As du volant',    emoji: '🏅', type: 'botte', protege: 'accident' },
+            citerne:    { nom: 'Citerne',         emoji: '🏅', type: 'botte', protege: 'panne' },
+            increvable: { nom: 'Increvable',      emoji: '🏅', type: 'botte', protege: 'crevaison' },
+            prioritaire:{ nom: 'Prioritaire',     emoji: '🏅', type: 'botte', protege: 'feu_rouge' },
+        };
 
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        function changePlayers(delta) {
-            nbPlayers = Math.min(6, Math.max(2, nbPlayers + delta));
-            document.getElementById('players-value').textContent = nbPlayers;
-        }
-
-        function selectKm(km, btn) {
-            objectifKm = km;
-            document.querySelectorAll('.km-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-        }
-
-        function changeCartes(delta) {
-            nbCartes = Math.min(10, Math.max(4, nbCartes + delta));
-            document.getElementById('cartes-value').textContent = nbCartes;
-        }
-
+        function changePlayers(d) { nbPlayers = Math.min(6, Math.max(2, nbPlayers + d)); document.getElementById('players-value').textContent = nbPlayers; }
+        function selectKm(km, btn) { objectifKm = km; document.querySelectorAll('.km-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); }
+        function changeCartes(d) { nbCartes = Math.min(10, Math.max(4, nbCartes + d)); document.getElementById('cartes-value').textContent = nbCartes; }
+        function changeBottes(d) { nbBottes = Math.min(6, Math.max(1, nbBottes + d)); document.getElementById('bottes-value').textContent = nbBottes; }
+        function toggleBottes() { document.getElementById('bottes-options').style.display = document.getElementById('toggle-bottes').checked ? 'block' : 'none'; }
         function updateChance(val) {
             chanceLevel = parseInt(val);
             document.getElementById('chance-value').textContent = val + '%';
-            let desc = '';
-            if (val <= 20) desc = '😈 Très difficile, peu de bonnes cartes';
-            else if (val <= 40) desc = '😤 Difficile';
-            else if (val <= 60) desc = '😊 Équilibré';
-            else if (val <= 80) desc = '🍀 Chanceux, beaucoup de bonnes cartes';
-            else desc = '🌟 Très chanceux, presque que des bonnes cartes !';
-            document.getElementById('chance-desc').textContent = desc;
-        }
-
-        function toggleBottes() {
-            const checked = document.getElementById('toggle-bottes').checked;
-            document.getElementById('bottes-options').style.display = checked ? 'block' : 'none';
-        }
-
-        function changeBottes(delta) {
-            nbBottes = Math.min(6, Math.max(1, nbBottes + delta));
-            document.getElementById('bottes-value').textContent = nbBottes;
+            const descs = ['😈 Très difficile', '😤 Difficile', '😊 Équilibré', '🍀 Chanceux', '🌟 Très chanceux !'];
+            document.getElementById('chance-desc').textContent = descs[Math.floor(val / 25)];
         }
 
         function showPlayerNames() {
-            const container = document.getElementById('player-inputs');
-            container.innerHTML = '';
+            const c = document.getElementById('player-inputs');
+            c.innerHTML = '';
             for (let i = 1; i <= nbPlayers; i++) {
-                const input = document.createElement('input');
-                input.className = 'player-input';
-                input.placeholder = '🚗 Joueur ' + i;
-                input.id = 'player-' + i;
-                container.appendChild(input);
+                const inp = document.createElement('input');
+                inp.className = 'player-input';
+                inp.placeholder = '🚗 Joueur ' + i;
+                inp.id = 'player-' + i;
+                c.appendChild(inp);
             }
             showScreen('screen-players');
         }
 
-        function startGame() {
-            const names = [];
-            for (let i = 1; i <= nbPlayers; i++) {
-                const val = document.getElementById('player-' + i).value.trim();
-                names.push(val || 'Joueur ' + i);
+        function creerPioche() {
+            const p = [];
+            const chance = chanceLevel / 100;
+
+            // KM
+            const kmPoids = [
+                { id: 'km25',  base: 10 },
+                { id: 'km50',  base: 10 },
+                { id: 'km75',  base: 10 },
+                { id: 'km100', base: 12 },
+                { id: 'km200', base: 4 + Math.round(chance * 8) },
+            ];
+            kmPoids.forEach(k => { for (let i = 0; i < k.base; i++) p.push(k.id); });
+
+            // ATTAQUES
+            if (reglesAttaques) {
+                const nbAttaques = Math.round(5 - chance * 3);
+                ['accident','panne','crevaison','feu_rouge'].forEach(a => {
+                    for (let i = 0; i < Math.max(1, nbAttaques); i++) p.push(a);
+                });
+                if (reglesLimite) for (let i = 0; i < Math.max(1, nbAttaques); i++) p.push('limite');
             }
 
-            const bottes = document.getElementById('toggle-bottes').checked;
-            const bonus = document.getElementById('toggle-bonus').checked;
-            const limite = document.getElementById('toggle-limite').checked;
-            const coupefile = document.getElementById('toggle-coupefile').checked;
-            const attaques = document.getElementById('toggle-attaques').checked;
+            // PARADES
+            const nbParades = Math.round(4 + chance * 4);
+            ['reparation','essence','roue','feu_vert'].forEach(par => {
+                for (let i = 0; i < nbParades; i++) p.push(par);
+            });
+            if (reglesLimite) for (let i = 0; i < nbParades; i++) p.push('fin_limite');
 
-            const resume = document.getElementById('resume-content');
-            resume.innerHTML = `
-                <p style="margin-bottom:8px">👥 <b>${names.join(', ')}</b></p>
-                <p style="margin-bottom:8px">🏁 Objectif : <b>${objectifKm} km</b></p>
-                <p style="margin-bottom:8px">🃏 Cartes en main : <b>${nbCartes}</b></p>
-                <p style="margin-bottom:8px">🎲 Chance : <b>${chanceLevel}%</b></p>
-                <p style="margin-bottom:8px">🏆 Bottes : <b>${bottes ? nbBottes + ' exemplaire(s)' : 'Désactivées'}</b></p>
-                <p style="margin-bottom:8px">💥 Attaques : <b>${attaques ? 'Oui' : 'Non'}</b></p>
-                <p style="margin-bottom:8px">🚦 Limite vitesse : <b>${limite ? 'Oui' : 'Non'}</b></p>
-                <p style="margin-bottom:8px">⚡ Coupe-file : <b>${coupefile ? 'Oui' : 'Non'}</b></p>
-                <p style="margin-bottom:0">✅ Points bonus : <b>${bonus ? 'Oui' : 'Non'}</b></p>
-            `;
-            showScreen('screen-resume');
+            // BOTTES
+            if (reglesBottes) {
+                ['as_volant','citerne','increvable','prioritaire'].forEach(b => {
+                    for (let i = 0; i < nbBottes; i++) p.push(b);
+                });
+            }
+
+            return p.sort(() => Math.random() - 0.5);
         }
 
-        function lancerJeu() {
-            alert('Le jeu va commencer ! (à venir)');
+        function piocher() {
+            if (pioche.length === 0) return null;
+            return pioche.pop();
+        }
+
+        function startGame() {
+            reglesBottes = document.getElementById('toggle-bottes').checked;
+            reglesBonus = document.getElementById('toggle-bonus').checked;
+            reglesLimite = document.getElementById('toggle-limite').checked;
+            reglesCoupefile = document.getElementById('toggle-coupefile').checked;
+            reglesAttaques = document.getElementById('toggle-attaques').checked;
+
+            joueurs = [];
+            for (let i = 1; i <= nbPlayers; i++) {
+                const nom = document.getElementById('player-' + i).value.trim() || 'Joueur ' + i;
+                joueurs.push({ nom, km: 0, main: [], statuts: { arrete: true, accident: false, panne: false, crevaison: false, limite: false }, bottes: [] });
+            }
+
+            pioche = creerPioche();
+
+            // Distribuer les cartes
+            joueurs.forEach(j => {
+                for (let i = 0; i < nbCartes; i++) {
+                    const c = piocher();
+                    if (c) j.main.push(c);
+                }
+            });
+
+            joueurActuel = 0;
+            afficherPassage();
+        }
+
+        function afficherPassage() {
+            document.getElementById('passage-titre').textContent = '👋 ' + joueurs[joueurActuel].nom + ', à toi !';
+            showScreen('screen-passage');
+        }
+
+        function afficherMain() {
+            carteSelectionnee = -1;
+            const j = joueurs[joueurActuel];
+
+            document.getElementById('jeu-nom').textContent = '🚗 ' + j.nom;
+            document.getElementById('jeu-km').textContent = j.km;
+            document.getElementById('jeu-objectif').textContent = objectifKm;
+            document.getElementById('pioche-count').textContent = pioche.length;
+
+            // Statuts
+            const statutsRow = document.getElementById('statuts-row');
+            statutsRow.innerHTML = '';
+            if (j.statuts.arrete) statutsRow.innerHTML += '<span class="statut-badge statut-danger">🛑 Arrêté</span>';
+            if (!j.statuts.arrete) statutsRow.innerHTML += '<span class="statut-badge statut-ok">✅ En route</span>';
+            if (j.statuts.accident) statutsRow.innerHTML += '<span class="statut-badge statut-danger">💥 Accident</span>';
+            if (j.statuts.panne) statutsRow.innerHTML += '<span class="statut-badge statut-danger">⛽ Panne</span>';
+            if (j.statuts.crevaison) statutsRow.innerHTML += '<span class="statut-badge statut-danger">🔧 Crevaison</span>';
+            if (j.statuts.limite) statutsRow.innerHTML += '<span class="statut-badge statut-danger">🚦 Limité</span>';
+            j.bottes.forEach(b => statutsRow.innerHTML += '<span class="statut-badge statut-ok">🏅 ' + CARTES_DEF[b].nom + '</span>');
+
+            // Autres joueurs
+            const autresDiv = document.getElementById('autres-joueurs');
+            autresDiv.innerHTML = '';
+            joueurs.forEach((jj, idx) => {
+                if (idx === joueurActuel) return;
+                let statStr = '';
+                if (jj.statuts.accident) statStr += '💥 ';
+                if (jj.statuts.panne) statStr += '⛽ ';
+                if (jj.statuts.crevaison) statStr += '🔧 ';
+                if (jj.statuts.limite) statStr += '🚦 ';
+                if (jj.statuts.arrete) statStr += '🛑 ';
+                autresDiv.innerHTML += `<div class="autre-joueur"><span class="autre-nom">${jj.nom} <span class="autre-statut">${statStr}</span></span><span class="autre-km">${jj.km} km</span></div>`;
+            });
+
+            // Main
+            const mainDiv = document.getElementById('cartes-main');
+            mainDiv.innerHTML = '';
+            j.main.forEach((carteId, idx) => {
+                const def = CARTES_DEF[carteId];
+                const div = document.createElement('div');
+                div.className = 'carte ' + def.type;
+                div.innerHTML = `<span class="carte-emoji">${def.emoji}</span>${def.type === 'km' ? '<span class="carte-km">' + def.valeur + '</span>' : ''}<span class="carte-nom">${def.nom}</span>`;
+                div.onclick = () => selectionnerCarte(idx);
+                mainDiv.appendChild(div);
+            });
+
+            showScreen('screen-jeu');
+        }
+
+        function selectionnerCarte(idx) {
+            carteSelectionnee = idx;
+            document.querySelectorAll('.carte').forEach((c, i) => {
+                c.classList.toggle('selected', i === idx);
+            });
+        }
+
+        function jouerCarte() {
+            if (carteSelectionnee === -1) { alert('Sélectionne une carte d\'abord !'); return; }
+            const j = joueurs[joueurActuel];
+            const carteId = j.main[carteSelectionnee];
+            const def = CARTES_DEF[carteId];
+
+            if (def.type === 'km') jouerKm(carteId, def);
+            else if (def.type === 'parade') jouerParade(carteId, def);
+            else if (def.type === 'botte') jouerBotte(carteId);
+            else if (def.type === 'attaque') choisirCible(carteId, def);
+        }
+
+        function jouerKm(carteId, def) {
+            const j = joueurs[joueurActuel];
+            if (j.statuts.arrete) { alert('Tu es arrêté ! Joue un Feu Vert d\'abord.'); return; }
+            if (j.statuts.accident || j.statuts.panne || j.statuts.crevaison) { alert('Tu as un problème ! Répare-toi d\'abord.'); return; }
+            if (j.statuts.limite && def.valeur > 50) { alert('Tu es limité à 50 km/h ! Tu ne peux jouer que des 25 ou 50 km.'); return; }
+            if (j.km + def.valeur > objectifKm) { alert('Tu dépasserais l\'objectif ! Joue une carte plus petite.'); return; }
+
+            j.km += def.valeur;
+            retirerCarte();
+            piocherCarte();
+            if (j.km >= objectifKm) { finDePartie(); return; }
+            finDeTour();
+        }
+
+        function jouerParade(carteId, def) {
+            const j = joueurs[joueurActuel];
+            if (carteId === 'feu_vert' && j.statuts.arrete) { j.statuts.arrete = false; retirerCarte(); piocherCarte(); finDeTour(); return; }
+            if (carteId === 'reparation' && j.statuts.accident) { j.statuts.accident = false; retirerCarte(); piocherCarte(); finDeTour(); return; }
+            if (carteId === 'essence' && j.statuts.panne) { j.statuts.panne = false; retirerCarte(); piocherCarte(); finDeTour(); return; }
+            if (carteId === 'roue' && j.statuts.crevaison) { j.statuts.crevaison = false; retirerCarte(); piocherCarte(); finDeTour(); return; }
+            if (carteId === 'fin_limite' && j.statuts.limite) { j.statuts.limite = false; retirerCarte(); piocherCarte(); finDeTour(); return; }
+            alert('Cette parade n\'est pas utile maintenant !');
+        }
+
+        function jouerBotte(carteId) {
+            const j = joueurs[joueurActuel];
+            j.bottes.push(carteId);
+            // La botte soigne aussi le problème correspondant
+            if (carteId === 'as_volant') j.statuts.accident = false;
+            if (carteId === 'citerne') j.statuts.panne = false;
+            if (carteId === 'increvable') j.statuts.crevaison = false;
+            if (carteId === 'prioritaire') { j.statuts.arrete = false; j.statuts.feu_rouge = false; }
+            retirerCarte();
+            piocherCarte();
+            finDeTour();
+        }
+
+        function choisirCible(carteId, def) {
+            if (!reglesAttaques) { alert('Les attaques sont désactivées !'); return; }
+            const ciblesRow = document.getElementById('cibles-row');
+            ciblesRow.innerHTML = '';
+            joueurs.forEach((jj, idx) => {
+                if (idx === joueurActuel) return;
+                const btn = document.createElement('button');
+                btn.className = 'cible-btn';
+                btn.textContent = jj.nom + ' (' + jj.km + ' km)';
+                btn.onclick = () => attaquer(idx, carteId, def);
+                ciblesRow.appendChild(btn);
+            });
+            showScreen('screen-cible');
+        }
+
+        function attaquer(cibleIdx, carteId, def) {
+            const cible = joueurs[cibleIdx];
+            // Vérifier bottes
+            const botteProtege = { accident: 'as_volant', panne: 'citerne', crevaison: 'increvable', feu_rouge: 'prioritaire' };
+            if (botteProtege[carteId] && cible.bottes.includes(botteProtege[carteId])) {
+                alert(cible.nom + ' a une botte ! L\'attaque est annulée.'); showScreen('screen-jeu'); return;
+            }
+            if (carteId === 'accident') { if (cible.statuts.accident) { alert(cible.nom + ' a déjà un accident !'); showScreen('screen-jeu'); return; } cible.statuts.accident = true; }
+            if (carteId === 'panne') { if (cible.statuts.panne) { alert(cible.nom + ' est déjà en panne !'); showScreen('screen-jeu'); return; } cible.statuts.panne = true; }
+            if (carteId === 'crevaison') { if (cible.statuts.crevaison) { alert(cible.nom + ' a déjà une crevaison !'); showScreen('screen-jeu'); return; } cible.statuts.crevaison = true; }
+            if (carteId === 'feu_rouge') { if (cible.statuts.arrete && !cible.bottes.includes('prioritaire')) { alert(cible.nom + ' est déjà arrêté !'); showScreen('screen-jeu'); return; } cible.statuts.arrete = true; }
+            if (carteId === 'limite') { if (!reglesLimite) { alert('Les limites sont désactivées !'); showScreen('screen-jeu'); return; } if (cible.statuts.limite) { alert(cible.nom + ' est déjà limité !'); showScreen('screen-jeu'); return; } cible.statuts.limite = true; }
+            retirerCarte();
+            piocherCarte();
+            showScreen('screen-jeu');
+            finDeTour();
+        }
+
+        function defausserCarte() {
+            if (carteSelectionnee === -1) { alert('Sélectionne une carte à défausser !'); return; }
+            retirerCarte();
+            piocherCarte();
+            finDeTour();
+        }
+
+        function retirerCarte() {
+            joueurs[joueurActuel].main.splice(carteSelectionnee, 1);
+            carteSelectionnee = -1;
+        }
+
+        function piocherCarte() {
+            const c = piocher();
+            if (c) joueurs[joueurActuel].main.push(c);
+        }
+
+        function passerTour() {
+            piocherCarte();
+            finDeTour();
+        }
+
+        function finDeTour() {
+            joueurActuel = (joueurActuel + 1) % nbPlayers;
+            afficherPassage();
+        }
+
+        function finDePartie() {
+            const gagnant = joueurs[joueurActuel];
+            document.getElementById('fin-gagnant').textContent = '🥇 ' + gagnant.nom + ' a gagné avec ' + gagnant.km + ' km !';
+            const scoresDiv = document.getElementById('fin-scores');
+            scoresDiv.innerHTML = '';
+            const sorted = [...joueurs].sort((a, b) => b.km - a.km);
+            sorted.forEach((j, i) => {
+                scoresDiv.innerHTML += `<div class="autre-joueur"><span class="autre-nom">${i+1}. ${j.nom}</span><span class="autre-km">${j.km} km</span></div>`;
+            });
+            showScreen('screen-fin');
         }
     </script>
 </body>
