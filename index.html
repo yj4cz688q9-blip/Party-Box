@@ -49,19 +49,179 @@
             background-color: #00e5cc;
             color: #0d0d0d;
         }
+
+        /* ÉCRAN CONFIG */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .screen.active {
+            display: flex;
+        }
+        h2 {
+            font-size: 28px;
+            color: #00e5cc;
+            margin-bottom: 30px;
+        }
+        .config-box {
+            background-color: #1a1a1a;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 20px;
+        }
+        .config-label {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .counter-btn {
+            background-color: #00e5cc;
+            color: #0d0d0d;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 24px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .counter-value {
+            font-size: 32px;
+            font-weight: bold;
+            min-width: 50px;
+        }
+        .start-btn {
+            background-color: #00e5cc;
+            color: #0d0d0d;
+            border: none;
+            border-radius: 20px;
+            padding: 18px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 320px;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        /* ÉCRAN NOM DES ÉQUIPES */
+        .team-input {
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 16px;
+            width: 100%;
+            max-width: 320px;
+            margin: 6px 0;
+        }
+        .team-input:focus {
+            border-color: #00e5cc;
+            outline: none;
+        }
     </style>
 </head>
 <body>
-    <h1>🎉 Party Box</h1>
-    <p class="subtitle">Choisis ton jeu !</p>
 
-    <button class="game-btn" onclick="alert('Time\'s Up arrive bientôt!')">
-        ⏱️ Time's Up
-    </button>
+    <!-- ÉCRAN ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🎉 Party Box</h1>
+        <p class="subtitle">Choisis ton jeu !</p>
+        <button class="game-btn" onclick="showScreen('screen-config')">⏱️ Time's Up</button>
+        <button class="game-btn" onclick="alert('Bientôt disponible!')">🚗 Mille Bornes</button>
+    </div>
 
-    <button class="game-btn" onclick="alert('Bientôt disponible!')">
-        🚗 Mille Bornes
-    </button>
+    <!-- ÉCRAN CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+
+        <div class="config-box">
+            <p class="config-label">👥 Nombre d'équipes</p>
+            <div class="counter">
+                <button class="counter-btn" onclick="changeTeams(-1)">−</button>
+                <span class="counter-value" id="teams-value">2</span>
+                <button class="counter-btn" onclick="changeTeams(1)">+</button>
+            </div>
+        </div>
+
+        <div class="config-box">
+            <p class="config-label">⏱️ Durée du timer (secondes)</p>
+            <div class="counter">
+                <button class="counter-btn" onclick="changeTimer(-5)">−</button>
+                <span class="counter-value" id="timer-value">30</span>
+                <button class="counter-btn" onclick="changeTimer(5)">+</button>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="showTeamNames()">Suivant ➡️</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- ÉCRAN NOMS DES ÉQUIPES -->
+    <div class="screen" id="screen-teams">
+        <h2>✏️ Noms des équipes</h2>
+        <div id="team-inputs"></div>
+        <button class="start-btn" onclick="startGame()" style="margin-top:20px">C'est parti ! 🚀</button>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Retour</button>
+    </div>
+
+    <script>
+        let nbTeams = 2;
+        let timerDuration = 30;
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function changeTeams(delta) {
+            nbTeams = Math.min(6, Math.max(2, nbTeams + delta));
+            document.getElementById('teams-value').textContent = nbTeams;
+        }
+
+        function changeTimer(delta) {
+            timerDuration = Math.min(120, Math.max(10, timerDuration + delta));
+            document.getElementById('timer-value').textContent = timerDuration;
+        }
+
+        function showTeamNames() {
+            const container = document.getElementById('team-inputs');
+            container.innerHTML = '';
+            for (let i = 1; i <= nbTeams; i++) {
+                const input = document.createElement('input');
+                input.className = 'team-input';
+                input.placeholder = '🏆 Équipe ' + i;
+                input.id = 'team-' + i;
+                container.appendChild(input);
+            }
+            showScreen('screen-teams');
+        }
+
+        function startGame() {
+            alert('Le jeu va commencer !');
+        }
+    </script>
 </body>
 </html>
-
