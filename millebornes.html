@@ -331,9 +331,11 @@
 
             // PARADES
             const nbParades = Math.round(4 + chance * 4);
-            ['reparation','essence','roue','feu_vert'].forEach(par => {
-                for (let i = 0; i < nbParades; i++) p.push(par);
-            });
+            ['reparation','essence','roue'].forEach(par => {
+    for (let i = 0; i < nbParades; i++) p.push(par);
+});
+for (let i = 0; i < nbParades + 5; i++) p.push('feu_vert');
+
             if (reglesLimite) for (let i = 0; i < nbParades; i++) p.push('fin_limite');
 
             // BOTTES
