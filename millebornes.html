@@ -571,7 +571,8 @@
             else if (j.statuts.arrete && !j.statuts.accident && !j.statuts.panne && !j.statuts.crevaison) {
                 const fv = j.main.find(c => c === 'feu_vert');
                 if (fv) { j.statuts.arrete = false; j.main.splice(j.main.indexOf(fv), 1); const c = piocher(); if (c) j.main.push(c); action = '🟢 ' + j.nom + ' joue Feu Vert !'; }
-                else { const c = piocher(); if (c) j.main.push(c); action = '⏭️ ' + j.nom + ' passe son tour (pas de feu vert)'; }
+                else { defausserBotInutile(j); action = '🗑️ ' + j.nom + ' défausse une carte inutile'; }
+
             }
             else if (j.statuts.accident) {
                 const rep = j.main.find(c => c === 'reparation');
@@ -627,6 +628,19 @@
 
             if (j.km >= objectifKm) { setTimeout(finDePartie, 1000); }
         }
+function defausserBotInutile(j) {
+    const prioriteDefausse = ['limite', 'fin_limite', 'accident', 'panne', 'crevaison', 'feu_rouge'];
+    for (const cible of prioriteDefausse) {
+        const idx = j.main.indexOf(cible);
+        if (idx !== -1) {
+            j.main.splice(idx, 1);
+            const c = piocher(); if (c) j.main.push(c);
+            return;
+        }
+    }
+    j.main.splice(0, 1);
+    const c = piocher(); if (c) j.main.push(c);
+}
 
         function jouerKmBot(j) {
             const kmCartes = j.main.filter(c => CARTES_DEF[c].type === 'km')
