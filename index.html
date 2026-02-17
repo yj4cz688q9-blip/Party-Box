@@ -23,19 +23,7 @@
         h1 { font-size: 48px; color: #00e5cc; margin-bottom: 10px; }
         h2 { font-size: 28px; color: #00e5cc; margin-bottom: 30px; }
         .subtitle { font-size: 16px; color: #888; margin-bottom: 60px; }
-        .game-btn {
-            background-color: #1a1a1a;
-            color: white;
-            border: 2px solid #00e5cc;
-            border-radius: 20px;
-            padding: 20px;
-            width: 100%;
-            max-width: 320px;
-            margin: 10px auto;
-            font-size: 20px;
-            cursor: pointer;
-            display: block;
-        }
+        .game-btn { background-color: #1a1a1a; color: white; border: 2px solid #00e5cc; border-radius: 20px; padding: 20px; width: 100%; max-width: 320px; margin: 10px auto; font-size: 20px; cursor: pointer; display: block; }
         .config-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 320px; margin-bottom: 20px; }
         .config-label { font-size: 16px; color: #888; margin-bottom: 10px; }
         .counter { display: flex; align-items: center; justify-content: center; gap: 20px; }
@@ -45,58 +33,28 @@
         .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
         .team-input { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 16px; color: white; font-size: 16px; width: 100%; max-width: 320px; margin: 6px 0; }
         .team-input:focus { border-color: #00e5cc; outline: none; }
-
-        /* ÉCRAN JEU */
         .manche-info { font-size: 14px; color: #888; margin-bottom: 5px; }
         .team-info { font-size: 20px; color: #00e5cc; font-weight: bold; margin-bottom: 30px; }
-        .timer-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 6px solid #00e5cc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 40px;
-            color: white;
-        }
+        .timer-circle { width: 120px; height: 120px; border-radius: 50%; border: 6px solid #00e5cc; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: bold; margin-bottom: 40px; color: white; }
         .timer-circle.warning { border-color: orange; color: orange; }
         .timer-circle.danger { border-color: red; color: red; }
-        .word-card {
-            background-color: #1a1a1a;
-            border-radius: 24px;
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 320px;
-            margin-bottom: 40px;
-        }
+        .word-card { background-color: #1a1a1a; border-radius: 24px; padding: 40px 30px; width: 100%; max-width: 320px; margin-bottom: 40px; }
         .word-text { font-size: 32px; font-weight: bold; }
         .action-btns { display: flex; gap: 20px; }
-        .btn-red {
-            background-color: #ff3b3b;
-            border: none;
-            border-radius: 20px;
-            padding: 20px;
-            font-size: 36px;
-            cursor: pointer;
-            flex: 1;
-        }
-        .btn-green {
-            background-color: #00c97a;
-            border: none;
-            border-radius: 20px;
-            padding: 20px;
-            font-size: 36px;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        /* ÉCRAN FIN DE TOUR */
+        .btn-red { background-color: #ff3b3b; border: none; border-radius: 20px; padding: 20px; font-size: 36px; cursor: pointer; flex: 1; }
+        .btn-green { background-color: #00c97a; border: none; border-radius: 20px; padding: 20px; font-size: 36px; cursor: pointer; flex: 1; }
         .score-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 320px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .score-team { font-size: 18px; }
         .score-points { font-size: 24px; font-weight: bold; color: #00e5cc; }
+
+        /* RÈGLES */
+        .regle-box { background-color: #1a1a1a; border-radius: 24px; padding: 30px; width: 100%; max-width: 320px; margin-bottom: 30px; }
+        .regle-emoji { font-size: 60px; margin-bottom: 15px; }
+        .regle-titre { font-size: 22px; font-weight: bold; color: #00e5cc; margin-bottom: 10px; }
+        .regle-desc { font-size: 16px; color: #aaa; line-height: 1.5; }
+
+        /* COMPTE À REBOURS */
+        .countdown-number { font-size: 120px; font-weight: bold; color: #00e5cc; }
     </style>
 </head>
 <body>
@@ -140,12 +98,30 @@
         <button class="back-btn" onclick="showScreen('screen-config')">← Retour</button>
     </div>
 
-    <!-- ÉCRAN AVANT LE TOUR -->
+    <!-- RÈGLES DE LA MANCHE -->
+    <div class="screen" id="screen-regles">
+        <p class="manche-info" id="regles-manche"></p>
+        <h2>Règles de la manche</h2>
+        <div class="regle-box">
+            <div class="regle-emoji" id="regle-emoji"></div>
+            <div class="regle-titre" id="regle-titre"></div>
+            <div class="regle-desc" id="regle-desc"></div>
+        </div>
+        <button class="start-btn" onclick="afficherPreTour()">Compris ! ✅</button>
+    </div>
+
+    <!-- PRÉ-TOUR -->
     <div class="screen" id="screen-pretour">
         <p class="manche-info" id="pretour-manche"></p>
         <h2 id="pretour-team"></h2>
+        <p style="color:#888; margin-bottom:15px; font-size:14px" id="pretour-regle"></p>
         <p style="color:#888; margin-bottom:40px">Passez le téléphone à cette équipe !</p>
-        <button class="start-btn" onclick="startTour()">▶️ Lancer le tour</button>
+        <button class="start-btn" onclick="startCountdown()">▶️ Lancer le tour</button>
+    </div>
+
+    <!-- COMPTE À REBOURS -->
+    <div class="screen" id="screen-countdown">
+        <div class="countdown-number" id="countdown-display">3</div>
     </div>
 
     <!-- ÉCRAN JEU -->
@@ -179,7 +155,6 @@
     </div>
 
     <script>
-        // DONNÉES
         const mots = [
             "Chat","Chien","Voiture","Pizza","Football","Guitare","Plage","Montagne",
             "Avion","Train","Vélo","Soleil","Lune","Étoile","Forêt","Rivière",
@@ -191,22 +166,34 @@
             "Musique","Chanson","Concert","Scène","Microphone","Batterie","Piano","Violon",
             "Peinture","Sculpture","Photo","Cinéma","Théâtre","Livre","Magazine","Journal",
             "École","Université","Professeur","Élève","Crayon","Stylo","Cahier","Sac",
-            "Manteau","Chapeau","Lunettes","Montre","Bague","Collier","Chaussures","Basket",
+            "Manteau","Chapeau","Lunettes","Montre","Bague","Collier","Chaussures",
             "Frigo","Four","Micro-onde","Casserole","Assiette","Verre","Fourchette","Couteau",
             "Hôpital","Médecin","Infirmière","Pharmacie","Médicament","Ambulance",
             "Pompier","Police","Avocat","Juge","Prison","Banque","Argent","Carte",
             "Vacances","Voyage","Hôtel","Restaurant","Café","Bar","Discothèque","Fête",
-            "Anniversaire","Cadeau","Bougie","Gâteau","Ballon","Confetti","Champagne",
+            "Anniversaire","Cadeau","Bougie","Gâteau","Confetti","Champagne",
             "Cool","Selfie","Hashtag","Internet","Wi-Fi","Emoji","Story","Like",
             "Influenceur","Podcast","Streaming","Playlist","Application","Notification",
-            "Skateboard","Trottinette","Casque","Écouteurs","Chargeur","Batterie","Câble",
+            "Skateboard","Trottinette","Casque","Écouteurs","Chargeur","Câble",
             "Yoga","Méditation","Sport","Fitness","Musculation","Course","Marathon",
             "Burger","Tacos","Sushi","Kebab","Nuggets","Frites","Smoothie","Bubble tea",
             "Chanteur","Acteur","Footballeur","Joueur","Coach","Arbitre","Supporter",
             "Stade","Vestiaire","Trophée","Médaille","Podium","Champion","Équipe",
             "Printemps","Été","Automne","Hiver","Pluie","Neige","Orage","Arc-en-ciel",
-            "Camping","Randonnée","Tente","Sac de couchage","Boussole","Carte","Feu",
-            "Surf","Planche","Vague","Combinaison","Palmes","Masque","Tuba","Plongée"
+            "Camping","Randonnée","Tente","Sac de couchage","Boussole","Feu de camp",
+            "Surf","Planche","Vague","Combinaison","Palmes","Masque","Tuba","Plongée",
+            "Boulanger","Boucher","Épicerie","Marché","Supermarché","Caisse","Chariot",
+            "Dentiste","Opticien","Coiffeur","Barbier","Esthéticienne","Manucure",
+            "Mairie","Préfecture","Passeport","Carte d'identité","Permis","Amende",
+            "Ascenseur","Escalator","Couloir","Parking","Garage","Atelier","Usine",
+            "Tracteur","Moissonneuse","Ferme","Vache","Cochon","Poulet","Mouton","Chèvre",
+            "Ruche","Abeille","Miel","Papillon","Coccinelle","Fourmi","Araignée","Moustique"
+        ];
+
+        const regles = [
+            { emoji: "🗣️", titre: "Manche 1 — Décrivez !", desc: "Vous pouvez dire tout ce que vous voulez, faire des phrases, donner des indices... Tout est permis sauf le mot !" },
+            { emoji: "🤫", titre: "Manche 2 — Un seul mot !", desc: "Vous n'avez le droit qu'à UN SEUL mot pour faire deviner. Pas de phrases, pas de gestes !" },
+            { emoji: "🎭", titre: "Manche 3 — Mime !", desc: "Silence total ! Vous devez mimer uniquement. Interdit de parler ou de faire des sons !" }
         ];
 
         let nbTeams = 2;
@@ -260,13 +247,39 @@
             equipeActuelle = 0;
             motsMelangés = [...mots].sort(() => Math.random() - 0.5);
             motIndex = 0;
-            afficherPreTour();
+            afficherRegles();
+        }
+
+        function afficherRegles() {
+            const r = regles[mancheActuelle - 1];
+            document.getElementById('regles-manche').textContent = '🎮 Manche ' + mancheActuelle + ' / 3';
+            document.getElementById('regle-emoji').textContent = r.emoji;
+            document.getElementById('regle-titre').textContent = r.titre;
+            document.getElementById('regle-desc').textContent = r.desc;
+            showScreen('screen-regles');
         }
 
         function afficherPreTour() {
+            const r = regles[mancheActuelle - 1];
             document.getElementById('pretour-manche').textContent = '🎮 Manche ' + mancheActuelle + ' / 3';
             document.getElementById('pretour-team').textContent = '👥 ' + teamNames[equipeActuelle];
+            document.getElementById('pretour-regle').textContent = r.emoji + ' ' + r.titre;
             showScreen('screen-pretour');
+        }
+
+        function startCountdown() {
+            showScreen('screen-countdown');
+            let count = 3;
+            document.getElementById('countdown-display').textContent = count;
+            const interval = setInterval(() => {
+                count--;
+                if (count <= 0) {
+                    clearInterval(interval);
+                    startTour();
+                } else {
+                    document.getElementById('countdown-display').textContent = count;
+                }
+            }, 1000);
         }
 
         function startTour() {
@@ -315,17 +328,19 @@
             document.getElementById('fintour-info').textContent = teamNames[equipeActuelle] + ' a joué !';
             afficherScores('scores-list');
             equipeActuelle++;
+
+            const btn = document.getElementById('btn-suivant');
             if (equipeActuelle >= nbTeams) {
                 if (mancheActuelle >= 3) {
-                    document.getElementById('btn-suivant').textContent = '🏆 Voir les résultats';
-                    document.getElementById('btn-suivant').onclick = finDePartie;
+                    btn.textContent = '🏆 Voir les résultats';
+                    btn.onclick = finDePartie;
                 } else {
-                    document.getElementById('btn-suivant').textContent = 'Manche suivante ➡️';
-                    document.getElementById('btn-suivant').onclick = mancheSuivante;
+                    btn.textContent = 'Manche suivante ➡️';
+                    btn.onclick = mancheSuivante;
                 }
             } else {
-                document.getElementById('btn-suivant').textContent = 'Tour suivant ➡️';
-                document.getElementById('btn-suivant').onclick = tourSuivant;
+                btn.textContent = 'Tour suivant ➡️';
+                btn.onclick = afficherPreTour;
             }
             showScreen('screen-fintour');
         }
@@ -350,7 +365,7 @@
             equipeActuelle = 0;
             motsMelangés = [...mots].sort(() => Math.random() - 0.5);
             motIndex = 0;
-            afficherPreTour();
+            afficherRegles();
         }
 
         function finDePartie() {
