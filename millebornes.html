@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mille Bornes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #0d0d0d;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 42px; color: #00e5cc; margin-bottom: 10px; }
+        h2 { font-size: 26px; color: #00e5cc; margin-bottom: 20px; }
+        .subtitle { font-size: 16px; color: #888; margin-bottom: 40px; }
+        .config-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .config-label { font-size: 15px; color: #aaa; margin-bottom: 12px; text-align: left; }
+        .counter { display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .counter-btn { background-color: #00e5cc; color: #0d0d0d; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .counter-value { font-size: 28px; font-weight: bold; min-width: 50px; }
+        .start-btn { background-color: #00e5cc; color: #0d0d0d; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .toggle-label { font-size: 15px; color: #ddd; text-align: left; }
+        .toggle {
+            position: relative; width: 50px; height: 28px; cursor: pointer;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333; border-radius: 28px; transition: 0.3s;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 4px; bottom: 4px; background-color: white;
+            border-radius: 50%; transition: 0.3s;
+        }
+        input:checked + .slider { background-color: #00e5cc; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* CURSEUR CHANCE */
+        .chance-slider {
+            width: 100%;
+            accent-color: #00e5cc;
+            margin: 10px 0;
+        }
+        .chance-value { font-size: 24px; font-weight: bold; color: #00e5cc; }
+        .chance-desc { font-size: 13px; color: #888; margin-top: 5px; }
+
+        /* SÉLECTEUR KM */
+        .km-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 5px; }
+        .km-btn {
+            background-color: #2a2a2a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            color: white;
+            padding: 8px 16px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .km-btn.selected { border-color: #00e5cc; color: #00e5cc; font-weight: bold; }
+
+        /* NOMS JOUEURS */
+        .player-input { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 16px; color: white; font-size: 16px; width: 100%; max-width: 340px; margin: 6px 0; }
+        .player-input:focus { border-color: #00e5cc; outline: none; }
+
+        /* SECTION TITRE */
+        .section-title { font-size: 13px; color: #00e5cc; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🚗 Mille Bornes</h1>
+        <p class="subtitle">Le jeu de cartes classique !</p>
+        <button class="start-btn" onclick="showScreen('screen-config')">⚙️ Configuration</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+
+        <!-- Nombre de joueurs -->
+        <p class="section-title">👥 Joueurs</p>
+        <div class="config-box">
+            <p class="config-label">Nombre de joueurs</p>
+            <div class="counter">
+                <button class="counter-btn" onclick="changePlayers(-1)">−</button>
+                <span class="counter-value" id="players-value">2</span>
+                <button class="counter-btn" onclick="changePlayers(1)">+</button>
+            </div>
+        </div>
+
+        <!-- Objectif km -->
+        <p class="section-title">🏁 Objectif</p>
+        <div class="config-box">
+            <p class="config-label">Kilomètres à atteindre</p>
+            <div class="km-options">
+                <button class="km-btn" onclick="selectKm(700, this)">700 km</button>
+                <button class="km-btn selected" onclick="selectKm(1000, this)">1000 km</button>
+                <button class="km-btn" onclick="selectKm(1500, this)">1500 km</button>
+            </div>
+        </div>
+
+        <!-- Cartes en main -->
+        <div class="config-box">
+            <p class="config-label">Nombre de cartes en main</p>
+            <div class="counter">
+                <button class="counter-btn" onclick="changeCartes(-1)">−</button>
+                <span class="counter-value" id="cartes-value">6</span>
+                <button class="counter-btn" onclick="changeCartes(1)">+</button>
+            </div>
+        </div>
+
+        <!-- Chance -->
+        <p class="section-title">🎲 Chance</p>
+        <div class="config-box">
+            <p class="config-label">Niveau de chance</p>
+            <input type="range" class="chance-slider" min="0" max="100" value="50" id="chance-slider" oninput="updateChance(this.value)">
+            <div class="chance-value" id="chance-value">50%</div>
+            <div class="chance-desc" id="chance-desc">Équilibré</div>
+        </div>
+
+        <!-- Bottes -->
+        <p class="section-title">🏆 Bottes</p>
+        <div class="config-box">
+            <div class="toggle-row">
+                <span class="toggle-label">Activer les bottes</span>
+                <label class="toggle"><input type="checkbox" id="toggle-bottes" checked onchange="toggleBottes()"><span class="slider"></span></label>
+            </div>
+            <div id="bottes-options">
+                <p class="config-label" style="margin-top:10px">Exemplaires de chaque botte</p>
+                <div class="counter">
+                    <button class="counter-btn" onclick="changeBottes(-1)">−</button>
+                    <span class="counter-value" id="bottes-value">1</span>
+                    <button class="counter-btn" onclick="changeBottes(1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Règles -->
+        <p class="section-title">📋 Règles</p>
+        <div class="config-box">
+            <div class="toggle-row">
+                <span class="toggle-label">✅ Points bonus</span>
+                <label class="toggle"><input type="checkbox" id="toggle-bonus"><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+                <span class="toggle-label">🚦 Limite de vitesse</span>
+                <label class="toggle"><input type="checkbox" id="toggle-limite" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+                <span class="toggle-label">⚡ Coupe-file</span>
+                <label class="toggle"><input type="checkbox" id="toggle-coupefile" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row" style="margin-bottom:0">
+                <span class="toggle-label">💥 Attaques activées</span>
+                <label class="toggle"><input type="checkbox" id="toggle-attaques" checked><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="showPlayerNames()">Suivant ➡️</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- NOMS JOUEURS -->
+    <div class="screen" id="screen-players">
+        <h2>✏️ Noms des joueurs</h2>
+        <div id="player-inputs"></div>
+        <button class="start-btn" onclick="startGame()" style="margin-top:20px">C'est parti ! 🚀</button>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Retour</button>
+    </div>
+
+    <!-- RÉSUMÉ CONFIG -->
+    <div class="screen" id="screen-resume">
+        <h2>🎮 Prêt à jouer !</h2>
+        <div class="config-box" style="text-align:left">
+            <div id="resume-content"></div>
+        </div>
+        <button class="start-btn" onclick="lancerJeu()">🚗 Lancer la partie !</button>
+        <button class="back-btn" onclick="showScreen('screen-players')">← Retour</button>
+    </div>
+
+    <script>
+        let nbPlayers = 2;
+        let objectifKm = 1000;
+        let nbCartes = 6;
+        let chanceLevel = 50;
+        let nbBottes = 1;
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function changePlayers(delta) {
+            nbPlayers = Math.min(6, Math.max(2, nbPlayers + delta));
+            document.getElementById('players-value').textContent = nbPlayers;
+        }
+
+        function selectKm(km, btn) {
+            objectifKm = km;
+            document.querySelectorAll('.km-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function changeCartes(delta) {
+            nbCartes = Math.min(10, Math.max(4, nbCartes + delta));
+            document.getElementById('cartes-value').textContent = nbCartes;
+        }
+
+        function updateChance(val) {
+            chanceLevel = parseInt(val);
+            document.getElementById('chance-value').textContent = val + '%';
+            let desc = '';
+            if (val <= 20) desc = '😈 Très difficile, peu de bonnes cartes';
+            else if (val <= 40) desc = '😤 Difficile';
+            else if (val <= 60) desc = '😊 Équilibré';
+            else if (val <= 80) desc = '🍀 Chanceux, beaucoup de bonnes cartes';
+            else desc = '🌟 Très chanceux, presque que des bonnes cartes !';
+            document.getElementById('chance-desc').textContent = desc;
+        }
+
+        function toggleBottes() {
+            const checked = document.getElementById('toggle-bottes').checked;
+            document.getElementById('bottes-options').style.display = checked ? 'block' : 'none';
+        }
+
+        function changeBottes(delta) {
+            nbBottes = Math.min(6, Math.max(1, nbBottes + delta));
+            document.getElementById('bottes-value').textContent = nbBottes;
+        }
+
+        function showPlayerNames() {
+            const container = document.getElementById('player-inputs');
+            container.innerHTML = '';
+            for (let i = 1; i <= nbPlayers; i++) {
+                const input = document.createElement('input');
+                input.className = 'player-input';
+                input.placeholder = '🚗 Joueur ' + i;
+                input.id = 'player-' + i;
+                container.appendChild(input);
+            }
+            showScreen('screen-players');
+        }
+
+        function startGame() {
+            const names = [];
+            for (let i = 1; i <= nbPlayers; i++) {
+                const val = document.getElementById('player-' + i).value.trim();
+                names.push(val || 'Joueur ' + i);
+            }
+
+            const bottes = document.getElementById('toggle-bottes').checked;
+            const bonus = document.getElementById('toggle-bonus').checked;
+            const limite = document.getElementById('toggle-limite').checked;
+            const coupefile = document.getElementById('toggle-coupefile').checked;
+            const attaques = document.getElementById('toggle-attaques').checked;
+
+            const resume = document.getElementById('resume-content');
+            resume.innerHTML = `
+                <p style="margin-bottom:8px">👥 <b>${names.join(', ')}</b></p>
+                <p style="margin-bottom:8px">🏁 Objectif : <b>${objectifKm} km</b></p>
+                <p style="margin-bottom:8px">🃏 Cartes en main : <b>${nbCartes}</b></p>
+                <p style="margin-bottom:8px">🎲 Chance : <b>${chanceLevel}%</b></p>
+                <p style="margin-bottom:8px">🏆 Bottes : <b>${bottes ? nbBottes + ' exemplaire(s)' : 'Désactivées'}</b></p>
+                <p style="margin-bottom:8px">💥 Attaques : <b>${attaques ? 'Oui' : 'Non'}</b></p>
+                <p style="margin-bottom:8px">🚦 Limite vitesse : <b>${limite ? 'Oui' : 'Non'}</b></p>
+                <p style="margin-bottom:8px">⚡ Coupe-file : <b>${coupefile ? 'Oui' : 'Non'}</b></p>
+                <p style="margin-bottom:0">✅ Points bonus : <b>${bonus ? 'Oui' : 'Non'}</b></p>
+            `;
+            showScreen('screen-resume');
+        }
+
+        function lancerJeu() {
+            alert('Le jeu va commencer ! (à venir)');
+        }
+    </script>
+</body>
+</html>
