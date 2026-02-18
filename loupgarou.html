@@ -395,6 +395,11 @@
             suggererRoles();
         }
 
+function allerConfig() {
+    showScreen('screen-config');
+    setTimeout(function() { suggererRoles(); }, 50);
+}
+
         function suggererRoles() {
             const n = nbJoueurs;
             let loups = Math.max(1, Math.floor(n / 4));
