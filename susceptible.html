@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qui est le plus susceptible de...</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; overflow-y: auto; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 36px; color: #ff6b6b; margin-bottom: 10px; margin-top: 20px; }
+        h2 { font-size: 24px; color: #ff6b6b; margin-bottom: 20px; margin-top: 20px; }
+        .subtitle { font-size: 15px; color: #888; margin-bottom: 30px; }
+        .start-btn { background-color: #ff6b6b; color: white; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .section-title { font-size: 13px; color: #ff6b6b; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 8px; }
+
+        /* CATÉGORIES */
+        .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .cat-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 14px; padding: 15px 10px; color: white; font-size: 13px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .cat-btn.selected { border-color: #ff6b6b; color: #ff6b6b; }
+        .cat-btn-emoji { font-size: 28px; }
+        .tout-btn { background-color: #2a0a0a; border: 2px solid #ff6b6b; border-radius: 14px; padding: 15px; color: #ff6b6b; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; max-width: 340px; margin-bottom: 10px; }
+        .tout-btn.selected { background-color: #ff6b6b; color: white; }
+
+        /* CARTE QUESTION */
+        .carte-question { background: linear-gradient(135deg, #2a0a0a, #1a1a1a); border: 2px solid #ff6b6b; border-radius: 24px; padding: 35px 25px; width: 100%; max-width: 340px; margin: 20px 0; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .carte-cat { font-size: 12px; color: #ff6b6b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .carte-emoji-big { font-size: 50px; margin-bottom: 15px; }
+        .carte-texte { font-size: 20px; line-height: 1.5; color: white; font-weight: bold; }
+
+        /* COMPTEUR */
+        .compteur-info { font-size: 13px; color: #888; margin-bottom: 5px; }
+        .suivant-btn { background-color: #ff6b6b; color: white; border: none; border-radius: 20px; padding: 18px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; max-width: 340px; margin-top: 10px; }
+        .relancer-btn { background-color: #1a1a1a; border: 2px solid #ff6b6b; color: #ff6b6b; border-radius: 20px; padding: 14px; font-size: 16px; cursor: pointer; width: 100%; max-width: 340px; margin-top: 8px; }
+
+        /* NIVEAU */
+        .niveau-options { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+        .niveau-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; color: white; padding: 10px 16px; font-size: 14px; cursor: pointer; }
+        .niveau-btn.selected { border-color: #ff6b6b; color: #ff6b6b; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🤔 Qui est le plus<br>susceptible de...</h1>
+        <p class="subtitle">Désignez le coupable parmi vous !</p>
+        <button class="start-btn" onclick="showScreen('screen-config')">🎮 Jouer</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+
+        <p class="section-title">🌶️ Niveau</p>
+        <div class="niveau-options">
+            <button class="niveau-btn selected" onclick="selectNiveau('soft', this)">😇 Soft</button>
+            <button class="niveau-btn" onclick="selectNiveau('medium', this)">😏 Medium</button>
+            <button class="niveau-btn" onclick="selectNiveau('hard', this)">🔥 Hard</button>
+        </div>
+
+        <p class="section-title">🎯 Catégories</p>
+        <button class="tout-btn selected" id="btn-tout" onclick="toggleTout()">🎲 Tout mélangé</button>
+        <div class="cat-grid">
+            <button class="cat-btn" onclick="toggleCat('humour', this)"><span class="cat-btn-emoji">😂</span>Humour</button>
+            <button class="cat-btn" onclick="toggleCat('nourriture', this)"><span class="cat-btn-emoji">🍕</span>Nourriture</button>
+            <button class="cat-btn" onclick="toggleCat('sport', this)"><span class="cat-btn-emoji">💪</span>Sport</button>
+            <button class="cat-btn" onclick="toggleCat('gene', this)"><span class="cat-btn-emoji">😱</span>Gêne</button>
+            <button class="cat-btn" onclick="toggleCat('amour', this)"><span class="cat-btn-emoji">💘</span>Amour</button>
+            <button class="cat-btn" onclick="toggleCat('bizarre', this)"><span class="cat-btn-emoji">🤪</span>Bizarre</button>
+            <button class="cat-btn" onclick="toggleCat('soiree', this)"><span class="cat-btn-emoji">🎉</span>Soirée</button>
+            <button class="cat-btn" onclick="toggleCat('ecole', this)"><span class="cat-btn-emoji">🧠</span>École</button>
+            <button class="cat-btn" onclick="toggleCat('argent', this)"><span class="cat-btn-emoji">💸</span>Argent</button>
+            <button class="cat-btn" onclick="toggleCat('tech', this)"><span class="cat-btn-emoji">📱</span>Tech</button>
+        </div>
+
+        <button class="start-btn" onclick="lancerJeu()" style="margin-top:15px">C'est parti ! 🎯</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- JEU -->
+    <div class="screen" id="screen-jeu">
+        <p class="compteur-info" id="compteur-info">Question 1</p>
+        <div class="carte-question">
+            <div class="carte-cat" id="carte-cat"></div>
+            <div class="carte-emoji-big" id="carte-emoji"></div>
+            <div class="carte-texte" id="carte-texte"></div>
+        </div>
+        <button class="suivant-btn" onclick="questionSuivante()">➡️ Question suivante</button>
+        <button class="relancer-btn" onclick="melangerEtRelancer()">🔀 Autre question</button>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Quitter</button>
+    </div>
+
+    <script>
+        let niveau = 'soft';
+        let categoriesSelectionnees = [];
+        let toutMelange = true;
+        let questionsDisponibles = [];
+        let questionsUtilisees = [];
+        let questionActuelle = 0;
+
+        const QUESTIONS = {
+            humour: {
+                soft: [
+                    {emoji:'😂', texte:'faire rire tout le monde sans faire exprès ?'},
+                    {emoji:'🤡', texte:'faire une blague nulle et rire en premier ?'},
+                    {emoji:'😄', texte:'avoir le fou rire au pire moment ?'},
+                    {emoji:'🙃', texte:'dire quelque chose de complètement hors sujet ?'},
+                    {emoji:'😆', texte:'imiter quelqu\'un sans s\'en rendre compte ?'},
+                    {emoji:'🤣', texte:'raconter la même blague 10 fois ?'},
+                    {emoji:'😝', texte:'faire des grimaces en public ?'},
+                    {emoji:'🎭', texte:'dramatiser une situation ridicule ?'},
+                    {emoji:'😜', texte:'inventer des mots qui n\'existent pas ?'},
+                    {emoji:'🤭', texte:'rire de ses propres blagues avant de les finir ?'},
+                    {emoji:'😏', texte:'avoir une réponse sarcastique pour tout ?'},
+                    {emoji:'🙈', texte:'faire semblant de ne pas entendre pour éviter une question ?'},
+                    {emoji:'😬', texte:'essayer d\'être drôle et rater complètement ?'},
+                    {emoji:'🤪', texte:'danser spontanément dans la rue ?'},
+                    {emoji:'😅', texte:'avoir un surnom ridicule qu\'on ne peut pas oublier ?'},
+                    {emoji:'🃏', texte:'faire une blague au mauvais moment ?'},
+                    {emoji:'😁', texte:'sourire bêtement sans raison apparente ?'},
+                    {emoji:'🤓', texte:'expliquer une blague après l\'avoir racontée ?'},
+                    {emoji:'😂', texte:'se souvenir d\'un truc drôle en plein milieu d\'un moment sérieux ?'},
+                    {emoji:'🎪', texte:'transformer n\'importe quelle situation en spectacle ?'},
+                ],
+                medium: [
+                    {emoji:'😂', texte:'faire une blague sur lui-même sans s\'en rendre compte ?'},
+                    {emoji:'🤡', texte:'tomber dans un piège évident juste pour faire rire les autres ?'},
+                    {emoji:'😆', texte:'imiter le prof devant toute la classe ?'},
+                    {emoji:'🙃', texte:'répondre complètement à côté d\'une question sérieuse ?'},
+                    {emoji:'😜', texte:'faire une sortie comique dans une réunion importante ?'},
+                    {emoji:'🎭', texte:'se déguiser ridiculeusement juste pour faire rire ?'},
+                    {emoji:'😏', texte:'avoir une répartie qui laisse tout le monde bouche bée ?'},
+                    {emoji:'🤣', texte:'rire si fort qu\'il en pleure et s\'étouffe ?'},
+                    {emoji:'😝', texte:'faire une imitation parfaite de quelqu\'un dans la pièce ?'},
+                    {emoji:'🤭', texte:'dire une vanne sur quelqu\'un qui vient d\'entrer dans la pièce ?'},
+                ],
+                hard: [
+                    {emoji:'😈', texte:'faire une blague de mauvais goût qui met tout le monde mal à l\'aise ?'},
+                    {emoji:'😂', texte:'rire d\'une situation catastrophique qui lui arrive ?'},
+                    {emoji:'🤡', texte:'humilier quelqu\'un pour faire rire les autres ?'},
+                    {emoji:'😆', texte:'faire une blague sur son ex à un dîner ?'},
+                    {emoji:'🙃', texte:'faire rire quelqu\'un qui essaie de rester sérieux dans une situation grave ?'},
+                ],
+            },
+            nourriture: {
+                soft: [
+                    {emoji:'🍕', texte:'manger une pizza froide au petit déjeuner ?'},
+                    {emoji:'🍫', texte:'finir le chocolat et remettre la boîte vide dans le frigo ?'},
+                    {emoji:'🍟', texte:'voler les frites dans l\'assiette des autres ?'},
+                    {emoji:'🥗', texte:'commander un truc sain et finir par prendre un burger ?'},
+                    {emoji:'🍣', texte:'manger des sushis avec une fourchette ?'},
+                    {emoji:'🍦', texte:'finir sa glace avant d\'arriver chez soi ?'},
+                    {emoji:'🥪', texte:'faire le sandwich le plus bizarre possible ?'},
+                    {emoji:'🍜', texte:'manger des pâtes à n\'importe quelle heure du jour ?'},
+                    {emoji:'🥤', texte:'boire directement dans le carton de jus de fruit ?'},
+                    {emoji:'🍪', texte:'manger tous les gâteaux et prétendre que c\'est pas lui ?'},
+                    {emoji:'🍔', texte:'commander le menu le plus calorique sans culpabiliser ?'},
+                    {emoji:'🧀', texte:'mettre du fromage sur n\'importe quel plat ?'},
+                    {emoji:'🍩', texte:'manger en cachette pour ne pas partager ?'},
+                    {emoji:'🥓', texte:'mettre du ketchup sur absolument tout ?'},
+                    {emoji:'🍿', texte:'finir tout le popcorn avant que le film commence ?'},
+                    {emoji:'🥞', texte:'manger des crêpes à n\'importe quel repas ?'},
+                    {emoji:'🍭', texte:'avoir toujours des bonbons sur lui ?'},
+                    {emoji:'🥜', texte:'grignoter sans s\'arrêter pendant les films ?'},
+                    {emoji:'🍋', texte:'manger un citron entier sans grimacer ?'},
+                    {emoji:'🫕', texte:'mettre trop d\'épices dans tous les plats ?'},
+                ],
+                medium: [
+                    {emoji:'🍕', texte:'commander de la nourriture en cachette la nuit ?'},
+                    {emoji:'🍫', texte:'manger un gâteau entier tout seul en une soirée ?'},
+                    {emoji:'🥡', texte:'manger directement dans la casserole pour ne pas faire la vaisselle ?'},
+                    {emoji:'🍟', texte:'manger les restes de tout le monde sans demander ?'},
+                    {emoji:'🥐', texte:'dépenser une fortune dans un restaurant et ne rien finir ?'},
+                    {emoji:'🍣', texte:'commander 20 sushis et les manger tous seul ?'},
+                    {emoji:'🍦', texte:'manger de la glace directement dans le bac ?'},
+                    {emoji:'🥗', texte:'mentir sur son régime alimentaire ?'},
+                    {emoji:'🍔', texte:'manger un burger de 3 étages sans le démonter ?'},
+                    {emoji:'🧁', texte:'lécher le glaçage et remettre le gâteau ?'},
+                ],
+                hard: [
+                    {emoji:'🌶️', texte:'manger quelque chose d\'absolument dégoûtant pour un pari ?'},
+                    {emoji:'🍕', texte:'voler la nourriture de son colocataire ?'},
+                    {emoji:'🥴', texte:'manger quelque chose périmé depuis longtemps ?'},
+                    {emoji:'🍺', texte:'boire quelque chose d\'horrible juste parce que c\'est gratuit ?'},
+                    {emoji:'😈', texte:'mettre quelque chose de bizarre dans la nourriture des autres pour rigoler ?'},
+                ],
+            },
+            sport: {
+                soft: [
+                    {emoji:'💪', texte:'commencer un sport et arrêter après 3 jours ?'},
+                    {emoji:'🏃', texte:'prétendre courir et marcher dès qu\'on ne le voit plus ?'},
+                    {emoji:'🧘', texte:'s\'endormir pendant un cours de yoga ?'},
+                    {emoji:'⚽', texte:'rater un penalty dans le foot en salle ?'},
+                    {emoji:'🏊', texte:'faire semblant de nager alors qu\'il a pied ?'},
+                    {emoji:'🎾', texte:'envoyer la balle de tennis dans le filet à chaque fois ?'},
+                    {emoji:'🚴', texte:'tomber de vélo sur une route plate ?'},
+                    {emoji:'🤸', texte:'se blesser en faisant quelque chose de simple au sport ?'},
+                    {emoji:'🏋️', texte:'prendre des poses muscu devant le miroir ?'},
+                    {emoji:'⛷️', texte:'chuter sur une piste verte au ski ?'},
+                    {emoji:'🎯', texte:'rater la cible à chaque fois au lancer ?'},
+                    {emoji:'🏓', texte:'perdre au ping-pong contre quelqu\'un qui joue pour la première fois ?'},
+                    {emoji:'🧗', texte:'abandonner une activité sportive en plein milieu ?'},
+                    {emoji:'🤾', texte:'se vanter de ses performances sportives qui sont en réalité moyennes ?'},
+                    {emoji:'🏄', texte:'tomber de la planche de surf à la première vague ?'},
+                    {emoji:'⛳', texte:'perdre sa balle de golf dans les buissons ?'},
+                    {emoji:'🥊', texte:'esquiver au lieu de combattre à la boxe ?'},
+                    {emoji:'🤼', texte:'crier victoire avant la fin du match ?'},
+                    {emoji:'🏇', texte:'avoir peur du cheval pendant une leçon d\'équitation ?'},
+                    {emoji:'🎿', texte:'mettre ses skis à l\'envers ?'},
+                ],
+                medium: [
+                    {emoji:'💪', texte:'se filmer à la salle de sport pour Instagram ?'},
+                    {emoji:'🏃', texte:'abandonner un marathon à mi-chemin pour prendre un taxi ?'},
+                    {emoji:'⚽', texte:'tackler violemment lors d\'un match amical ?'},
+                    {emoji:'🤸', texte:'se faire une entorse en faisant quelque chose de ridiculement simple ?'},
+                    {emoji:'🏋️', texte:'soulever trop lourd et ne plus pouvoir bouger les bras ?'},
+                    {emoji:'🧘', texte:'prétendre faire du sport depuis des mois sans avoir bougé ?'},
+                    {emoji:'🏊', texte:'couler en essayant de faire le malin dans la piscine ?'},
+                    {emoji:'🚴', texte:'tomber de vélo devant tout le monde et faire semblant que c\'est voulu ?'},
+                    {emoji:'⛷️', texte:'dévaler une piste noire par accident ?'},
+                    {emoji:'🎾', texte:'casser une raquette de tennis de frustration ?'},
+                ],
+                hard: [
+                    {emoji:'😤', texte:'insulter l\'arbitre lors d\'un match ?'},
+                    {emoji:'💪', texte:'tricher pour gagner lors d\'un match amical ?'},
+                    {emoji:'🏃', texte:'abandonner son équipe en plein match ?'},
+                    {emoji:'🤬', texte:'se battre lors d\'un match de sport ?'},
+                    {emoji:'😈', texte:'saboter l\'équipement adverse pour gagner ?'},
+                ],
+            },
+            gene: {
+                soft: [
+                    {emoji:'😱', texte:'trébucher dans des escaliers devant tout le monde ?'},
+                    {emoji:'😳', texte:'appeler son prof "maman" en classe ?'},
+                    {emoji:'🙈', texte:'envoyer un message au mauvais destinataire ?'},
+                    {emoji:'😬', texte:'oublier le prénom de quelqu\'un après 10 minutes ?'},
+                    {emoji:'🫣', texte:'parler à quelqu\'un qui avait des écouteurs ?'},
+                    {emoji:'😅', texte:'dire au revoir et partir dans la même direction que l\'autre ?'},
+                    {emoji:'🥴', texte:'glisser sur une peau de banane pour de vrai ?'},
+                    {emoji:'😶', texte:'avoir du papier toilette collé à la chaussure ?'},
+                    {emoji:'😲', texte:'se tromper de porte et entrer dans la mauvaise pièce ?'},
+                    {emoji:'🤦', texte:'chercher ses lunettes alors qu\'il les a sur la tête ?'},
+                    {emoji:'😳', texte:'rater un high five complètement ?'},
+                    {emoji:'🙊', texte:'dire "vous aussi" quand le serveur dit "bon appétit" ?'},
+                    {emoji:'😱', texte:'tomber en rentrant dans une vitre ?'},
+                    {emoji:'😬', texte:'avoir un accroc énorme dans ses vêtements et ne pas s\'en rendre compte ?'},
+                    {emoji:'🫣', texte:'éternuer et tout envoyer sur quelqu\'un ?'},
+                    {emoji:'😅', texte:'oublier de couper son micro en réunion ?'},
+                    {emoji:'🙈', texte:'faire tomber quelque chose dans un endroit silencieux ?'},
+                    {emoji:'😳', texte:'se tromper de prénom avec son petit ami/petite amie ?'},
+                    {emoji:'😵', texte:'rater une marche et tout donner pour ne pas tomber ?'},
+                    {emoji:'🤭', texte:'roter très fort dans un endroit calme ?'},
+                ],
+                medium: [
+                    {emoji:'😱', texte:'oublier son anniversaire à quelqu\'un et s\'en souvenir le lendemain ?'},
+                    {emoji:'😳', texte:'appeler son chef par son prénom devant tout le monde ?'},
+                    {emoji:'🙈', texte:'liker par accident une vieille photo en scrollant ?'},
+                    {emoji:'😬', texte:'se retrouver enfermé dans des toilettes publiques ?'},
+                    {emoji:'🫣', texte:'raconter une blague que personne ne comprend et devoir l\'expliquer ?'},
+                    {emoji:'😅', texte:'s\'endormir lors d\'une réunion importante ?'},
+                    {emoji:'🥴', texte:'confondre quelqu\'un avec une célébrité en public ?'},
+                    {emoji:'😶', texte:'arriver en retard et faire du bruit en entrant dans une pièce silencieuse ?'},
+                    {emoji:'😲', texte:'avoir son téléphone qui sonne avec une sonnerie ridicule dans un endroit calme ?'},
+                    {emoji:'🤦', texte:'passer toute une journée avec un bout de salade entre les dents ?'},
+                ],
+                hard: [
+                    {emoji:'😱', texte:'tomber en public et faire comme si rien ne s\'était passé ?'},
+                    {emoji:'😳', texte:'se faire rejeter en public devant tous ses amis ?'},
+                    {emoji:'🙈', texte:'envoyer un message privé en story ?'},
+                    {emoji:'😬', texte:'se faire surprendre en train de parler tout seul ?'},
+                    {emoji:'🫣', texte:'avoir un fou rire incontrôlable lors d\'une cérémonie sérieuse ?'},
+                ],
+            },
+            amour: {
+                soft: [
+                    {emoji:'💘', texte:'tomber amoureux du/de la premier(e) venu(e) ?'},
+                    {emoji:'💌', texte:'envoyer un message puis le regretter immédiatement ?'},
+                    {emoji:'😍', texte:'stalker les réseaux sociaux de son crush ?'},
+                    {emoji:'💑', texte:'être jaloux sans raison apparente ?'},
+                    {emoji:'🥰', texte:'tomber amoureux d\'un personnage fictif ?'},
+                    {emoji:'💝', texte:'faire une grande déclaration et rougir ?'},
+                    {emoji:'💕', texte:'regarder des films romantiques en pleurant ?'},
+                    {emoji:'🌹', texte:'offrir des fleurs pour la moindre occasion ?'},
+                    {emoji:'😘', texte:'parler de son crush à tout le monde sauf à lui/elle ?'},
+                    {emoji:'💗', texte:'envoyer un mème pour draguer ?'},
+                    {emoji:'🥺', texte:'attendre une réponse à un message pendant des heures ?'},
+                    {emoji:'💞', texte:'tomber amoureux du mauvais type de personne à chaque fois ?'},
+                    {emoji:'😻', texte:'avoir un crush sur quelqu\'un de pas du tout disponible ?'},
+                    {emoji:'💓', texte:'faire semblant de ne pas s\'intéresser à quelqu\'un alors qu\'il est fou de lui ?'},
+                    {emoji:'🫀', texte:'être en couple depuis 1 semaine et parler de mariage ?'},
+                    {emoji:'💋', texte:'draguer quelqu\'un et l\'inviter à sortir le même soir ?'},
+                    {emoji:'🌷', texte:'offrir quelque chose d\'extrêmement romantique pour un premier rendez-vous ?'},
+                    {emoji:'🥰', texte:'mettre une photo de couple en fond d\'écran après 2 jours ?'},
+                    {emoji:'💌', texte:'écrire une lettre d\'amour très longue ?'},
+                    {emoji:'😍', texte:'changer complètement pour plaire à quelqu\'un ?'},
+                ],
+                medium: [
+                    {emoji:'💘', texte:'tomber amoureux de l\'ami(e) de son ex ?'},
+                    {emoji:'💌', texte:'envoyer un message à minuit sans réfléchir ?'},
+                    {emoji:'😍', texte:'déclarer sa flamme après 2 verres ?'},
+                    {emoji:'💑', texte:'être jaloux du téléphone de son partenaire ?'},
+                    {emoji:'🥰', texte:'pleurer lors d\'une rupture en public ?'},
+                    {emoji:'💝', texte:'faire une déclaration dramatique pour se réconcilier ?'},
+                    {emoji:'😘', texte:'rappeler son ex à 3h du matin ?'},
+                    {emoji:'🌹', texte:'organiser une surprise romantique qui tourne mal ?'},
+                    {emoji:'💕', texte:'poster une photo de couple à chaque occasion ?'},
+                    {emoji:'🥺', texte:'analyser chaque message reçu pendant des heures ?'},
+                ],
+                hard: [
+                    {emoji:'💘', texte:'sortir avec deux personnes en même temps sans le faire exprès ?'},
+                    {emoji:'😈', texte:'utiliser un faux profil pour espionner son ex ?'},
+                    {emoji:'💔', texte:'pleurer une rupture pendant des mois ?'},
+                    {emoji:'🫣', texte:'déclarer son amour au mauvais moment ?'},
+                    {emoji:'😱', texte:'faire une scène de jalousie en public ?'},
+                ],
+            },
+            bizarre: {
+                soft: [
+                    {emoji:'🤪', texte:'parler à ses plantes comme si elles répondaient ?'},
+                    {emoji:'🦄', texte:'croire aux licornes et aux sirènes ?'},
+                    {emoji:'🌙', texte:'marcher en dormant ?'},
+                    {emoji:'👽', texte:'croire aux extraterrestres et aux complots ?'},
+                    {emoji:'🤖', texte:'parler à son téléphone comme s\'il était vivant ?'},
+                    {emoji:'🐾', texte:'faire des bruits d\'animaux sans s\'en rendre compte ?'},
+                    {emoji:'🌀', texte:'avoir une routine matinale ultra bizarre ?'},
+                    {emoji:'🎪', texte:'collectionner quelque chose de très inutile ?'},
+                    {emoji:'🔮', texte:'croire aux horoscopes à 100% ?'},
+                    {emoji:'🧙', texte:'avoir des rituels porte-bonheur très précis ?'},
+                    {emoji:'🌈', texte:'voir des signes partout ?'},
+                    {emoji:'🎭', texte:'avoir des conversations imaginaires dans sa tête ?'},
+                    {emoji:'🦋', texte:'nommer ses objets du quotidien ?'},
+                    {emoji:'🌺', texte:'parler à son chat en lui prêtant une voix ?'},
+                    {emoji:'🍄', texte:'avoir une théorie du complot farfelue ?'},
+                    {emoji:'🌊', texte:'compter les dalles du trottoir en marchant ?'},
+                    {emoji:'🎵', texte:'chanter en pensant être seul alors qu\'on l\'entend très bien ?'},
+                    {emoji:'🌟', texte:'avoir une mascotte porte-bonheur inavouable ?'},
+                    {emoji:'🎈', texte:'faire des cérémonies bizarres pour ses affaires ?'},
+                    {emoji:'🧲', texte:'avoir une mémoire photographique pour des choses inutiles ?'},
+                ],
+                medium: [
+                    {emoji:'🤪', texte:'nommer chacun de ses objets quotidiens ?'},
+                    {emoji:'🦄', texte:'avoir une collection secrète très bizarre ?'},
+                    {emoji:'🌙', texte:'faire des rituels très précis avant de dormir ?'},
+                    {emoji:'👽', texte:'passer des heures à regarder des documentaires sur les ovnis ?'},
+                    {emoji:'🤖', texte:'parler à la TV comme si les personnages pouvaient l\'entendre ?'},
+                    {emoji:'🐾', texte:'imiter les animaux de façon très réaliste ?'},
+                    {emoji:'🌀', texte:'avoir une superstition qu\'il prend très au sérieux ?'},
+                    {emoji:'🎪', texte:'faire des choses totalement imprévisibles ?'},
+                    {emoji:'🔮', texte:'prétendre avoir un 6ème sens ?'},
+                    {emoji:'🧙', texte:'faire des sorts pour porter bonheur ?'},
+                ],
+                hard: [
+                    {emoji:'🤪', texte:'faire quelque chose de complètement fou en public ?'},
+                    {emoji:'😈', texte:'jouer un rôle bizarre pendant toute une journée ?'},
+                    {emoji:'🌀', texte:'disparaître plusieurs jours sans prévenir personne ?'},
+                    {emoji:'👽', texte:'convaincre quelqu\'un d\'une théorie du complot absurde ?'},
+                    {emoji:'🦄', texte:'se déguiser de façon très étrange dans un endroit public ?'},
+                ],
+            },
+            soiree: {
+                soft: [
+                    {emoji:'🎉', texte:'arriver en retard à toutes les soirées ?'},
+                    {emoji:'🕺', texte:'danser sur n\'importe quelle musique ?'},
+                    {emoji:'🎤', texte:'s\'emparer du micro au karaoké ?'},
+                    {emoji:'🥳', texte:'porter le chapeau de fête toute la soirée ?'},
+                    {emoji:'🎊', texte:'organiser une fête surprise qui tourne mal ?'},
+                    {emoji:'🍾', texte:'être le premier à dire "encore une dernière" ?'},
+                    {emoji:'📸', texte:'photographier tout ce qui se passe pendant la soirée ?'},
+                    {emoji:'🎮', texte:'proposer des jeux toute la soirée ?'},
+                    {emoji:'🌙', texte:'être le dernier à partir à chaque fois ?'},
+                    {emoji:'🎵', texte:'s\'emparer du contrôle de la musique ?'},
+                    {emoji:'🥂', texte:'porter des toasts pour absolument tout ?'},
+                    {emoji:'🕹️', texte:'transformer n\'importe quelle soirée en compétition ?'},
+                    {emoji:'🛋️', texte:'s\'endormir sur le canapé avant minuit ?'},
+                    {emoji:'🎭', texte:'se déguiser même quand il n\'y a pas de thème ?'},
+                    {emoji:'🍕', texte:'commander à manger à 2h du matin ?'},
+                    {emoji:'💃', texte:'faire une chorégraphie improvisée ?'},
+                    {emoji:'🎈', texte:'décorer excessivement pour une simple soirée ?'},
+                    {emoji:'📱', texte:'passer la soirée sur son téléphone ?'},
+                    {emoji:'🎁', texte:'apporter le meilleur cadeau à chaque fête ?'},
+                    {emoji:'🙃', texte:'proposer des activités que personne ne veut faire ?'},
+                ],
+                medium: [
+                    {emoji:'🎉', texte:'faire la fête jusqu\'à 6h du matin ?'},
+                    {emoji:'🕺', texte:'prendre le contrôle de la piste de danse ?'},
+                    {emoji:'🎤', texte:'chanter faux au karaoké sans s\'en rendre compte ?'},
+                    {emoji:'🥳', texte:'inviter des inconnus à la soirée ?'},
+                    {emoji:'🎊', texte:'créer le drama de la soirée ?'},
+                    {emoji:'🍾', texte:'perdre ses affaires lors d\'une soirée ?'},
+                    {emoji:'📸', texte:'poster des photos compromettantes des autres ?'},
+                    {emoji:'🎵', texte:'mettre de la musique que personne ne connaît ?'},
+                    {emoji:'🌙', texte:'partir sans dire au revoir à personne ?'},
+                    {emoji:'🥂', texte:'raconter des secrets après quelques verres ?'},
+                ],
+                hard: [
+                    {emoji:'😈', texte:'créer un drama mémorable lors d\'une soirée ?'},
+                    {emoji:'🎉', texte:'faire une chose dont il n\'aurait jamais cru être capable lors d\'une soirée ?'},
+                    {emoji:'🥳', texte:'inviter son ex à la soirée sans prévenir ?'},
+                    {emoji:'🕺', texte:'se retrouver à danser sur une table ?'},
+                    {emoji:'😱', texte:'faire quelque chose d\'embarrassant dont tout le monde se souvient ?'},
+                ],
+            },
+            ecole: {
+                soft: [
+                    {emoji:'🧠', texte:'oublier ses devoirs à la maison ?'},
+                    {emoji:'📚', texte:'réviser la veille pour l\'examen ?'},
+                    {emoji:'✏️', texte:'s\'endormir en classe ?'},
+                    {emoji:'🎒', texte:'avoir le sac le plus lourd de la classe ?'},
+                    {emoji:'📝', texte:'copier sur le voisin pendant un contrôle ?'},
+                    {emoji:'🖊️', texte:'demander un stylo et ne jamais le rendre ?'},
+                    {emoji:'📐', texte:'perdre sa règle le jour du cours de géométrie ?'},
+                    {emoji:'🏫', texte:'arriver en retard au cours le plus strict ?'},
+                    {emoji:'📖', texte:'prétendre avoir lu le livre alors qu\'il a lu le résumé ?'},
+                    {emoji:'🎓', texte:'promettre de réviser et regarder Netflix à la place ?'},
+                    {emoji:'🖥️', texte:'avoir les notes les plus désorganisées de la classe ?'},
+                    {emoji:'🗂️', texte:'perdre une feuille importante le jour où on en a besoin ?'},
+                    {emoji:'📓', texte:'avoir un cahier illisible même pour lui-même ?'},
+                    {emoji:'⏰', texte:'mettre 5 alarmes et se rendormir à chaque fois ?'},
+                    {emoji:'🤓', texte:'avoir des questions pour le prof après chaque cours ?'},
+                    {emoji:'💭', texte:'rêvasser pendant tout le cours ?'},
+                    {emoji:'📊', texte:'faire une présentation non préparée et s\'en sortir quand même ?'},
+                    {emoji:'🎯', texte:'réussir un examen sans avoir rien révisé ?'},
+                    {emoji:'📱', texte:'utiliser son téléphone en classe sans se faire prendre ?'},
+                    {emoji:'🏃', texte:'courir pour attraper le bus de justesse chaque matin ?'},
+                ],
+                medium: [
+                    {emoji:'🧠', texte:'trouver une excuse créative pour ne pas rendre son devoir ?'},
+                    {emoji:'📚', texte:'sécher un cours et se faire prendre ?'},
+                    {emoji:'✏️', texte:'convaincre le prof de repousser un examen ?'},
+                    {emoji:'📝', texte:'rater un examen et blâmer le prof ?'},
+                    {emoji:'🎒', texte:'arriver à un examen sans rien ?'},
+                    {emoji:'🖊️', texte:'faire une intervention spontanée non demandée en classe ?'},
+                    {emoji:'📐', texte:'perdre ses notes de toute l\'année au pire moment ?'},
+                    {emoji:'🏫', texte:'se faire disputer par le prof devant toute la classe ?'},
+                    {emoji:'📖', texte:'dormir en cours et ronfler ?'},
+                    {emoji:'🎓', texte:'argumenter avec le prof sur une note ?'},
+                ],
+                hard: [
+                    {emoji:'😈', texte:'tricher à un examen important ?'},
+                    {emoji:'🧠', texte:'faire le devoir d\'un autre contre de l\'argent ?'},
+                    {emoji:'📚', texte:'falsifier une signature sur un mot d\'excuse ?'},
+                    {emoji:'✏️', texte:'saboter le travail de quelqu\'un d\'autre par jalousie ?'},
+                    {emoji:'📝', texte:'pirater les notes d\'un examen ?'},
+                ],
+            },
+            argent: {
+                soft: [
+                    {emoji:'💸', texte:'dépenser tout son argent le premier jour du mois ?'},
+                    {emoji:'💳', texte:'oublier son portefeuille quand c\'est lui qui doit payer ?'},
+                    {emoji:'🛍️', texte:'faire du shopping compulsif en période de stress ?'},
+                    {emoji:'💰', texte:'arrondir ses prix quand il vend quelque chose ?'},
+                    {emoji:'🏦', texte:'ignorer ses relevés de compte par peur ?'},
+                    {emoji:'💵', texte:'emprunter de l\'argent et oublier de rembourser ?'},
+                    {emoji:'🛒', texte:'aller faire les courses avec une liste et revenir avec autre chose ?'},
+                    {emoji:'💴', texte:'payer quelque chose sans regarder le prix ?'},
+                    {emoji:'🎁', texte:'offrir des cadeaux trop chers pour son budget ?'},
+                    {emoji:'💶', texte:'prétexter être fauché pour éviter de payer ?'},
+                    {emoji:'🏧', texte:'vérifier son solde avant chaque achat ?'},
+                    {emoji:'💷', texte:'négocier le prix de n\'importe quoi ?'},
+                    {emoji:'🛍️', texte:'acheter quelque chose juste parce que c\'est en promo ?'},
+                    {emoji:'💰', texte:'avoir des économies secrètes ?'},
+                    {emoji:'🤑', texte:'parler d\'argent dans tous ses sujets de conversation ?'},
+                    {emoji:'💸', texte:'dépenser plus qu\'il ne gagne régulièrement ?'},
+                    {emoji:'💳', texte:'avoir peur de regarder son compte en banque ?'},
+                    {emoji:'🛒', texte:'commander des choses en ligne et les retourner aussitôt ?'},
+                    {emoji:'💵', texte:'calculer combien coûte chaque sortie avant d\'y aller ?'},
+                    {emoji:'🏦', texte:'faire un budget mais ne jamais le respecter ?'},
+                ],
+                medium: [
+                    {emoji:'💸', texte:'claquer tout son salaire en 3 jours ?'},
+                    {emoji:'💳', texte:'se retrouver à découvert chaque mois ?'},
+                    {emoji:'🛍️', texte:'cacher ses achats à sa famille ?'},
+                    {emoji:'💰', texte:'demander une avance à ses parents à 30 ans ?'},
+                    {emoji:'🏦', texte:'mentir sur son salaire à ses amis ?'},
+                    {emoji:'💵', texte:'emprunter de l\'argent pour des choses inutiles ?'},
+                    {emoji:'🛒', texte:'acheter quelque chose très cher sur un coup de tête ?'},
+                    {emoji:'💴', texte:'avoir des dettes cachées ?'},
+                    {emoji:'🎁', texte:'réutiliser un cadeau qu\'il avait reçu ?'},
+                    {emoji:'💶', texte:'mentir sur ses revenus pour avoir une réduction ?'},
+                ],
+                hard: [
+                    {emoji:'😈', texte:'voler une petite chose sans se sentir coupable ?'},
+                    {emoji:'💸', texte:'faire faillite à cause de ses dépenses ?'},
+                    {emoji:'💳', texte:'utiliser la carte de crédit de quelqu\'un sans permission ?'},
+                    {emoji:'🛍️', texte:'mentir sur ses finances pour impressionner ?'},
+                    {emoji:'💰', texte:'escroquer quelqu\'un de façon mineure ?'},
+                ],
+            },
+            tech: {
+                soft: [
+                    {emoji:'📱', texte:'passer plus de 8h par jour sur son téléphone ?'},
+                    {emoji:'💻', texte:'ne jamais mettre à jour ses applications ?'},
+                    {emoji:'🎮', texte:'jouer aux jeux vidéo toute la nuit ?'},
+                    {emoji:'📺', texte:'regarder 10 épisodes d\'une série en une soirée ?'},
+                    {emoji:'🖥️', texte:'avoir 200 onglets ouverts en permanence ?'},
+                    {emoji:'🔋', texte:'paniquer quand son téléphone passe en dessous de 20% ?'},
+                    {emoji:'📸', texte:'prendre 50 photos avant d\'en garder une ?'},
+                    {emoji:'🎵', texte:'avoir une playlist pour chaque humeur ?'},
+                    {emoji:'💾', texte:'ne jamais sauvegarder ses fichiers ?'},
+                    {emoji:'🌐', texte:'passer des heures à scroller sans raison ?'},
+                    {emoji:'📧', texte:'avoir 10 000 mails non lus ?'},
+                    {emoji:'🔔', texte:'avoir toutes les notifications activées ?'},
+                    {emoji:'📡', texte:'paniquer sans connexion internet ?'},
+                    {emoji:'🎙️', texte:'parler à son assistant vocal comme à une vraie personne ?'},
+                    {emoji:'🖱️', texte:'avoir un bureau d\'ordinateur rempli d\'icônes ?'},
+                    {emoji:'📱', texte:'avoir 500 photos inutiles sur son téléphone ?'},
+                    {emoji:'💻', texte:'utiliser le même mot de passe pour tout ?'},
+                    {emoji:'🎮', texte:'dépenser de l\'argent réel dans un jeu gratuit ?'},
+                    {emoji:'📺', texte:'regarder des vidéos YouTube en boucle pendant des heures ?'},
+                    {emoji:'🔌', texte:'avoir sa batterie externe partout avec lui ?'},
+                ],
+                medium: [
+                    {emoji:'📱', texte:'vérifier son téléphone toutes les 2 minutes ?'},
+                    {emoji:'💻', texte:'travailler sur son ordinateur jusqu\'à 3h du matin ?'},
+                    {emoji:'🎮', texte:'passer un weekend entier à jouer sans sortir ?'},
+                    {emoji:'📺', texte:'regarder la même série 3 fois ?'},
+                    {emoji:'🖥️', texte:'passer 4h sur les réseaux sociaux sans s\'en rendre compte ?'},
+                    {emoji:'🔋', texte:'utiliser le téléphone de quelqu\'un d\'autre pour charger ?'},
+                    {emoji:'📸', texte:'supprimer une photo si elle n\'a pas assez de likes ?'},
+                    {emoji:'🎵', texte:'imposer sa musique à tout le groupe ?'},
+                    {emoji:'💾', texte:'perdre un travail important faute de sauvegarde ?'},
+                    {emoji:'🌐', texte:'passer plus de temps en ligne qu\'en vrai ?'},
+                ],
+                hard: [
+                    {emoji:'😈', texte:'espionner quelqu\'un via ses réseaux sociaux ?'},
+                    {emoji:'📱', texte:'pirater le compte de quelqu\'un par curiosité ?'},
+                    {emoji:'💻', texte:'télécharger illégalement du contenu ?'},
+                    {emoji:'🎮', texte:'dépenser plus de 500€ dans un jeu mobile ?'},
+                    {emoji:'🌐', texte:'créer un faux profil en ligne ?'},
+                ],
+            },
+        };
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function selectNiveau(n, btn) {
+            niveau = n;
+            document.querySelectorAll('.niveau-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function toggleTout() {
+            toutMelange = true;
+            categoriesSelectionnees = [];
+            document.getElementById('btn-tout').classList.add('selected');
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+        }
+
+        function toggleCat(cat, btn) {
+            toutMelange = false;
+            document.getElementById('btn-tout').classList.remove('selected');
+            if (categoriesSelectionnees.includes(cat)) {
+                categoriesSelectionnees = categoriesSelectionnees.filter(c => c !== cat);
+                btn.classList.remove('selected');
+            } else {
+                categoriesSelectionnees.push(cat);
+                btn.classList.add('selected');
+            }
+            if (categoriesSelectionnees.length === 0) toggleTout();
+        }
+
+        function lancerJeu() {
+            const cats = toutMelange ? Object.keys(QUESTIONS) : categoriesSelectionnees;
+            questionsDisponibles = [];
+            cats.forEach(cat => {
+                const qs = QUESTIONS[cat][niveau] || [];
+                qs.forEach(q => questionsDisponibles.push({ ...q, cat }));
+            });
+            questionsDisponibles = questionsDisponibles.sort(() => Math.random() - 0.5);
+            questionsUtilisees = [];
+            questionActuelle = 0;
+            afficherQuestion();
+            showScreen('screen-jeu');
+        }
+
+        function afficherQuestion() {
+            if (questionsDisponibles.length === 0) {
+                alert('Aucune question disponible !');
+                showScreen('screen-config');
+                return;
+            }
+            if (questionActuelle >= questionsDisponibles.length) {
+                questionsDisponibles = questionsDisponibles.sort(() => Math.random() - 0.5);
+                questionActuelle = 0;
+            }
+            const q = questionsDisponibles[questionActuelle];
+            const catNoms = {
+                humour: '😂 Humour', nourriture: '🍕 Nourriture', sport: '💪 Sport',
+                gene: '😱 Gêne', amour: '💘 Amour', bizarre: '🤪 Bizarre',
+                soiree: '🎉 Soirée', ecole: '🧠 École', argent: '💸 Argent', tech: '📱 Tech'
+            };
+            document.getElementById('carte-cat').textContent = catNoms[q.cat] || q.cat;
+            document.getElementById('carte-emoji').textContent = q.emoji;
+            document.getElementById('carte-texte').textContent = 'Qui est le plus susceptible de ' + q.texte;
+            document.getElementById('compteur-info').textContent = 'Question ' + (questionActuelle + 1) + ' / ' + questionsDisponibles.length;
+        }
+
+        function questionSuivante() {
+            questionActuelle++;
+            afficherQuestion();
+        }
+
+        function melangerEtRelancer() {
+            questionsDisponibles = questionsDisponibles.sort(() => Math.random() - 0.5);
+            questionActuelle = 0;
+            afficherQuestion();
+        }
+    </script>
+</body>
+</html>
