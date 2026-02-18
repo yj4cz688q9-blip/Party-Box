@@ -294,6 +294,7 @@
 
     <script>
         let nbJoueurs = 8;
+        window.onload = function() { suggererRoles(); };
         let rolesConfig = { loup:2, grandloup:0, enfantloup:0, loupblanc:0, villageois:2, voyante:1, sorciere:1, cupidon:1, petitefille:1, chasseur:0, ancien:0, bouc:0, ours:0, renard:0, seductrice:0, flute:0, juge:0, enfantsauvage:0 };
         let joueurs=[], indexDistrib=0, amoureux=[], amoureuxTemp=[];
         let sorcierePotionVie=true, sorcierePotionMort=true;
