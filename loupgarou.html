@@ -23,57 +23,56 @@
         .chance-value { font-size: 28px; font-weight: bold; color: #a78bfa; }
         .player-input { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 16px; color: white; font-size: 16px; width: 100%; max-width: 340px; margin: 6px 0; }
         .player-input:focus { border-color: #a78bfa; outline: none; }
-
-        /* RÔLES */
-        .role-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .role-info { display: flex; align-items: center; gap: 10px; text-align: left; }
-        .role-emoji { font-size: 24px; }
-        .role-nom { font-size: 15px; font-weight: bold; }
-        .role-desc { font-size: 12px; color: #888; }
-        .role-counter { display: flex; align-items: center; gap: 10px; }
-        .role-btn { background-color: #a78bfa; color: #0d0d0d; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 18px; cursor: pointer; font-weight: bold; }
-        .role-count { font-size: 20px; font-weight: bold; min-width: 24px; }
+        .role-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #222; }
+        .role-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .role-info { display: flex; align-items: center; gap: 10px; text-align: left; flex: 1; }
+        .role-emoji { font-size: 24px; min-width: 30px; }
+        .role-nom { font-size: 14px; font-weight: bold; }
+        .role-desc-config { font-size: 11px; color: #888; margin-top: 2px; line-height: 1.3; }
+        .role-counter { display: flex; align-items: center; gap: 8px; }
+        .role-btn { background-color: #a78bfa; color: #0d0d0d; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .role-count { font-size: 18px; font-weight: bold; min-width: 20px; }
         .total-info { font-size: 14px; color: #888; margin-bottom: 15px; }
         .total-info span { color: #a78bfa; font-weight: bold; }
+        .equipe-badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-bottom: 4px; }
+        .badge-loup { background-color: #3d0000; color: #ff5555; }
+        .badge-village { background-color: #003d2e; color: #00e5cc; }
+        .badge-solitaire { background-color: #3d3000; color: #ffcc00; }
 
         /* CARTE RÔLE */
-        .carte-role {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border: 2px solid #a78bfa;
-            border-radius: 24px;
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 320px;
-            margin-bottom: 30px;
-        }
-        .carte-role-emoji { font-size: 80px; margin-bottom: 15px; }
-        .carte-role-nom { font-size: 28px; font-weight: bold; color: #a78bfa; margin-bottom: 10px; }
-        .carte-role-desc { font-size: 15px; color: #aaa; line-height: 1.5; }
+        .carte-role { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #a78bfa; border-radius: 24px; padding: 30px 25px; width: 100%; max-width: 320px; margin-bottom: 20px; }
+        .carte-role-emoji { font-size: 70px; margin-bottom: 12px; }
+        .carte-role-nom { font-size: 26px; font-weight: bold; color: #a78bfa; margin-bottom: 8px; }
+        .carte-role-equipe { font-size: 13px; margin-bottom: 12px; }
+        .carte-role-desc { font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 12px; }
+        .carte-role-pouvoir { background-color: #0d0d2e; border-radius: 12px; padding: 12px; font-size: 13px; color: #a78bfa; line-height: 1.5; }
 
         /* NUIT */
         .nuit-bg { background: linear-gradient(180deg, #0d0d1a, #0d0d0d); }
-        .phase-emoji { font-size: 80px; margin-bottom: 20px; }
-        .narration { font-size: 16px; color: #ccc; line-height: 1.7; margin-bottom: 30px; max-width: 320px; font-style: italic; }
+        .phase-emoji { font-size: 70px; margin-bottom: 15px; }
+        .narration { font-size: 15px; color: #ccc; line-height: 1.7; margin-bottom: 25px; max-width: 320px; font-style: italic; }
         .action-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 20px; }
-
-        /* JOUEURS SÉLECTIONNABLES */
-        .joueurs-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 10px; }
-        .joueur-btn { background-color: #2a2a2a; border: 2px solid #444; border-radius: 14px; padding: 10px 16px; color: white; font-size: 14px; cursor: pointer; }
+        .joueurs-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+        .joueur-btn { background-color: #2a2a2a; border: 2px solid #444; border-radius: 12px; padding: 8px 14px; color: white; font-size: 14px; cursor: pointer; }
         .joueur-btn.selected { border-color: #a78bfa; background-color: #2a1a4a; color: #a78bfa; font-weight: bold; }
         .joueur-btn.mort { opacity: 0.4; text-decoration: line-through; cursor: not-allowed; }
-        .joueur-btn.sauve { border-color: #00e5cc; background-color: #001a1a; }
         .joueur-btn.empoisonne { border-color: #ff3b3b; background-color: #2a0000; }
-
-        /* JOUR */
         .jour-bg { background: linear-gradient(180deg, #1a1000, #0d0d0d); }
-        .mort-annonce { background-color: #2a0000; border: 2px solid #ff3b3b; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 20px; font-size: 18px; }
+        .mort-annonce { background-color: #2a0000; border: 2px solid #ff3b3b; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 20px; font-size: 16px; line-height: 1.6; }
         .vote-joueur { background-color: #1a1a1a; border: 2px solid #333; border-radius: 14px; padding: 15px; width: 100%; max-width: 340px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .vote-joueur.selected { border-color: #ff3b3b; }
-        .vote-count-display { font-size: 13px; color: #888; }
-
-        /* SCORES FINAUX */
         .equipe-gagnante { font-size: 48px; margin-bottom: 10px; }
-        .score-final-box { background-color: #1a1a1a; border-radius: 16px; padding: 15px; width: 100%; max-width: 340px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .score-final-box { background-color: #1a1a1a; border-radius: 16px; padding: 12px 15px; width: 100%; max-width: 340px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .countdown-big { font-size: 72px; font-weight: bold; color: #a78bfa; margin: 20px 0; }
+        .sommeil-texte { font-size: 18px; color: #ccc; font-style: italic; margin-bottom: 10px; max-width: 300px; }
+
+        /* CHASSEUR */
+        .chasseur-box { background-color: #2a1a00; border: 2px solid #ff9500; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 20px; }
+
+        /* JOUEUR DE FLÛTE */
+        .flute-box { background-color: #1a2a1a; border: 2px solid #00cc66; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 20px; }
+
+        .section-config { font-size: 14px; color: #a78bfa; font-weight: bold; text-align: left; margin: 15px 0 8px; padding-left: 5px; border-left: 3px solid #a78bfa; }
     </style>
 </head>
 <body>
@@ -93,89 +92,92 @@
         <p class="section-title">👥 Joueurs</p>
         <div class="config-box">
             <p class="config-label">Nombre de joueurs</p>
-            <input type="range" class="chance-slider" min="5" max="12" value="8" id="nb-joueurs-slider" oninput="updateNbJoueurs(this.value)">
+            <input type="range" class="chance-slider" min="5" max="24" value="8" id="nb-joueurs-slider" oninput="updateNbJoueurs(this.value)">
             <div class="chance-value" id="nb-joueurs-value">8 joueurs</div>
         </div>
 
         <p class="section-title">🎭 Rôles</p>
         <div class="config-box">
-            <p class="config-label" style="margin-bottom:15px">Composition (suggérée automatiquement)</p>
+            <p class="config-label">Composition (modifiable)</p>
 
+            <p class="section-config">🐺 Équipe des Loups</p>
             <div class="role-row">
-                <div class="role-info">
-                    <span class="role-emoji">🐺</span>
-                    <div><div class="role-nom">Loup Garou</div><div class="role-desc">Élimine un villageois chaque nuit</div></div>
-                </div>
-                <div class="role-counter">
-                    <button class="role-btn" onclick="changeRole('loup', -1)">−</button>
-                    <span class="role-count" id="count-loup">2</span>
-                    <button class="role-btn" onclick="changeRole('loup', 1)">+</button>
-                </div>
+                <div class="role-info"><span class="role-emoji">🐺</span><div><div class="role-nom">Loup Garou</div><div class="role-desc-config">Dévore un villageois chaque nuit</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('loup',-1)">−</button><span class="role-count" id="count-loup">2</span><button class="role-btn" onclick="changeRole('loup',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🌙</span><div><div class="role-nom">Grand Méchant Loup</div><div class="role-desc-config">Loup qui dévore une 2ème victime si tous les loups spéciaux sont morts</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('grandloup',-1)">−</button><span class="role-count" id="count-grandloup">0</span><button class="role-btn" onclick="changeRole('grandloup',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🐑</span><div><div class="role-nom">Enfant Loup</div><div class="role-desc-config">Villageois lié à un père. Devient loup si son père meurt</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('enfantloup',-1)">−</button><span class="role-count" id="count-enfantloup">0</span><button class="role-btn" onclick="changeRole('enfantloup',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🐺</span><div><div class="role-nom">Loup Blanc</div><div class="role-desc-config">Loup solitaire qui veut gagner seul. Peut éliminer un loup chaque 2ème nuit</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('loupblanc',-1)">−</button><span class="role-count" id="count-loupblanc">0</span><button class="role-btn" onclick="changeRole('loupblanc',1)">+</button></div>
             </div>
 
+            <p class="section-config">🧑‍🌾 Équipe du Village</p>
             <div class="role-row">
-                <div class="role-info">
-                    <span class="role-emoji">👁️</span>
-                    <div><div class="role-nom">Voyante</div><div class="role-desc">Voit un rôle chaque nuit</div></div>
-                </div>
-                <div class="role-counter">
-                    <button class="role-btn" onclick="changeRole('voyante', -1)">−</button>
-                    <span class="role-count" id="count-voyante">1</span>
-                    <button class="role-btn" onclick="changeRole('voyante', 1)">+</button>
-                </div>
+                <div class="role-info"><span class="role-emoji">🧑‍🌾</span><div><div class="role-nom">Villageois</div><div class="role-desc-config">Pas de pouvoir, vote pour éliminer les loups</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('villageois',-1)">−</button><span class="role-count" id="count-villageois">2</span><button class="role-btn" onclick="changeRole('villageois',1)">+</button></div>
             </div>
-
             <div class="role-row">
-                <div class="role-info">
-                    <span class="role-emoji">🧙</span>
-                    <div><div class="role-nom">Sorcière</div><div class="role-desc">Une potion de vie, une de mort</div></div>
-                </div>
-                <div class="role-counter">
-                    <button class="role-btn" onclick="changeRole('sorciere', -1)">−</button>
-                    <span class="role-count" id="count-sorciere">1</span>
-                    <button class="role-btn" onclick="changeRole('sorciere', 1)">+</button>
-                </div>
+                <div class="role-info"><span class="role-emoji">👁️</span><div><div class="role-nom">Voyante</div><div class="role-desc-config">Voit le rôle d'un joueur chaque nuit</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('voyante',-1)">−</button><span class="role-count" id="count-voyante">1</span><button class="role-btn" onclick="changeRole('voyante',1)">+</button></div>
             </div>
-
             <div class="role-row">
-                <div class="role-info">
-                    <span class="role-emoji">💘</span>
-                    <div><div class="role-nom">Cupidon</div><div class="role-desc">Désigne 2 amoureux au début</div></div>
-                </div>
-                <div class="role-counter">
-                    <button class="role-btn" onclick="changeRole('cupidon', -1)">−</button>
-                    <span class="role-count" id="count-cupidon">1</span>
-                    <button class="role-btn" onclick="changeRole('cupidon', 1)">+</button>
-                </div>
+                <div class="role-info"><span class="role-emoji">🧙</span><div><div class="role-nom">Sorcière</div><div class="role-desc-config">Une potion de vie, une de mort</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('sorciere',-1)">−</button><span class="role-count" id="count-sorciere">1</span><button class="role-btn" onclick="changeRole('sorciere',1)">+</button></div>
             </div>
-
             <div class="role-row">
-                <div class="role-info">
-                    <span class="role-emoji">👧</span>
-                    <div><div class="role-nom">Petite Fille</div><div class="role-desc">Peut espionner les loups la nuit</div></div>
-                </div>
-                <div class="role-counter">
-                    <button class="role-btn" onclick="changeRole('petitefille', -1)">−</button>
-                    <span class="role-count" id="count-petitefille">1</span>
-                    <button class="role-btn" onclick="changeRole('petitefille', 1)">+</button>
-                </div>
+                <div class="role-info"><span class="role-emoji">💘</span><div><div class="role-nom">Cupidon</div><div class="role-desc-config">Désigne 2 amoureux au début</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('cupidon',-1)">−</button><span class="role-count" id="count-cupidon">1</span><button class="role-btn" onclick="changeRole('cupidon',1)">+</button></div>
             </div>
-
-            <div class="role-row" style="margin-bottom:0">
-                <div class="role-info">
-                    <span class="role-emoji">🧑‍🌾</span>
-                    <div><div class="role-nom">Villageois</div><div class="role-desc">Vote pour éliminer les loups</div></div>
-                </div>
-                <div class="role-counter">
-                    <button class="role-btn" onclick="changeRole('villageois', -1)">−</button>
-                    <span class="role-count" id="count-villageois">2</span>
-                    <button class="role-btn" onclick="changeRole('villageois', 1)">+</button>
-                </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">👧</span><div><div class="role-nom">Petite Fille</div><div class="role-desc-config">Peut espionner les loups la nuit</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('petitefille',-1)">−</button><span class="role-count" id="count-petitefille">1</span><button class="role-btn" onclick="changeRole('petitefille',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🏹</span><div><div class="role-nom">Chasseur</div><div class="role-desc-config">Quand il meurt, il tire sur un joueur de son choix</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('chasseur',-1)">−</button><span class="role-count" id="count-chasseur">0</span><button class="role-btn" onclick="changeRole('chasseur',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">👴</span><div><div class="role-nom">Ancien</div><div class="role-desc-config">Survit à la première attaque des loups</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('ancien',-1)">−</button><span class="role-count" id="count-ancien">0</span><button class="role-btn" onclick="changeRole('ancien',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🎭</span><div><div class="role-nom">Bouc Émissaire</div><div class="role-desc-config">Éliminé en cas d'égalité au vote. Choisit alors qui ne vote pas la prochaine fois</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('bouc',-1)">−</button><span class="role-count" id="count-bouc">0</span><button class="role-btn" onclick="changeRole('bouc',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🐻</span><div><div class="role-nom">Ours de Thiercelieux</div><div class="role-desc-config">Le meneur grogne au début de chaque jour si un loup est adjacent à l'Ours</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('ours',-1)">−</button><span class="role-count" id="count-ours">0</span><button class="role-btn" onclick="changeRole('ours',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🦊</span><div><div class="role-nom">Renard</div><div class="role-desc-config">Peut flairer un groupe de 3 joueurs pour savoir si l'un est loup</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('renard',-1)">−</button><span class="role-count" id="count-renard">0</span><button class="role-btn" onclick="changeRole('renard',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">💋</span><div><div class="role-nom">Séductrice</div><div class="role-desc-config">Chaque nuit, rend un joueur muet le lendemain (ne peut pas voter ni parler)</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('seductrice',-1)">−</button><span class="role-count" id="count-seductrice">0</span><button class="role-btn" onclick="changeRole('seductrice',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🎺</span><div><div class="role-nom">Joueur de Flûte</div><div class="role-desc-config">Ensorcelle des joueurs chaque nuit. Gagne si tous les vivants sont ensorcelés</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('flute',-1)">−</button><span class="role-count" id="count-flute">0</span><button class="role-btn" onclick="changeRole('flute',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">👨‍⚖️</span><div><div class="role-nom">Juge Bègue</div><div class="role-desc-config">Peut déclencher un 2ème vote une fois dans la partie</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('juge',-1)">−</button><span class="role-count" id="count-juge">0</span><button class="role-btn" onclick="changeRole('juge',1)">+</button></div>
+            </div>
+            <div class="role-row">
+                <div class="role-info"><span class="role-emoji">🧒</span><div><div class="role-nom">Enfant Sauvage</div><div class="role-desc-config">Choisit un modèle au début. Devient loup si son modèle meurt</div></div></div>
+                <div class="role-counter"><button class="role-btn" onclick="changeRole('enfantsauvage',-1)">−</button><span class="role-count" id="count-enfantsauvage">0</span><button class="role-btn" onclick="changeRole('enfantsauvage',1)">+</button></div>
             </div>
         </div>
 
         <p class="total-info">Total rôles : <span id="total-roles">8</span> / <span id="total-joueurs">8</span></p>
-
         <button class="start-btn" onclick="showNomJoueurs()">Suivant ➡️</button>
         <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
     </div>
@@ -188,21 +190,31 @@
         <button class="back-btn" onclick="showScreen('screen-config')">← Retour</button>
     </div>
 
-    <!-- DISTRIBUTION RÔLES -->
+    <!-- PASSAGE RÔLE -->
     <div class="screen" id="screen-role">
-        <p style="color:#888; font-size:14px; margin-bottom:10px" id="role-passage"></p>
-        <p style="color:#555; font-size:13px; margin-bottom:30px">⚠️ Ne montrez pas votre rôle aux autres !</p>
-        <button class="start-btn" onclick="voirRole()">👁️ Voir mon rôle</button>
+        <div class="countdown-big" id="role-countdown">5</div>
+        <p style="color:#555; font-size:14px">Attendez que l'écran se débloque...</p>
     </div>
 
-    <!-- AFFICHAGE RÔLE -->
+    <!-- VOIR RÔLE -->
     <div class="screen" id="screen-voir-role">
+        <p style="color:#888; font-size:14px; margin-bottom:5px" id="role-passage">👋 Joueur, regarde ton rôle !</p>
+        <p style="color:#555; font-size:12px; margin-bottom:15px">⚠️ Ne montrez pas votre rôle aux autres !</p>
         <div class="carte-role">
             <div class="carte-role-emoji" id="role-emoji"></div>
             <div class="carte-role-nom" id="role-nom"></div>
+            <div class="carte-role-equipe" id="role-equipe"></div>
             <div class="carte-role-desc" id="role-desc"></div>
+            <div class="carte-role-pouvoir" id="role-pouvoir"></div>
         </div>
         <button class="start-btn" onclick="roleVuSuivant()">✅ J'ai vu mon rôle</button>
+    </div>
+
+    <!-- SOMMEIL -->
+    <div class="screen nuit-bg" id="screen-sommeil">
+        <div class="phase-emoji">😴</div>
+        <p class="sommeil-texte" id="sommeil-texte"></p>
+        <div class="countdown-big" id="sommeil-countdown">5</div>
     </div>
 
     <!-- NUIT INTRO -->
@@ -222,19 +234,49 @@
         <button class="start-btn" id="phase-btn" style="background-color:#4a3a8a">Confirmer ✅</button>
     </div>
 
+    <!-- CHASSEUR TIRE -->
+    <div class="screen" id="screen-chasseur">
+        <div class="chasseur-box">
+            <div style="font-size:50px;margin-bottom:10px">🏹</div>
+            <p style="font-size:18px;font-weight:bold;color:#ff9500;margin-bottom:10px" id="chasseur-nom"></p>
+            <p style="color:#aaa;font-size:14px">Le Chasseur est mort ! Avant de partir, il tire sur quelqu'un...</p>
+        </div>
+        <div class="joueurs-grid" id="chasseur-cibles"></div>
+        <button class="start-btn" onclick="confirmerTirChasseur()" style="background-color:#ff9500;margin-top:20px">🏹 Tirer !</button>
+    </div>
+
+    <!-- ENFANT SAUVAGE CHOISIT MODÈLE -->
+    <div class="screen" id="screen-enfantsauvage">
+        <div class="phase-emoji">🧒</div>
+        <h2>L'Enfant Sauvage</h2>
+        <p class="narration">Choisissez votre modèle. Si cette personne meurt, vous deviendrez un Loup Garou !</p>
+        <div class="joueurs-grid" id="enfantsauvage-cibles"></div>
+        <button class="start-btn" onclick="confirmerModele()" style="background-color:#4a3a8a;margin-top:20px">Confirmer ✅</button>
+    </div>
+
+    <!-- ENFANT LOUP CHOISIT PÈRE -->
+    <div class="screen" id="screen-enfantloup">
+        <div class="phase-emoji">🐑</div>
+        <h2>L'Enfant Loup</h2>
+        <p class="narration">Choisissez votre père parmi les villageois. Si votre père meurt, vous rejoindrez les loups !</p>
+        <div class="joueurs-grid" id="enfantloup-cibles"></div>
+        <button class="start-btn" onclick="confirmerPere()" style="background-color:#4a3a8a;margin-top:20px">Confirmer ✅</button>
+    </div>
+
     <!-- JOUR -->
     <div class="screen jour-bg" id="screen-jour">
         <div class="phase-emoji">☀️</div>
         <h2>Le jour se lève</h2>
         <div id="mort-annonce-box"></div>
-        <p class="narration" id="jour-narration"></p>
+        <div id="ours-annonce" style="display:none;background-color:#2a1a00;border:2px solid #ff9500;border-radius:16px;padding:15px;width:100%;max-width:340px;margin-bottom:15px;font-size:16px">🐻 GRRR ! L'Ours grogne — un loup est assis à côté de lui !</div>
+        <p class="narration" id="jour-narration">Les survivants se rassemblent sur la place du village...</p>
         <button class="start-btn" onclick="commencerVote()">🗳️ Voter</button>
     </div>
 
     <!-- VOTE -->
     <div class="screen" id="screen-vote">
         <h2>🗳️ Vote du village</h2>
-        <p style="color:#888; margin-bottom:20px">Qui voulez-vous éliminer ?</p>
+        <p style="color:#888; margin-bottom:20px" id="vote-subtitle">Qui voulez-vous éliminer ?</p>
         <div id="vote-liste"></div>
         <button class="start-btn" onclick="confirmerVote()" style="margin-top:10px; background-color:#ff3b3b">Éliminer 💀</button>
         <button class="back-btn" onclick="passerVote()">⏭️ Pas de vote</button>
@@ -244,34 +286,77 @@
     <div class="screen" id="screen-fin">
         <div class="equipe-gagnante" id="fin-emoji"></div>
         <h2 id="fin-titre"></h2>
-        <p style="color:#888; margin-bottom:30px" id="fin-desc"></p>
-        <div id="fin-roles"></div>
+        <p style="color:#888; margin-bottom:20px" id="fin-desc"></p>
+        <div id="fin-roles" style="width:100%;max-width:340px"></div>
         <button class="start-btn" onclick="showScreen('screen-home')" style="margin-top:30px">🏠 Accueil</button>
     </div>
 
     <script>
-        // CONFIG
         let nbJoueurs = 8;
-        let rolesConfig = { loup: 2, voyante: 1, sorciere: 1, cupidon: 1, petitefille: 1, villageois: 2 };
-
-        // ÉTAT JEU
-        let joueurs = [];
-        let indexDistrib = 0;
-        let amoureux = [];
-        let sorcierePotionVie = true, sorcierePotionMort = true;
-        let victimeNuit = null;
-        let phaseIndex = 0;
-        let phases = [];
-        let voteSelectionne = -1;
-        let numNuit = 0;
+        let rolesConfig = { loup:2, grandloup:0, enfantloup:0, loupblanc:0, villageois:2, voyante:1, sorciere:1, cupidon:1, petitefille:1, chasseur:0, ancien:0, bouc:0, ours:0, renard:0, seductrice:0, flute:0, juge:0, enfantsauvage:0 };
+        let joueurs=[], indexDistrib=0, amoureux=[], amoureuxTemp=[];
+        let sorcierePotionVie=true, sorcierePotionMort=true;
+        let sauveParSorciere=false, empoisonneParSorciere=null;
+        let victimeNuit=null, phaseIndex=0, phases=[], voteSelectionne=-1, numNuit=0;
+        let ancienPremierAttaque=true, modeleEnfantSauvage=null, pereEnfantLoup=null;
+        let chasseurCible=null, jugeUtilise=false, muetDemain=null, muetAujourdhui=null;
+        let ensorcelés=[], loupBlancPeutTuer=false;
 
         const ROLES_INFO = {
-            loup:        { emoji: '🐺', nom: 'Loup Garou',   desc: 'Chaque nuit, vous vous réveillez avec les autres loups pour dévorer un villageois. Le jour, faites semblant d\'être innocent !' },
-            voyante:     { emoji: '👁️', nom: 'Voyante',      desc: 'Chaque nuit, vous pouvez regarder la carte d\'un joueur et découvrir son rôle.' },
-            sorciere:    { emoji: '🧙', nom: 'Sorcière',     desc: 'Vous possédez deux potions : une de vie (pour sauver la victime des loups) et une de mort (pour empoisonner quelqu\'un).' },
-            cupidon:     { emoji: '💘', nom: 'Cupidon',      desc: 'La première nuit, vous désignez deux amoureux. S\'ils l\'un meurt, l\'autre meurt de chagrin.' },
-            petitefille: { emoji: '👧', nom: 'Petite Fille', desc: 'Vous pouvez espionner les loups garous pendant leur phase. Attention à ne pas vous faire prendre !' },
-            villageois:  { emoji: '🧑‍🌾', nom: 'Villageois',  desc: 'Vous n\'avez aucun pouvoir spécial. Votre seule arme est votre capacité à convaincre les autres lors des votes.' },
+            loup:         { emoji:'🐺', nom:'Loup Garou',         equipe:'loup',     equipeLabel:'🐺 Équipe des Loups',
+                desc:'Vous faites partie de la meute des loups garous. Votre but est d\'éliminer tous les villageois.',
+                pouvoir:'💡 Chaque nuit, vous vous réveillez avec les autres loups pour choisir ensemble une victime à dévorer. Le jour, faites semblant d\'être innocent pour ne pas être éliminé par le village !' },
+            grandloup:    { emoji:'🌙', nom:'Grand Méchant Loup', equipe:'loup',     equipeLabel:'🐺 Équipe des Loups',
+                desc:'Vous êtes le plus puissant des loups garous. Vous vous réveillez avec la meute chaque nuit.',
+                pouvoir:'💡 Tant qu\'il reste des loups spéciaux (Loup Blanc, Enfant Loup) en vie, vous jouez normalement. Quand ils sont tous morts, vous pouvez dévorer une 2ème victime supplémentaire chaque nuit !' },
+            loupblanc:    { emoji:'🐺', nom:'Loup Blanc',         equipe:'solitaire', equipeLabel:'🌟 Solitaire',
+                desc:'Vous êtes un loup solitaire. Vous vous réveillez avec les autres loups mais vous voulez gagner SEUL.',
+                pouvoir:'💡 Vous rejoignez les loups la nuit mais les 2ème nuits (nuit 2, 4, 6...) vous pouvez éliminer un loup de votre choix. Vous gagnez si vous êtes le DERNIER survivant !' },
+            enfantloup:   { emoji:'🐑', nom:'Enfant Loup',        equipe:'variable', equipeLabel:'❓ Variable',
+                desc:'Vous êtes un villageois, mais vous avez un lien profond avec votre père adoptif.',
+                pouvoir:'💡 Au début de la partie, vous choisissez un joueur comme "père". Tant qu\'il est vivant, vous jouez pour le village. Si votre père meurt, vous rejoignez les loups garous et vous réveillez avec eux !' },
+            villageois:   { emoji:'🧑‍🌾', nom:'Villageois',        equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes un simple villageois. Vous n\'avez aucun pouvoir spécial, mais votre instinct et votre capacité à convaincre les autres sont vos meilleures armes.',
+                pouvoir:'💡 Participez activement aux débats du jour ! Observez le comportement des autres joueurs, posez des questions, et votez pour éliminer ceux qui vous semblent suspects.' },
+            voyante:      { emoji:'👁️', nom:'Voyante',            equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous avez un don de clairvoyance. Chaque nuit, vous pouvez percer les secrets d\'un joueur.',
+                pouvoir:'💡 Chaque nuit, choisissez un joueur et l\'app vous révélera son rôle exact. Partagez subtilement vos découvertes le jour sans vous faire repérer par les loups !' },
+            sorciere:     { emoji:'🧙', nom:'Sorcière',           equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes une puissante sorcière qui possède deux potions magiques très précieuses.',
+                pouvoir:'💡 Potion de VIE 💚 : utilisable une seule fois pour sauver la victime des loups cette nuit. Potion de MORT ☠️ : utilisable une seule fois pour empoisonner n\'importe quel joueur. Utilisez-les avec sagesse !' },
+            cupidon:      { emoji:'💘', nom:'Cupidon',            equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes le dieu de l\'amour. La première nuit, vous unissez deux âmes pour toujours.',
+                pouvoir:'💡 La première nuit, désignez 2 joueurs qui deviennent amoureux. Les amoureux connaissent leur partenaire. Si l\'un meurt, l\'autre meurt de chagrin. Si les amoureux sont un loup et un villageois, ils ont une 3ème condition de victoire : être les 2 derniers survivants !' },
+            petitefille:  { emoji:'👧', nom:'Petite Fille',       equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes curieuse et courageuse. Pendant que tout le monde dort, vous risquez votre vie pour espionner.',
+                pouvoir:'💡 Pendant la nuit des loups, vous pouvez "entrouvrir les yeux" pour voir les loups. L\'app vous montrera leurs noms ! Mais attention : si les loups vous repèrent, vous serez éliminée à la place de leur victime !' },
+            chasseur:     { emoji:'🏹', nom:'Chasseur',           equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes un chasseur expert. Même dans la mort, vous ne partez pas sans riposter.',
+                pouvoir:'💡 Quand vous mourez (attaque des loups OU vote du village), vous tirez immédiatement sur un joueur de votre choix qui mourra avec vous. Choisissez bien votre cible !' },
+            ancien:       { emoji:'👴', nom:'Ancien',             equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes le sage du village. Votre longue expérience vous a rendu plus résistant.',
+                pouvoir:'💡 Vous survivez à la PREMIÈRE attaque des loups (vous restez en vie cette nuit-là). Mais si le village vous élimine par vote, tous les villageois spéciaux perdent leurs pouvoirs !' },
+            bouc:         { emoji:'🎭', nom:'Bouc Émissaire',     equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes toujours celui qu\'on accuse en premier. Mais même dans la mort, vous avez un dernier mot.',
+                pouvoir:'💡 En cas d\'égalité lors d\'un vote, c\'est vous qui êtes éliminé. En compensation, vous choisissez UN joueur qui n\'aura pas le droit de voter lors du prochain vote du jour !' },
+            ours:         { emoji:'🐻', nom:'Ours de Thiercelieux', equipe:'village', equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes un ours domestique qui sent le danger. Votre instinct détecte les loups qui vous entourent.',
+                pouvoir:'💡 Au début de chaque journée, si l\'un de vos voisins immédiats (assis à côté de vous en cercle) est un loup, le meneur de jeu dit "GRRR" pour avertir le village !' },
+            renard:       { emoji:'🦊', nom:'Renard',             equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes rusé et votre flair est légendaire. Vous pouvez détecter la présence des loups.',
+                pouvoir:'💡 Chaque nuit, choisissez un groupe de 3 joueurs. L\'app vous dira si au moins l\'un d\'eux est un loup. Si aucun n\'est loup, vous perdez votre pouvoir pour le reste de la partie !' },
+            seductrice:   { emoji:'💋', nom:'Séductrice',         equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous avez un charme irrésistible. D\'un regard, vous pouvez réduire quelqu\'un au silence.',
+                pouvoir:'💡 Chaque nuit, choisissez un joueur qui sera "ensorcelé" par votre charme. Le lendemain, ce joueur ne pourra pas parler ni voter lors du débat du jour !' },
+            flute:        { emoji:'🎺', nom:'Joueur de Flûte',    equipe:'solitaire', equipeLabel:'🌟 Solitaire',
+                desc:'Vous jouez seul contre tous. Votre musique enivrante soumet les esprits à votre volonté.',
+                pouvoir:'💡 Chaque nuit, ensorcelez 2 joueurs avec votre flûte. Vous gagnez si TOUS les joueurs encore en vie sont ensorcelés par vous. Ni le village ni les loups — vous seul gagnez !' },
+            juge:         { emoji:'👨‍⚖️', nom:'Juge Bègue',        equipe:'village',  equipeLabel:'🧑‍🌾 Village',
+                desc:'Vous êtes le juge du village. Vous avez le pouvoir de provoquer un second procès.',
+                pouvoir:'💡 Une seule fois dans la partie, vous pouvez faire signe au meneur pour déclencher un DEUXIÈME vote immédiatement après le premier. Cette capacité est secrète — faites un signe discret !' },
+            enfantsauvage:{ emoji:'🧒', nom:'Enfant Sauvage',     equipe:'variable', equipeLabel:'❓ Variable',
+                desc:'Vous avez grandi seul dans la forêt. Vous avez besoin d\'un modèle pour rester du côté des humains.',
+                pouvoir:'💡 Au début de la partie, choisissez un joueur comme "modèle". Tant qu\'il est vivant, vous jouez pour le village. Si votre modèle meurt, vous devenez un Loup Garou et rejoignez la meute !' },
         };
 
         function showScreen(id) {
@@ -282,12 +367,23 @@
         function parler(texte) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(texte);
-                utterance.lang = 'fr-FR';
-                utterance.rate = 0.85;
-                utterance.pitch = 0.8;
-                window.speechSynthesis.speak(utterance);
+                const u = new SpeechSynthesisUtterance(texte);
+                u.lang='fr-FR'; u.rate=0.85; u.pitch=0.8;
+                window.speechSynthesis.speak(u);
             }
+        }
+
+        function afficherSommeil(texte, callback) {
+            showScreen('screen-sommeil');
+            document.getElementById('sommeil-texte').textContent = texte;
+            parler(texte);
+            let count = 5;
+            document.getElementById('sommeil-countdown').textContent = count;
+            const interval = setInterval(() => {
+                count--;
+                document.getElementById('sommeil-countdown').textContent = count;
+                if (count <= 0) { clearInterval(interval); callback(); }
+            }, 1000);
         }
 
         function updateNbJoueurs(val) {
@@ -297,413 +393,599 @@
         }
 
         function suggererRoles() {
-            if (nbJoueurs <= 6) rolesConfig = { loup: 1, voyante: 1, sorciere: 1, cupidon: 1, petitefille: 0, villageois: nbJoueurs - 4 };
-            else if (nbJoueurs <= 8) rolesConfig = { loup: 2, voyante: 1, sorciere: 1, cupidon: 1, petitefille: 1, villageois: nbJoueurs - 6 };
-            else rolesConfig = { loup: 3, voyante: 1, sorciere: 1, cupidon: 1, petitefille: 1, villageois: nbJoueurs - 7 };
-            Object.keys(rolesConfig).forEach(r => {
-                document.getElementById('count-' + r).textContent = rolesConfig[r];
-            });
+            const n = nbJoueurs;
+            let loups = Math.max(1, Math.floor(n / 4));
+            rolesConfig = { loup:loups, grandloup:0, enfantloup:0, loupblanc:0, villageois:Math.max(0,n-loups-4), voyante:1, sorciere:1, cupidon:1, petitefille:n>=8?1:0, chasseur:n>=10?1:0, ancien:n>=12?1:0, bouc:0, ours:0, renard:0, seductrice:0, flute:0, juge:0, enfantsauvage:0 };
+            // Ajuster villageois
+            let total = Object.values(rolesConfig).reduce((a,b)=>a+b,0);
+            rolesConfig.villageois = Math.max(0, rolesConfig.villageois + (n - total));
+            Object.keys(rolesConfig).forEach(r => document.getElementById('count-'+r).textContent = rolesConfig[r]);
             updateTotal();
         }
 
         function changeRole(role, delta) {
             rolesConfig[role] = Math.max(0, rolesConfig[role] + delta);
-            document.getElementById('count-' + role).textContent = rolesConfig[role];
+            document.getElementById('count-'+role).textContent = rolesConfig[role];
             updateTotal();
         }
 
         function updateTotal() {
-            const total = Object.values(rolesConfig).reduce((a, b) => a + b, 0);
+            const total = Object.values(rolesConfig).reduce((a,b)=>a+b,0);
             document.getElementById('total-roles').textContent = total;
             document.getElementById('total-joueurs').textContent = nbJoueurs;
-            document.getElementById('total-roles').style.color = total === nbJoueurs ? '#00e5cc' : '#ff3b3b';
+            document.getElementById('total-roles').style.color = total===nbJoueurs ? '#00e5cc' : '#ff3b3b';
         }
 
         function showNomJoueurs() {
-            const total = Object.values(rolesConfig).reduce((a, b) => a + b, 0);
-            if (total !== nbJoueurs) { alert('Le nombre de rôles (' + total + ') doit être égal au nombre de joueurs (' + nbJoueurs + ') !'); return; }
+            const total = Object.values(rolesConfig).reduce((a,b)=>a+b,0);
+            if (total !== nbJoueurs) { alert('Le nombre de rôles ('+total+') doit être égal au nombre de joueurs ('+nbJoueurs+') !'); return; }
             const c = document.getElementById('noms-inputs');
             c.innerHTML = '';
-            for (let i = 1; i <= nbJoueurs; i++) {
+            for (let i=1;i<=nbJoueurs;i++) {
                 const inp = document.createElement('input');
-                inp.className = 'player-input';
-                inp.placeholder = '🧑 Joueur ' + i;
-                inp.id = 'nom-' + i;
+                inp.className='player-input'; inp.placeholder='🧑 Joueur '+i; inp.id='nom-'+i;
                 c.appendChild(inp);
             }
             showScreen('screen-noms');
         }
 
         function distribuerRoles() {
-            // Créer la liste des rôles
-            let listeRoles = [];
-            Object.entries(rolesConfig).forEach(([role, count]) => {
-                for (let i = 0; i < count; i++) listeRoles.push(role);
-            });
-            listeRoles = listeRoles.sort(() => Math.random() - 0.5);
-
+            let liste = [];
+            Object.entries(rolesConfig).forEach(([role,count]) => { for(let i=0;i<count;i++) liste.push(role); });
+            liste = liste.sort(()=>Math.random()-0.5);
             joueurs = [];
-            for (let i = 1; i <= nbJoueurs; i++) {
-                const nom = document.getElementById('nom-' + i).value.trim() || 'Joueur ' + i;
-                joueurs.push({ nom, role: listeRoles[i-1], vivant: true, amoureux: false });
+            for(let i=1;i<=nbJoueurs;i++) {
+                const nom = document.getElementById('nom-'+i).value.trim() || 'Joueur '+i;
+                joueurs.push({ nom, role:liste[i-1], vivant:true, amoureux:false, muet:false, ensorcele:false, ancienVie:true });
             }
-
-            indexDistrib = 0;
-            afficherPassageRole();
+            indexDistrib=0; afficherPassageRole();
         }
 
         function afficherPassageRole() {
-    if (indexDistrib >= joueurs.length) {
-        demarrerJeu();
-        return;
-    }
-    showScreen('screen-role');
-    document.getElementById('role-passage').textContent = '⏳ Passage dans 5 secondes...';
-    document.getElementById('screen-role').style.filter = 'blur(8px)';
-    let count = 5;
-    const interval = setInterval(() => {
-        count--;
-        if (count <= 0) {
-            clearInterval(interval);
-            document.getElementById('screen-role').style.filter = 'none';
-            document.getElementById('role-passage').textContent = '👋 ' + joueurs[indexDistrib].nom + ', regarde ton rôle !';
-        } else {
-            document.getElementById('role-passage').textContent = '⏳ Passage dans ' + count + ' secondes...';
-        }
-    }, 1000);
-}
-
-
-        function voirRole() {
-            const j = joueurs[indexDistrib];
-            const info = ROLES_INFO[j.role];
-            document.getElementById('role-emoji').textContent = info.emoji;
-            document.getElementById('role-nom').textContent = info.nom;
-            document.getElementById('role-desc').textContent = info.desc;
-            showScreen('screen-voir-role');
+            if (indexDistrib >= joueurs.length) { preparerDebut(); return; }
+            showScreen('screen-role');
+            let count=5;
+            document.getElementById('role-countdown').textContent=count;
+            const interval=setInterval(()=>{
+                count--;
+                document.getElementById('role-countdown').textContent=count;
+                if(count<=0){
+                    clearInterval(interval);
+                    const j=joueurs[indexDistrib];
+                    const info=ROLES_INFO[j.role];
+                    document.getElementById('role-passage').textContent='👋 '+j.nom+', regarde ton rôle !';
+                    document.getElementById('role-emoji').textContent=info.emoji;
+                    document.getElementById('role-nom').textContent=info.nom;
+                    document.getElementById('role-equipe').innerHTML='<span class="equipe-badge badge-'+(info.equipe==='loup'?'loup':info.equipe==='solitaire'?'solitaire':'village')+'">'+info.equipeLabel+'</span>';
+                    document.getElementById('role-desc').textContent=info.desc;
+                    document.getElementById('role-pouvoir').textContent=info.pouvoir;
+                    showScreen('screen-voir-role');
+                }
+            },1000);
         }
 
-        function roleVuSuivant() {
-            indexDistrib++;
-            afficherPassageRole();
+        function roleVuSuivant() { indexDistrib++; afficherPassageRole(); }
+
+        function preparerDebut() {
+            amoureux=[]; sorcierePotionVie=true; sorcierePotionMort=true;
+            victimeNuit=null; numNuit=1; ancienPremierAttaque=true;
+            modeleEnfantSauvage=null; pereEnfantLoup=null; muetDemain=null; muetAujourdhui=null;
+            ensorcelés=[]; loupBlancPeutTuer=false; jugeUtilise=false;
+
+            // Phases de début spéciales
+            const phasesDebut = [];
+            if (joueurs.some(j=>j.role==='enfantsauvage')) phasesDebut.push('enfantsauvage_setup');
+            if (joueurs.some(j=>j.role==='enfantloup')) phasesDebut.push('enfantloup_setup');
+
+            if (phasesDebut.length > 0) {
+                if (phasesDebut[0]==='enfantsauvage_setup') afficherEnfantSauvageSetup(phasesDebut);
+                else if (phasesDebut[0]==='enfantloup_setup') afficherEnfantLoupSetup();
+            } else {
+                afficherNuitIntro();
+            }
         }
 
-        function demarrerJeu() {
-            amoureux = [];
-            sorcierePotionVie = true;
-            sorcierePotionMort = true;
-            victimeNuit = null;
-            numNuit = 1;
-            afficherNuitIntro();
+        function afficherEnfantSauvageSetup(suite) {
+            parler("L'Enfant Sauvage se réveille... Il choisit son modèle parmi les joueurs...");
+            const grid = document.getElementById('enfantsauvage-cibles');
+            grid.innerHTML='';
+            joueurs.forEach((j,idx)=>{
+                if(j.role==='enfantsauvage') return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{ modeleEnfantSauvage=idx; document.querySelectorAll('#enfantsauvage-cibles .joueur-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+                grid.appendChild(btn);
+            });
+            showScreen('screen-enfantsauvage');
+        }
+
+        function confirmerModele() {
+            if(modeleEnfantSauvage===null){alert('Choisissez un modèle !');return;}
+            const suiteIdx = joueurs.some(j=>j.role==='enfantloup') ? 'enfantloup' : null;
+            afficherSommeil("L'Enfant Sauvage peut se rendormir...", ()=>{
+                if(suiteIdx) afficherEnfantLoupSetup();
+                else afficherNuitIntro();
+            });
+        }
+
+        function afficherEnfantLoupSetup() {
+            parler("L'Enfant Loup se réveille... Il choisit son père parmi les villageois...");
+            const grid=document.getElementById('enfantloup-cibles');
+            grid.innerHTML='';
+            joueurs.forEach((j,idx)=>{
+                if(j.role==='loup'||j.role==='grandloup'||j.role==='loupblanc'||j.role==='enfantloup') return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{ pereEnfantLoup=idx; document.querySelectorAll('#enfantloup-cibles .joueur-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+                grid.appendChild(btn);
+            });
+            showScreen('screen-enfantloup');
+        }
+
+        function confirmerPere() {
+            if(pereEnfantLoup===null){alert('Choisissez un père !');return;}
+            afficherSommeil("L'Enfant Loup peut se rendormir...", afficherNuitIntro);
         }
 
         function afficherNuitIntro() {
-            const narration = numNuit === 1
-                ? "Le soleil se couche sur le paisible village... Les habitants, épuisés par leur journée, ferment les yeux et sombrent dans le sommeil. Mais dans l'obscurité, des créatures terrifiantes s'éveillent..."
-                : "Une nouvelle nuit s'étend sur le village meurtri... Les survivants s'endorment, la peur au ventre, sachant que les loups rôdent dans les ténèbres...";
-            document.getElementById('nuit-narration').textContent = narration;
+            muetAujourdhui = muetDemain; muetDemain = null;
+            const narration = numNuit===1
+                ? "Le soleil se couche sur le paisible village de Thiercelieux... Les habitants, épuisés par leur journée, ferment les yeux et sombrent dans le sommeil. Mais dans l'obscurité, des créatures terrifiantes s'éveillent..."
+                : "Une nouvelle nuit s'étend sur le village meurtri... Les survivants s'endorment, la peur au ventre, sachant que les loups rôdent encore dans les ténèbres...";
+            document.getElementById('nuit-narration').textContent=narration;
             parler(narration);
             showScreen('screen-nuit-intro');
         }
 
         function commencerNuit() {
-            victimeNuit = null;
-            construirePhases();
-            phaseIndex = 0;
-            jouerPhase();
+            victimeNuit=null; sauveParSorciere=false; empoisonneParSorciere=null;
+            loupBlancPeutTuer = (numNuit%2===0);
+            construirePhases(); phaseIndex=0; jouerPhase();
         }
 
         function construirePhases() {
-            phases = [];
-            if (numNuit === 1 && joueurs.some(j => j.role === 'cupidon' && j.vivant)) phases.push('cupidon');
-            if (joueurs.some(j => j.role === 'voyante' && j.vivant)) phases.push('voyante');
-            if (joueurs.some(j => j.role === 'loup' && j.vivant)) phases.push('loups');
-            if (joueurs.some(j => j.role === 'petitefille' && j.vivant)) phases.push('petitefille');
-            if (joueurs.some(j => j.role === 'sorciere' && j.vivant)) phases.push('sorciere');
+            phases=[];
+            if(numNuit===1 && joueurs.some(j=>j.role==='cupidon'&&j.vivant)) phases.push('cupidon');
+            if(joueurs.some(j=>j.role==='voyante'&&j.vivant)) phases.push('voyante');
+            if(joueurs.some(j=>j.role==='renard'&&j.vivant)) phases.push('renard');
+            if(joueurs.some(j=>j.role==='seductrice'&&j.vivant)) phases.push('seductrice');
+            if(joueurs.some(j=>j.role==='flute'&&j.vivant)) phases.push('flute');
+            if(joueurs.some(j=>(j.role==='loup'||j.role==='grandloup')&&j.vivant)) phases.push('loups');
+            if(joueurs.some(j=>j.role==='loupblanc'&&j.vivant)&&loupBlancPeutTuer) phases.push('loupblanc');
+            if(joueurs.some(j=>j.role==='petitefille'&&j.vivant)) phases.push('petitefille');
+            if(joueurs.some(j=>j.role==='sorciere'&&j.vivant)) phases.push('sorciere');
         }
 
         function jouerPhase() {
-            if (phaseIndex >= phases.length) { afficherJour(); return; }
-            const phase = phases[phaseIndex];
-
-            if (phase === 'cupidon') afficherPhaseCupidon();
-            else if (phase === 'voyante') afficherPhaseVoyante();
-            else if (phase === 'loups') afficherPhaseLoups();
-            else if (phase === 'petitefille') afficherPhasePetiteFille();
-            else if (phase === 'sorciere') afficherPhaseSorciere();
+            if(phaseIndex>=phases.length){afficherJour();return;}
+            const phase=phases[phaseIndex];
+            if(phase==='cupidon') afficherPhaseCupidon();
+            else if(phase==='voyante') afficherPhaseVoyante();
+            else if(phase==='renard') afficherPhaseRenard();
+            else if(phase==='seductrice') afficherPhaseSeductrice();
+            else if(phase==='flute') afficherPhaseFlute();
+            else if(phase==='loups') afficherPhaseLoups();
+            else if(phase==='loupblanc') afficherPhaseLoupBlanc();
+            else if(phase==='petitefille') afficherPhasePetiteFille();
+            else if(phase==='sorciere') afficherPhaseSorciere();
         }
 
+        function phaseSuivante(texteRendormir) { phaseIndex++; afficherSommeil(texteRendormir, jouerPhase); }
+
         function afficherPhaseCupidon() {
-            const texte = "Cupidon... Cupidon se réveille... Désignez les deux amoureux...";
-            parler(texte);
-            document.getElementById('phase-emoji').textContent = '💘';
-            document.getElementById('phase-titre').textContent = 'Cupidon se réveille';
-            document.getElementById('phase-narration').textContent = 'Choisissez 2 joueurs qui seront amoureux. S\'ils l\'un meurt, l\'autre mourra de chagrin.';
-            const action = document.getElementById('phase-action');
-            action.innerHTML = '<div class="joueurs-grid" id="cupidon-cibles"></div><p style="color:#888;font-size:13px;margin-top:10px" id="cupidon-info">0/2 sélectionnés</p>';
-            const grid = document.getElementById('cupidon-cibles');
-            joueurs.forEach((j, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'joueur-btn';
-                btn.textContent = j.nom;
-                btn.onclick = () => selectionnerAmoureux(idx, btn);
+            parler("Cupidon se réveille... Désignez les deux amoureux...");
+            document.getElementById('phase-emoji').textContent='💘';
+            document.getElementById('phase-titre').textContent='Cupidon se réveille';
+            document.getElementById('phase-narration').textContent='Choisissez 2 joueurs qui seront amoureux pour toujours.';
+            amoureuxTemp=[];
+            const action=document.getElementById('phase-action');
+            action.innerHTML='<div class="joueurs-grid" id="cupidon-cibles"></div><p style="color:#888;font-size:13px;margin-top:10px" id="cupidon-info">0/2 sélectionnés</p>';
+            const grid=document.getElementById('cupidon-cibles');
+            joueurs.forEach((j,idx)=>{
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{
+                    if(amoureuxTemp.includes(idx)){amoureuxTemp=amoureuxTemp.filter(i=>i!==idx);btn.classList.remove('selected');}
+                    else if(amoureuxTemp.length<2){amoureuxTemp.push(idx);btn.classList.add('selected');}
+                    document.getElementById('cupidon-info').textContent=amoureuxTemp.length+'/2 sélectionnés';
+                };
                 grid.appendChild(btn);
             });
-            document.getElementById('phase-btn').onclick = confirmerCupidon;
+            document.getElementById('phase-btn').onclick=()=>{
+                if(amoureuxTemp.length!==2){alert('Choisis exactement 2 amoureux !');return;}
+                amoureux=[...amoureuxTemp];
+                joueurs[amoureux[0]].amoureux=true; joueurs[amoureux[1]].amoureux=true;
+                phaseSuivante('Cupidon peut se rendormir...');
+            };
             showScreen('screen-phase');
         }
 
-        let amoureuxTemp = [];
-        function selectionnerAmoureux(idx, btn) {
-            if (amoureuxTemp.includes(idx)) {
-                amoureuxTemp = amoureuxTemp.filter(i => i !== idx);
-                btn.classList.remove('selected');
-            } else if (amoureuxTemp.length < 2) {
-                amoureuxTemp.push(idx);
-                btn.classList.add('selected');
-            }
-            document.getElementById('cupidon-info').textContent = amoureuxTemp.length + '/2 sélectionnés';
-        }
-
-        function confirmerCupidon() {
-            if (amoureuxTemp.length !== 2) { alert('Choisis exactement 2 amoureux !'); return; }
-            amoureux = [...amoureuxTemp];
-            joueurs[amoureux[0]].amoureux = true;
-            joueurs[amoureux[1]].amoureux = true;
-            amoureuxTemp = [];
-            phaseIndex++;
-afficherSommeillPhase('💘 Cupidon peut se rendormir...', jouerPhase);
-
-        }
-
         function afficherPhaseVoyante() {
-            const texte = "La Voyante se réveille... Elle concentre ses pouvoirs et désigne un joueur dont elle veut connaître le rôle...";
-            parler(texte);
-            document.getElementById('phase-emoji').textContent = '👁️';
-            document.getElementById('phase-titre').textContent = 'La Voyante se réveille';
-            document.getElementById('phase-narration').textContent = 'Choisissez un joueur pour voir son rôle.';
-            const action = document.getElementById('phase-action');
-            action.innerHTML = '<div class="joueurs-grid" id="voyante-cibles"></div><div id="voyante-resultat" style="margin-top:15px;font-size:18px;color:#a78bfa"></div>';
-            const grid = document.getElementById('voyante-cibles');
-            joueurs.forEach((j, idx) => {
-                if (!j.vivant) return;
-                const btn = document.createElement('button');
-                btn.className = 'joueur-btn';
-                btn.textContent = j.nom;
-                btn.onclick = () => {
-                    const info = ROLES_INFO[j.role];
-                    document.getElementById('voyante-resultat').textContent = j.nom + ' est ' + info.emoji + ' ' + info.nom;
-                    document.querySelectorAll('#voyante-cibles .joueur-btn').forEach(b => b.classList.remove('selected'));
+            parler("La Voyante se réveille... Elle concentre ses pouvoirs mystiques...");
+            document.getElementById('phase-emoji').textContent='👁️';
+            document.getElementById('phase-titre').textContent='La Voyante se réveille';
+            document.getElementById('phase-narration').textContent='Choisissez un joueur pour voir son rôle secret.';
+            const action=document.getElementById('phase-action');
+            action.innerHTML='<div class="joueurs-grid" id="voyante-cibles"></div><div id="voyante-resultat" style="margin-top:15px;font-size:16px;color:#a78bfa;font-weight:bold"></div>';
+            const grid=document.getElementById('voyante-cibles');
+            joueurs.forEach((j,idx)=>{
+                if(!j.vivant) return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{
+                    const info=ROLES_INFO[j.role];
+                    document.getElementById('voyante-resultat').textContent=j.nom+' est '+info.emoji+' '+info.nom;
+                    document.querySelectorAll('#voyante-cibles .joueur-btn').forEach(b=>b.classList.remove('selected'));
                     btn.classList.add('selected');
                 };
                 grid.appendChild(btn);
             });
-            document.getElementById('phase-btn').onclick = () => { phaseIndex++; jouerPhase(); };
+            document.getElementById('phase-btn').onclick=()=>phaseSuivante('La Voyante peut se rendormir...');
+            showScreen('screen-phase');
+        }
+
+        function afficherPhaseRenard() {
+            parler("Le Renard se réveille... Il flaire le danger dans l'obscurité...");
+            document.getElementById('phase-emoji').textContent='🦊';
+            document.getElementById('phase-titre').textContent='Le Renard se réveille';
+            document.getElementById('phase-narration').textContent='Choisissez un joueur. L\'app révèlera si lui et ses 2 voisins contiennent un loup.';
+            const action=document.getElementById('phase-action');
+            action.innerHTML='<div class="joueurs-grid" id="renard-cibles"></div><div id="renard-resultat" style="margin-top:15px;font-size:16px;font-weight:bold"></div>';
+            const grid=document.getElementById('renard-cibles');
+            let renardCible=-1;
+            joueurs.forEach((j,idx)=>{
+                if(!j.vivant) return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{
+                    renardCible=idx;
+                    const vivants=joueurs.map((jj,i)=>({...jj,idx:i})).filter(jj=>jj.vivant);
+                    const posRenard=vivants.findIndex(jj=>jj.idx===idx);
+                    const groupe=[
+                        vivants[posRenard],
+                        vivants[(posRenard+1)%vivants.length],
+                        vivants[(posRenard-1+vivants.length)%vivants.length]
+                    ];
+                    const yaLoup=groupe.some(jj=>jj&&['loup','grandloup','loupblanc'].includes(jj.role));
+                    document.getElementById('renard-resultat').textContent = yaLoup ? '🐺 Oui ! Un loup se cache dans ce groupe !' : '✅ Aucun loup dans ce groupe.';
+                    document.getElementById('renard-resultat').style.color = yaLoup ? '#ff5555' : '#00e5cc';
+                    document.querySelectorAll('#renard-cibles .joueur-btn').forEach(b=>b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                };
+                grid.appendChild(btn);
+            });
+            document.getElementById('phase-btn').onclick=()=>phaseSuivante('Le Renard peut se rendormir...');
+            showScreen('screen-phase');
+        }
+
+        function afficherPhaseSeductrice() {
+            parler("La Séductrice se réveille... Elle choisit sa victime pour cette nuit...");
+            document.getElementById('phase-emoji').textContent='💋';
+            document.getElementById('phase-titre').textContent='La Séductrice se réveille';
+            document.getElementById('phase-narration').textContent='Choisissez un joueur qui sera muet demain.';
+            const action=document.getElementById('phase-action');
+            action.innerHTML='<div class="joueurs-grid" id="seductrice-cibles"></div>';
+            const grid=document.getElementById('seductrice-cibles');
+            joueurs.forEach((j,idx)=>{
+                if(!j.vivant||j.role==='seductrice') return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{ muetDemain=idx; document.querySelectorAll('#seductrice-cibles .joueur-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+                grid.appendChild(btn);
+            });
+            document.getElementById('phase-btn').onclick=()=>phaseSuivante('La Séductrice peut se rendormir...');
+            showScreen('screen-phase');
+        }
+
+        function afficherPhaseFlute() {
+            parler("Le Joueur de Flûte se réveille... Sa mélodie enivrante se répand dans le village...");
+            document.getElementById('phase-emoji').textContent='🎺';
+            document.getElementById('phase-titre').textContent='Le Joueur de Flûte';
+            document.getElementById('phase-narration').textContent='Choisissez 2 joueurs à ensorceler avec votre flûte.';
+            const action=document.getElementById('phase-action');
+            action.innerHTML='<div class="joueurs-grid" id="flute-cibles"></div><p style="color:#888;font-size:13px;margin-top:10px" id="flute-info">0/2 sélectionnés</p>';
+            const grid=document.getElementById('flute-cibles');
+            let fluteTemp=[];
+            joueurs.forEach((j,idx)=>{
+                if(!j.vivant||j.role==='flute') return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'+(j.ensorcele?' selected':'');
+                btn.textContent=j.nom+(j.ensorcele?' 🎺':'');
+                if(!j.ensorcele) btn.onclick=()=>{
+                    if(fluteTemp.includes(idx)){fluteTemp=fluteTemp.filter(i=>i!==idx);btn.classList.remove('selected');}
+                    else if(fluteTemp.length<2){fluteTemp.push(idx);btn.classList.add('selected');}
+                    document.getElementById('flute-info').textContent=fluteTemp.length+'/2 sélectionnés';
+                };
+                grid.appendChild(btn);
+            });
+            document.getElementById('phase-btn').onclick=()=>{
+                fluteTemp.forEach(idx=>{ joueurs[idx].ensorcele=true; });
+                const fin=verifierFluteVictoire();
+                if(fin){afficherFin('flute');return;}
+                phaseSuivante('Le Joueur de Flûte peut se rendormir...');
+            };
             showScreen('screen-phase');
         }
 
         function afficherPhaseLoups() {
-            const texte = "Les Loups Garous se réveillent... Ils se reconnaissent entre eux et choisissent leur victime pour cette nuit...";
-            parler(texte);
-            document.getElementById('phase-emoji').textContent = '🐺';
-            document.getElementById('phase-titre').textContent = 'Les Loups se réveillent';
-            document.getElementById('phase-narration').textContent = 'Choisissez votre victime cette nuit.';
-            const action = document.getElementById('phase-action');
-            action.innerHTML = '<div class="joueurs-grid" id="loups-cibles"></div>';
-            const grid = document.getElementById('loups-cibles');
-            joueurs.forEach((j, idx) => {
-                if (!j.vivant || j.role === 'loup') return;
-                const btn = document.createElement('button');
-                btn.className = 'joueur-btn';
-                btn.textContent = j.nom;
-                btn.onclick = () => {
-                    victimeNuit = idx;
-                    document.querySelectorAll('#loups-cibles .joueur-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                };
+            parler("Les Loups Garous se réveillent... Ils choisissent leur victime pour cette nuit...");
+            document.getElementById('phase-emoji').textContent='🐺';
+            document.getElementById('phase-titre').textContent='Les Loups se réveillent';
+            const loups=joueurs.filter(j=>(j.role==='loup'||j.role==='grandloup')&&j.vivant).map(j=>j.nom);
+            document.getElementById('phase-narration').textContent='Loups cette nuit : '+loups.join(', ')+'. Choisissez votre victime.';
+            const action=document.getElementById('phase-action');
+            action.innerHTML='<div class="joueurs-grid" id="loups-cibles"></div>';
+            const grid=document.getElementById('loups-cibles');
+            joueurs.forEach((j,idx)=>{
+                if(!j.vivant||j.role==='loup'||j.role==='grandloup'||j.role==='loupblanc') return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{ victimeNuit=idx; document.querySelectorAll('#loups-cibles .joueur-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
                 grid.appendChild(btn);
             });
-            document.getElementById('phase-btn').onclick = () => {
-                if (victimeNuit === null) { alert('Choisissez une victime !'); return; }
-                phaseIndex++; jouerPhase();
+            document.getElementById('phase-btn').onclick=()=>{
+                if(victimeNuit===null){alert('Choisissez une victime !');return;}
+                phaseSuivante('Les Loups Garous peuvent se rendormir...');
+            };
+            showScreen('screen-phase');
+        }
+
+        function afficherPhaseLoupBlanc() {
+            parler("Le Loup Blanc se réveille seul... Il peut éliminer un autre loup cette nuit...");
+            document.getElementById('phase-emoji').textContent='🐺';
+            document.getElementById('phase-titre').textContent='Le Loup Blanc se réveille';
+            document.getElementById('phase-narration').textContent='Vous pouvez éliminer un autre loup cette nuit (optionnel).';
+            const action=document.getElementById('phase-action');
+            action.innerHTML='<div class="joueurs-grid" id="loupblanc-cibles"></div>';
+            const grid=document.getElementById('loupblanc-cibles');
+            let loupBlancCible=null;
+            joueurs.forEach((j,idx)=>{
+                if(!j.vivant||j.role!=='loup'&&j.role!=='grandloup') return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{ loupBlancCible=idx; document.querySelectorAll('#loupblanc-cibles .joueur-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+                grid.appendChild(btn);
+            });
+            document.getElementById('phase-btn').onclick=()=>{
+                if(loupBlancCible!==null){ joueurs[loupBlancCible].vivant=false; }
+                phaseSuivante('Le Loup Blanc peut se rendormir...');
             };
             showScreen('screen-phase');
         }
 
         function afficherPhasePetiteFille() {
-            const texte = "La Petite Fille entrouvre les yeux... Elle peut espionner les loups garous, mais attention à ne pas se faire repérer...";
-            parler(texte);
-            document.getElementById('phase-emoji').textContent = '👧';
-            document.getElementById('phase-titre').textContent = 'La Petite Fille espionne';
-            document.getElementById('phase-narration').textContent = 'La Petite Fille peut regarder discrètement les loups. Si elle se fait repérer, elle sera éliminée à la place de la victime !';
-            document.getElementById('phase-action').innerHTML = '<p style="color:#a78bfa;font-size:16px">Les loups sont :<br><br>' + joueurs.filter(j => j.role === 'loup' && j.vivant).map(j => '🐺 ' + j.nom).join('<br>') + '</p>';
-            document.getElementById('phase-btn').onclick = () => { phaseIndex++; jouerPhase(); };
+            parler("La Petite Fille entrouvre les yeux... Elle risque sa vie pour espionner les loups...");
+            document.getElementById('phase-emoji').textContent='👧';
+            document.getElementById('phase-titre').textContent='La Petite Fille espionne';
+            document.getElementById('phase-narration').textContent='Regardez discrètement ! Si les loups vous repèrent, vous serez éliminée.';
+            document.getElementById('phase-action').innerHTML='<p style="color:#a78bfa;font-size:16px">🐺 Les loups cette nuit sont :<br><br>'+joueurs.filter(j=>(j.role==='loup'||j.role==='grandloup')&&j.vivant).map(j=>'🐺 '+j.nom).join('<br>')+'</p>';
+            document.getElementById('phase-btn').onclick=()=>phaseSuivante('La Petite Fille peut se rendormir...');
             showScreen('screen-phase');
         }
 
         function afficherPhaseSorciere() {
-            const texte = "La Sorcière se réveille... Elle regarde la victime des loups et décide si elle utilise ses potions...";
-            parler(texte);
-            document.getElementById('phase-emoji').textContent = '🧙';
-            document.getElementById('phase-titre').textContent = 'La Sorcière se réveille';
-            const victime = victimeNuit !== null ? joueurs[victimeNuit].nom : 'personne';
-            document.getElementById('phase-narration').textContent = 'Les loups ont attaqué : ' + victime;
-            const action = document.getElementById('phase-action');
-            let html = '';
-            if (sorcierePotionVie && victimeNuit !== null) {
-                html += '<button class="joueur-btn" id="btn-sauver" onclick="sorciereSauver()">💚 Sauver ' + victime + ' (potion de vie)</button><br><br>';
-            }
-            if (sorcierePotionMort) {
-                html += '<p style="color:#888;font-size:14px;margin-bottom:10px">Empoisonner quelqu\'un :</p><div class="joueurs-grid" id="sorciere-cibles"></div>';
-            }
-            if (!html) html = '<p style="color:#888">Vous n\'avez plus de potions.</p>';
-            action.innerHTML = html;
-            if (sorcierePotionMort) {
-                const grid = document.getElementById('sorciere-cibles');
-                joueurs.forEach((j, idx) => {
-                    if (!j.vivant) return;
-                    const btn = document.createElement('button');
-                    btn.className = 'joueur-btn';
-                    btn.textContent = j.nom;
-                    btn.onclick = () => {
-                        sorciereEmpoisonner(idx);
-                        document.querySelectorAll('#sorciere-cibles .joueur-btn').forEach(b => b.classList.remove('selected', 'empoisonne'));
-                        btn.classList.add('empoisonne');
-                    };
+            parler("La Sorcière se réveille... Elle examine ses précieuses potions...");
+            document.getElementById('phase-emoji').textContent='🧙';
+            document.getElementById('phase-titre').textContent='La Sorcière se réveille';
+            const victime=victimeNuit!==null?joueurs[victimeNuit].nom:'personne';
+            document.getElementById('phase-narration').textContent='Les loups ont attaqué : '+victime;
+            const action=document.getElementById('phase-action');
+            let html='';
+            if(sorcierePotionVie&&victimeNuit!==null) html+='<button class="joueur-btn" id="btn-sauver" onclick="sorciereSauver()">💚 Sauver '+victime+'</button><br><br>';
+            if(sorcierePotionMort){ html+='<p style="color:#888;font-size:14px;margin-bottom:10px">☠️ Empoisonner :</p><div class="joueurs-grid" id="sorciere-cibles"></div>'; }
+            if(!html) html='<p style="color:#888">Vous n\'avez plus de potions.</p>';
+            action.innerHTML=html;
+            if(sorcierePotionMort){
+                const grid=document.getElementById('sorciere-cibles');
+                joueurs.forEach((j,idx)=>{
+                    if(!j.vivant) return;
+                    const btn=document.createElement('button');
+                    btn.className='joueur-btn'; btn.textContent=j.nom;
+                    btn.onclick=()=>{ empoisonneParSorciere=idx; sorcierePotionMort=false; document.querySelectorAll('#sorciere-cibles .joueur-btn').forEach(b=>b.classList.remove('selected','empoisonne')); btn.classList.add('empoisonne'); };
                     grid.appendChild(btn);
                 });
             }
-            document.getElementById('phase-btn').onclick = () => { phaseIndex++; jouerPhase(); };
+            document.getElementById('phase-btn').onclick=()=>phaseSuivante('La Sorcière peut se rendormir...');
             showScreen('screen-phase');
         }
 
-        let sauveParSorciere = false;
-        let empoisonneParSorciere = null;
-
         function sorciereSauver() {
-            sauveParSorciere = true;
-            sorcierePotionVie = false;
-            document.getElementById('btn-sauver').textContent = '💚 Sauvé !';
-            document.getElementById('btn-sauver').style.borderColor = '#00e5cc';
+            sauveParSorciere=true; sorcierePotionVie=false;
+            const btn=document.getElementById('btn-sauver');
+            btn.textContent='💚 Sauvé !'; btn.style.borderColor='#00e5cc'; btn.onclick=null;
         }
 
-        function sorciereEmpoisonner(idx) {
-            empoisonneParSorciere = idx;
-            sorcierePotionMort = false;
+        function tuerJoueur(idx, raison) {
+            const j=joueurs[idx];
+            if(!j.vivant) return [];
+            j.vivant=false;
+            const mortsSup=[];
+
+            // Vérifier amoureux
+            if(j.amoureux){
+                const autreIdx=amoureux.find(i=>i!==idx);
+                if(autreIdx!==undefined&&joueurs[autreIdx].vivant){ joueurs[autreIdx].vivant=false; mortsSup.push(joueurs[autreIdx].nom+' (mort de chagrin 💔)'); }
+            }
+
+            // Vérifier enfant loup
+            if(pereEnfantLoup===idx){ const el=joueurs.find(jj=>jj.role==='enfantloup'&&jj.vivant); if(el){ el.role='loup'; mortsSup.push('⚠️ '+el.nom+' devient Loup Garou !'); } }
+
+            // Vérifier enfant sauvage
+            if(modeleEnfantSauvage===idx){ const es=joueurs.find(jj=>jj.role==='enfantsauvage'&&jj.vivant); if(es){ es.role='loup'; mortsSup.push('⚠️ '+es.nom+' devient Loup Garou !'); } }
+
+            return mortsSup;
         }
 
         function afficherJour() {
-            const morts = [];
-            if (!sauveParSorciere && victimeNuit !== null) {
-                joueurs[victimeNuit].vivant = false;
-                morts.push(joueurs[victimeNuit].nom);
-                // Vérifier amoureux
-                if (joueurs[victimeNuit].amoureux) {
-                    const autreAmoureux = amoureux.find(i => i !== victimeNuit);
-                    if (autreAmoureux !== undefined && joueurs[autreAmoureux].vivant) {
-                        joueurs[autreAmoureux].vivant = false;
-                        morts.push(joueurs[autreAmoureux].nom + ' (mort de chagrin 💔)');
-                    }
-                }
-            }
-            if (empoisonneParSorciere !== null) {
-                joueurs[empoisonneParSorciere].vivant = false;
-                morts.push(joueurs[empoisonneParSorciere].nom + ' (empoisonné 🧙)');
-                empoisonneParSorciere = null;
-            }
-            sauveParSorciere = false;
+            const morts=[]; const alertes=[];
 
-            const mortBox = document.getElementById('mort-annonce-box');
-            if (morts.length === 0) {
-                mortBox.innerHTML = '<div class="mort-annonce" style="border-color:#00e5cc;background-color:#001a1a">🌟 Cette nuit, personne n\'est mort !</div>';
-                parler('Le jour se lève sur le village. Cette nuit, personne n\'est mort. Le village se réveille soulagé... mais les loups rôdent encore.');
+            // Victime loups
+            if(!sauveParSorciere&&victimeNuit!==null){
+                const j=joueurs[victimeNuit];
+                if(j.role==='ancien'&&ancienPremierAttaque){ ancienPremierAttaque=false; alertes.push('👴 L\'Ancien a survécu à l\'attaque des loups !'); }
+                else { const sup=tuerJoueur(victimeNuit,'loups'); morts.push(j.nom); alertes.push(...sup); }
+            }
+
+            // Empoisonné sorcière
+            if(empoisonneParSorciere!==null){ const sup=tuerJoueur(empoisonneParSorciere,'sorciere'); morts.push(joueurs[empoisonneParSorciere].nom+' (empoisonné 🧙)'); alertes.push(...sup); empoisonneParSorciere=null; }
+            sauveParSorciere=false;
+
+            const mortBox=document.getElementById('mort-annonce-box');
+            if(morts.length===0&&alertes.length===0){
+                mortBox.innerHTML='<div class="mort-annonce" style="border-color:#00e5cc;background-color:#001a1a">🌟 Cette nuit, personne n\'est mort !</div>';
+                parler('Le jour se lève. Cette nuit, personne n\'est mort. Le village est soulagé... mais les loups rôdent encore.');
             } else {
-                mortBox.innerHTML = '<div class="mort-annonce">💀 Cette nuit, ' + morts.join(' et ') + ' ont été retrouvés morts...</div>';
-                parler('Le jour se lève sur le village. Cette nuit, ' + morts.join(' et ') + ' ont été retrouvés morts. Le village est en deuil...');
+                let html='<div class="mort-annonce">';
+                if(morts.length>0) html+='💀 '+morts.join(' et ')+' ont été retrouvés morts...<br>';
+                alertes.forEach(a=>{ html+='<br>'+a; });
+                html+='</div>';
+                mortBox.innerHTML=html;
+                parler('Le jour se lève. '+morts.join(' et ')+(morts.length>0?' ont été retrouvés morts.':''));
             }
 
-            document.getElementById('jour-narration').textContent = 'Les survivants se rassemblent sur la place du village pour débattre et voter.';
+            // Ours de Thiercelieux
+            const ours=joueurs.find(j=>j.role==='ours'&&j.vivant);
+            const oursBox=document.getElementById('ours-annonce');
+            if(ours){
+                const vivants=joueurs.filter(j=>j.vivant);
+                const idxOurs=vivants.findIndex(j=>j.role==='ours');
+                const voisins=[vivants[(idxOurs-1+vivants.length)%vivants.length],vivants[(idxOurs+1)%vivants.length]];
+                const loupVoisin=voisins.some(j=>j&&['loup','grandloup','loupblanc'].includes(j.role));
+                oursBox.style.display=loupVoisin?'block':'none';
+                if(loupVoisin) parler('Grrr ! L\'Ours grogne ! Un loup est assis à côté de lui !');
+            } else { oursBox.style.display='none'; }
 
-            const fin = verifierFinDePartie();
-            if (fin) { setTimeout(() => afficherFin(fin), 2000); return; }
+            const fin=verifierFinDePartie();
+            if(fin){setTimeout(()=>afficherFin(fin),2000);return;}
+
+            // Vérifier chasseur mort
+            const chasseurMort=morts.find(nom=>joueurs.find(j=>j.nom===nom&&j.role==='chasseur'));
+            if(chasseurMort){ setTimeout(()=>afficherChasseur(joueurs.findIndex(j=>j.nom===chasseurMort)),500); return; }
 
             showScreen('screen-jour');
             numNuit++;
         }
 
+        function afficherChasseur(idx) {
+            document.getElementById('chasseur-nom').textContent='🏹 '+joueurs[idx].nom+' est mort !';
+            const grid=document.getElementById('chasseur-cibles');
+            grid.innerHTML='';
+            chasseurCible=null;
+            joueurs.forEach((j,jIdx)=>{
+                if(!j.vivant||jIdx===idx) return;
+                const btn=document.createElement('button');
+                btn.className='joueur-btn'; btn.textContent=j.nom;
+                btn.onclick=()=>{ chasseurCible=jIdx; document.querySelectorAll('#chasseur-cibles .joueur-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+                grid.appendChild(btn);
+            });
+            showScreen('screen-chasseur');
+        }
+
+        function confirmerTirChasseur() {
+            if(chasseurCible===null){alert('Choisissez une cible !');return;}
+            const cible=joueurs[chasseurCible];
+            tuerJoueur(chasseurCible,'chasseur');
+            alert('💀 '+cible.nom+' a été tué par le Chasseur !\nIl était : '+ROLES_INFO[cible.role].emoji+' '+ROLES_INFO[cible.role].nom);
+            const fin=verifierFinDePartie();
+            if(fin){afficherFin(fin);return;}
+            showScreen('screen-jour');
+            numNuit++;
+        }
+
         function commencerVote() {
-            voteSelectionne = -1;
-            const liste = document.getElementById('vote-liste');
-            liste.innerHTML = '';
-            joueurs.forEach((j, idx) => {
-                if (!j.vivant) return;
-                const div = document.createElement('div');
-                div.className = 'vote-joueur';
-                div.innerHTML = '<span>' + j.nom + '</span><span style="color:#888;font-size:13px">' + ROLES_INFO[j.role].emoji + '</span>';
-                div.onclick = () => {
-                    voteSelectionne = idx;
-                    document.querySelectorAll('.vote-joueur').forEach(d => d.classList.remove('selected'));
-                    div.classList.add('selected');
-                };
+            voteSelectionne=-1;
+            const liste=document.getElementById('vote-liste');
+            liste.innerHTML='';
+            document.getElementById('vote-subtitle').textContent=muetAujourdhui!==null?'⚠️ '+joueurs[muetAujourdhui].nom+' ne peut pas voter !':'Qui voulez-vous éliminer ?';
+            joueurs.forEach((j,idx)=>{
+                if(!j.vivant) return;
+                const div=document.createElement('div');
+                div.className='vote-joueur';
+                div.innerHTML='<span>'+j.nom+(muetAujourdhui===idx?' 🤐':'')+'</span><span style="color:#888;font-size:13px">'+ROLES_INFO[j.role].emoji+'</span>';
+                div.onclick=()=>{ voteSelectionne=idx; document.querySelectorAll('.vote-joueur').forEach(d=>d.classList.remove('selected')); div.classList.add('selected'); };
                 liste.appendChild(div);
             });
             showScreen('screen-vote');
         }
 
         function confirmerVote() {
-            if (voteSelectionne === -1) { alert('Choisissez quelqu\'un à éliminer !'); return; }
-            const elimine = joueurs[voteSelectionne];
-            elimine.vivant = false;
-            parler(elimine.nom + ' a été éliminé par le village. Il était ' + ROLES_INFO[elimine.role].nom);
-            alert('💀 ' + elimine.nom + ' a été éliminé !\nIl était : ' + ROLES_INFO[elimine.role].emoji + ' ' + ROLES_INFO[elimine.role].nom);
-            if (elimine.amoureux) {
-                const autreAmoureux = amoureux.find(i => i !== voteSelectionne);
-                if (autreAmoureux !== undefined && joueurs[autreAmoureux].vivant) {
-                    joueurs[autreAmoureux].vivant = false;
-                    alert('💔 ' + joueurs[autreAmoureux].nom + ' meurt de chagrin !');
-                }
+            if(voteSelectionne===-1){alert('Choisissez quelqu\'un !');return;}
+            const elimine=joueurs[voteSelectionne];
+
+            // Ancien éliminé par vote — tous les villageois spéciaux perdent leurs pouvoirs
+            if(elimine.role==='ancien'){
+                parler(elimine.nom+' était l\'Ancien ! Les villageois ont perdu leurs pouvoirs spéciaux !');
+                alert('👴 '+elimine.nom+' était l\'Ancien !\n⚠️ Tous les villageois spéciaux perdent leurs pouvoirs !');
+                ['voyante','sorciere','chasseur','renard','seductrice','ours'].forEach(role=>{ joueurs.forEach(j=>{ if(j.role===role) j.role='villageois'; }); });
             }
-            const fin = verifierFinDePartie();
-            if (fin) { afficherFin(fin); return; }
+
+            const sup=tuerJoueur(voteSelectionne,'vote');
+            parler(elimine.nom+' a été éliminé. Il était '+ROLES_INFO[elimine.role].nom);
+            let msg='💀 '+elimine.nom+' a été éliminé !\nIl était : '+ROLES_INFO[elimine.role].emoji+' '+ROLES_INFO[elimine.role].nom;
+            if(sup.length>0) msg+='\n\n'+sup.join('\n');
+            alert(msg);
+
+            const fin=verifierFinDePartie();
+            if(fin){afficherFin(fin);return;}
+
+            // Chasseur éliminé par vote
+            if(elimine.role==='chasseur'){ afficherChasseur(voteSelectionne); return; }
+
             afficherNuitIntro();
         }
 
         function passerVote() {
-            const fin = verifierFinDePartie();
-            if (fin) { afficherFin(fin); return; }
+            const fin=verifierFinDePartie();
+            if(fin){afficherFin(fin);return;}
             afficherNuitIntro();
         }
 
+        function verifierFluteVictoire() {
+            return joueurs.filter(j=>j.vivant&&j.role!=='flute').every(j=>j.ensorcele);
+        }
+
         function verifierFinDePartie() {
-            const loupsVivants = joueurs.filter(j => j.role === 'loup' && j.vivant).length;
-            const villageoirsVivants = joueurs.filter(j => j.role !== 'loup' && j.vivant).length;
-            if (loupsVivants === 0) return 'village';
-            if (loupsVivants >= villageoirsVivants) return 'loups';
+            const loupsVivants=joueurs.filter(j=>(j.role==='loup'||j.role==='grandloup')&&j.vivant).length;
+            const loupBlancVivant=joueurs.find(j=>j.role==='loupblanc'&&j.vivant);
+            const villageoirsVivants=joueurs.filter(j=>j.role!=='loup'&&j.role!=='grandloup'&&j.role!=='loupblanc'&&j.vivant).length;
+            const totalVivants=joueurs.filter(j=>j.vivant).length;
+
+            if(loupBlancVivant&&totalVivants===1) return 'loupblanc';
+            if(verifierFluteVictoire()) return 'flute';
+
+            // Amoureux loup+villageois = victoire couple
+            if(amoureux.length===2){
+                const a1=joueurs[amoureux[0]], a2=joueurs[amoureux[1]];
+                if(a1.vivant&&a2.vivant&&totalVivants===2){ const roles=[a1.role,a2.role]; if(roles.includes('loup')&&!roles.every(r=>r==='loup')) return 'amoureux'; }
+            }
+
+            if(loupsVivants===0) return 'village';
+            if(loupsVivants>=villageoirsVivants) return 'loups';
             return null;
         }
 
         function afficherFin(gagnant) {
-            if (gagnant === 'village') {
-                document.getElementById('fin-emoji').textContent = '🧑‍🌾';
-                document.getElementById('fin-titre').textContent = 'Le village a gagné !';
-                document.getElementById('fin-desc').textContent = 'Tous les loups garous ont été éliminés. Le village peut enfin dormir en paix !';
-                parler('Le village a gagné ! Tous les loups garous ont été éliminés. Le village peut enfin dormir en paix !');
-            } else {
-                document.getElementById('fin-emoji').textContent = '🐺';
-                document.getElementById('fin-titre').textContent = 'Les Loups ont gagné !';
-                document.getElementById('fin-desc').textContent = 'Les loups garous ont pris le contrôle du village. La nuit règne pour toujours...';
-                parler('Les loups garous ont gagné ! Ils ont pris le contrôle du village. La nuit règne pour toujours...');
-            }
-            const rolesDiv = document.getElementById('fin-roles');
-            rolesDiv.innerHTML = '';
-            joueurs.forEach(j => {
-                const info = ROLES_INFO[j.role];
-                rolesDiv.innerHTML += `<div class="score-final-box"><span>${j.vivant ? '✅' : '💀'} ${j.nom}</span><span>${info.emoji} ${info.nom}</span></div>`;
+            const configs={
+                village:   {emoji:'🧑‍🌾', titre:'Le Village a gagné !',      desc:'Tous les loups ont été éliminés. Le village peut enfin dormir en paix !', parole:'Le village a gagné ! Tous les loups ont été éliminés.'},
+                loups:     {emoji:'🐺', titre:'Les Loups ont gagné !',       desc:'Les loups ont pris le contrôle du village. La nuit règne pour toujours...', parole:'Les loups garous ont gagné ! Ils ont pris le contrôle du village.'},
+                loupblanc: {emoji:'🐺', titre:'Le Loup Blanc a gagné !',     desc:'Le Loup Blanc a éliminé tout le monde et règne seul sur le village !', parole:'Le Loup Blanc a gagné tout seul !'},
+                flute:     {emoji:'🎺', titre:'Le Joueur de Flûte a gagné !',desc:'Tous les survivants sont sous l\'emprise de sa musique ensorcelante !', parole:'Le Joueur de Flûte a gagné ! Tout le monde est ensorcelé.'},
+                amoureux:  {emoji:'💕', titre:'Les Amoureux ont gagné !',    desc:'Leur amour a triomphé de tout — loups et villageois confondus !', parole:'Les amoureux ont gagné ! Leur amour a tout surmonté.'},
+            };
+            const cfg=configs[gagnant]||configs.village;
+            document.getElementById('fin-emoji').textContent=cfg.emoji;
+            document.getElementById('fin-titre').textContent=cfg.titre;
+            document.getElementById('fin-desc').textContent=cfg.desc;
+            parler(cfg.parole);
+            const rolesDiv=document.getElementById('fin-roles');
+            rolesDiv.innerHTML='';
+            joueurs.forEach(j=>{
+                const info=ROLES_INFO[j.role];
+                rolesDiv.innerHTML+=`<div class="score-final-box"><span>${j.vivant?'✅':'💀'} ${j.nom}</span><span>${info.emoji} ${info.nom}</span></div>`;
             });
             showScreen('screen-fin');
         }
 
-        // Init
         suggererRoles();
     </script>
 </body>
