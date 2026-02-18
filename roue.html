@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roue de la Chance</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 42px; color: #00e5cc; margin-bottom: 10px; }
+        h2 { font-size: 26px; color: #00e5cc; margin-bottom: 20px; }
+        .subtitle { font-size: 16px; color: #888; margin-bottom: 40px; }
+        .start-btn { background-color: #00e5cc; color: #0d0d0d; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .option-row { display: flex; gap: 10px; align-items: center; margin: 6px 0; width: 100%; max-width: 340px; }
+        .option-input { flex: 1; background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 14px; color: white; font-size: 15px; }
+        .option-input:focus { border-color: #00e5cc; outline: none; }
+        .delete-btn { background-color: #2a0000; border: 2px solid #ff3b3b; border-radius: 10px; color: #ff3b3b; width: 40px; height: 40px; font-size: 18px; cursor: pointer; flex-shrink: 0; }
+        .add-btn { background-color: #1a1a1a; border: 2px dashed #00e5cc; border-radius: 12px; color: #00e5cc; padding: 12px; width: 100%; max-width: 340px; font-size: 15px; cursor: pointer; margin-top: 5px; }
+        .section-title { font-size: 13px; color: #00e5cc; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 5px; }
+
+        /* ROUE */
+        .roue-container { position: relative; width: 320px; height: 320px; margin: 20px auto; }
+        canvas { border-radius: 50%; }
+        .roue-fleche {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            z-index: 10;
+            filter: drop-shadow(0 0 8px #00e5cc);
+        }
+        .spin-btn {
+            background-color: #00e5cc;
+            color: #0d0d0d;
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 32px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 0 20px #00e5cc55;
+        }
+        .resultat-box {
+            background-color: #1a1a1a;
+            border: 2px solid #00e5cc;
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-top: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #00e5cc;
+            max-width: 320px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🎡 Roue</h1>
+        <p class="subtitle">Laissez le hasard décider !</p>
+        <button class="start-btn" onclick="showScreen('screen-config')">⚙️ Configurer</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+        <p class="section-title">🎯 Options de la roue</p>
+        <div id="options-liste"></div>
+        <button class="add-btn" onclick="ajouterOption()">+ Ajouter une option</button>
+        <button class="start-btn" onclick="lancerRoue()" style="margin-top:20px">Lancer la roue 🎡</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- ROUE -->
+    <div class="screen" id="screen-roue">
+        <h2>🎡 Roue de la Chance</h2>
+        <div class="roue-container">
+            <div class="roue-fleche">▼</div>
+            <canvas id="roue-canvas" width="320" height="320"></canvas>
+        </div>
+        <button class="spin-btn" id="spin-btn" onclick="tournerRoue()">🎰</button>
+        <div class="resultat-box" id="resultat-box"></div>
+        <button class="back-btn" onclick="showScreen('screen-config')" style="margin-top:20px">⚙️ Modifier</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Accueil</button>
+    </div>
+
+    <script>
+        let options = ['Alice', 'Bob', 'Charlie', 'David'];
+        const COULEURS = ['#00e5cc','#a78bfa','#ff6b6b','#ffd166','#06d6a0','#118ab2','#ff9500','#ff3b3b','#00b4d8','#c77dff','#f72585','#4cc9f0'];
+        let rotation = 0;
+        let enTrain = false;
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function renderOptions() {
+            const liste = document.getElementById('options-liste');
+            liste.innerHTML = '';
+            options.forEach((o, idx) => {
+                const row = document.createElement('div');
+                row.className = 'option-row';
+                row.innerHTML = `<input class="option-input" value="${o}" oninput="options[${idx}]=this.value" placeholder="Option ${idx+1}">
+                <button class="delete-btn" onclick="supprimerOption(${idx})">✕</button>`;
+                liste.appendChild(row);
+            });
+        }
+
+        function ajouterOption() {
+            options.push('Option '+(options.length+1));
+            renderOptions();
+        }
+
+        function supprimerOption(idx) {
+            if(options.length <= 2) { alert('Au moins 2 options !'); return; }
+            options.splice(idx, 1);
+            renderOptions();
+        }
+
+        function lancerRoue() {
+            document.querySelectorAll('#options-liste .option-input').forEach((inp,idx) => {
+                options[idx] = inp.value.trim() || 'Option '+(idx+1);
+            });
+            dessinerRoue(rotation);
+            document.getElementById('resultat-box').style.display = 'none';
+            showScreen('screen-roue');
+        }
+
+        function dessinerRoue(angle) {
+            const canvas = document.getElementById('roue-canvas');
+            const ctx = canvas.getContext('2d');
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const r = cx - 5;
+            const n = options.length;
+            const arc = (2 * Math.PI) / n;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            options.forEach((opt, i) => {
+                const startAngle = angle + i * arc;
+                const endAngle = startAngle + arc;
+
+                // Secteur
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = COULEURS[i % COULEURS.length];
+                ctx.fill();
+                ctx.strokeStyle = '#0d0d0d';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Texte
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(startAngle + arc / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#0d0d0d';
+                ctx.font = `bold ${n > 8 ? 11 : 14}px Arial`;
+                const maxLen = 12;
+                const label = opt.length > maxLen ? opt.substring(0, maxLen)+'...' : opt;
+                ctx.fillText(label, r - 10, 5);
+                ctx.restore();
+            });
+
+            // Centre
+            ctx.beginPath();
+            ctx.arc(cx, cy, 20, 0, 2 * Math.PI);
+            ctx.fillStyle = '#0d0d0d';
+            ctx.fill();
+            ctx.strokeStyle = '#00e5cc';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        function tournerRoue() {
+            if(enTrain) return;
+            enTrain = true;
+            document.getElementById('resultat-box').style.display = 'none';
+            document.getElementById('spin-btn').style.opacity = '0.5';
+
+            const toursFull = (Math.floor(Math.random() * 5) + 5) * 2 * Math.PI;
+            const angleExtra = Math.random() * 2 * Math.PI;
+            const totalAngle = toursFull + angleExtra;
+            const duree = 4000;
+            const debut = performance.now();
+            const angleDepart = rotation;
+
+            function animer(now) {
+                const elapsed = now - debut;
+                const progress = Math.min(elapsed / duree, 1);
+                const ease = 1 - Math.pow(1 - progress, 4);
+                rotation = angleDepart + totalAngle * ease;
+                dessinerRoue(rotation);
+
+                if(progress < 1) {
+                    requestAnimationFrame(animer);
+                } else {
+                    enTrain = false;
+                    document.getElementById('spin-btn').style.opacity = '1';
+                    afficherResultat();
+                }
+            }
+
+            requestAnimationFrame(animer);
+        }
+
+        function afficherResultat() {
+            const n = options.length;
+            const arc = (2 * Math.PI) / n;
+            // La flèche pointe vers le haut (angle -PI/2)
+            const angleNormalise = (((-rotation - Math.PI / 2) % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+            const idx = Math.floor(angleNormalise / arc) % n;
+            const gagnant = options[idx];
+
+            const box = document.getElementById('resultat-box');
+            box.textContent = '🎉 ' + gagnant + ' !';
+            box.style.display = 'block';
+        }
+
+        renderOptions();
+    </script>
+</body>
+</html>
