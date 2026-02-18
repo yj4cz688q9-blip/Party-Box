@@ -538,10 +538,20 @@
         }
 
         function commencerNuit() {
-            victimeNuit=null; sauveParSorciere=false; empoisonneParSorciere=null;
-            loupBlancPeutTuer = (numNuit%2===0);
-            construirePhases(); phaseIndex=0; jouerPhase();
-        }
+    victimeNuit=null; sauveParSorciere=false; empoisonneParSorciere=null;
+    loupBlancPeutTuer = (numNuit%2===0);
+    construirePhases(); phaseIndex=0;
+    let count=5;
+    document.getElementById('nuit-narration').textContent='La nuit commence dans '+count+'...';
+    const btn=document.querySelector('#screen-nuit-intro .start-btn');
+    btn.style.display='none';
+    const interval=setInterval(()=>{
+        count--;
+        document.getElementById('nuit-narration').textContent=count>0?'La nuit commence dans '+count+'...':'🌙 Bonne nuit...';
+        if(count<=0){ clearInterval(interval); btn.style.display='block'; jouerPhase(); }
+    },1000);
+}
+
 
         function construirePhases() {
             phases=[];
