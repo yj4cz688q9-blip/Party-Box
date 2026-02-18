@@ -359,7 +359,7 @@
             }
             const nbP = Math.round(4 + chance * 4);
             ['reparation','essence','roue'].forEach(par => { for (let i = 0; i < nbP; i++) p.push(par); });
-            for (let i = 0; i < Math.round((nbP + 8) * mult); i++) p.push('feu_vert');
+            for (let i = 0; i < Math.round((nbP + 8) * mult * 1.25); i++) p.push('feu_vert');
             if (reglesLimite) for (let i = 0; i < nbP; i++) p.push('fin_limite');
             if (reglesBottes) ['as_volant','citerne','increvable','prioritaire'].forEach(b => { for (let i = 0; i < nbBottes; i++) p.push(b); });
             return p.sort(() => Math.random() - 0.5);
