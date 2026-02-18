@@ -722,27 +722,72 @@
         }
 
         function afficherPhaseLoups() {
-            parler("Les Loups Garous se réveillent... Ils choisissent leur victime pour cette nuit...");
-            document.getElementById('phase-emoji').textContent='🐺';
-            document.getElementById('phase-titre').textContent='Les Loups se réveillent';
-            const loups=joueurs.filter(j=>(j.role==='loup'||j.role==='grandloup')&&j.vivant).map(j=>j.nom);
-            document.getElementById('phase-narration').textContent='Loups cette nuit : '+loups.join(', ')+'. Choisissez votre victime.';
-            const action=document.getElementById('phase-action');
-            action.innerHTML='<div class="joueurs-grid" id="loups-cibles"></div>';
-            const grid=document.getElementById('loups-cibles');
-            joueurs.forEach((j,idx)=>{
-                if(!j.vivant||j.role==='loup'||j.role==='grandloup'||j.role==='loupblanc') return;
-                const btn=document.createElement('button');
-                btn.className='joueur-btn'; btn.textContent=j.nom;
-                btn.onclick=()=>{ victimeNuit=idx; document.querySelectorAll('#loups-cibles .joueur-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
-                grid.appendChild(btn);
-            });
-            document.getElementById('phase-btn').onclick=()=>{
-                if(victimeNuit===null){alert('Choisissez une victime !');return;}
-                phaseSuivante('Les Loups Garous peuvent se rendormir...');
-            };
+    parler("Les Loups Garous se réveillent... La petite fille peut ouvrir les yeux... Les loups se reconnaissent entre eux...");
+    const loupsVivants = joueurs.filter((j,idx) => (j.role==='loup'||j.role==='grandloup') && j.vivant).map((j,i) => ({...j, idx: joueurs.indexOf(j)}));
+    
+    // Voter un par un
+    let loupVoteIndex = 0;
+    let votesLoups = {};
+
+    function voterLoupSuivant() {
+        if(loupVoteIndex >= loupsVivants.length) {
+            // Compter les votes
+            const comptage = {};
+            Object.values(votesLoups).forEach(v => { comptage[v] = (comptage[v]||0) + 1; });
+            const maxVotes = Math.max(...Object.values(comptage));
+            const victimes = Object.keys(comptage).filter(k => comptage[k] === maxVotes);
+            victimeNuit = parseInt(victimes[Math.floor(Math.random() * victimes.length)]);
+            
+            // Afficher récap
+            document.getElementById('phase-emoji').textContent = '🐺';
+            document.getElementById('phase-titre').textContent = 'Récap des votes loups';
+            document.getElementById('phase-narration').textContent = 'Victime choisie : ' + joueurs[victimeNuit].nom;
+            const action = document.getElementById('phase-action');
+            action.innerHTML = '<div style="width:100%">' + loupsVivants.map(l => 
+                `<div style="background:#1a1a1a;border-radius:12px;padding:10px 15px;margin-bottom:8px;display:flex;justify-content:space-between">
+                    <span>🐺 ${l.nom}</span>
+                    <span style="color:#ff5555">➡️ ${joueurs[votesLoups[l.nom]].nom}</span>
+                </div>`
+            ).join('') + '</div>';
+            document.getElementById('phase-btn').onclick = () => phaseSuivante('Les Loups Garous peuvent se rendormir...');
             showScreen('screen-phase');
+            return;
         }
+
+        const loupActuel = loupsVivants[loupVoteIndex];
+        document.getElementById('phase-emoji').textContent = '🐺';
+        document.getElementById('phase-titre').textContent = loupActuel.nom + ', vote !';
+        document.getElementById('phase-narration').textContent = 'Qui veux-tu dévorer cette nuit ?';
+        const action = document.getElementById('phase-action');
+        action.innerHTML = '<div class="joueurs-grid" id="loups-cibles"></div>';
+        const grid = document.getElementById('loups-cibles');
+        joueurs.forEach((j, idx) => {
+            if(!j.vivant || j.role==='loup' || j.role==='grandloup' || j.role==='loupblanc') return;
+            const btn = document.createElement('button');
+            btn.className = 'joueur-btn';
+            btn.textContent = j.nom;
+            btn.onclick = () => {
+                votesLoups[loupActuel.nom] = idx;
+                document.querySelectorAll('#loups-cibles .joueur-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            };
+            grid.appendChild(btn);
+        });
+        document.getElementById('phase-btn').onclick = () => {
+            if(votesLoups[loupActuel.nom] === undefined) { alert('Choisis une victime !'); return; }
+            loupVoteIndex++;
+            if(loupVoteIndex < loupsVivants.length) {
+                afficherSommeil('🐺 Loup suivant...', voterLoupSuivant);
+            } else {
+                voterLoupSuivant();
+            }
+        };
+        showScreen('screen-phase');
+    }
+
+    voterLoupSuivant();
+}
+
 
         function afficherPhaseLoupBlanc() {
             parler("Le Loup Blanc se réveille seul... Il peut éliminer un autre loup cette nuit...");
