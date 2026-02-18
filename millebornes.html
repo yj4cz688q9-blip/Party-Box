@@ -371,7 +371,10 @@
     for (let i = 0; i < Math.round((nbP + 8) * mult); i++) p.push('feu_vert');
 
     if (reglesLimite) for (let i = 0; i < Math.round(nbP * mult); i++) p.push('fin_limite');
-    if (reglesBottes) ['as_volant','citerne','increvable','prioritaire'].forEach(b => { for (let i = 0; i < nbBottes; i++) p.push(b); });
+    if (reglesBottes) {
+    const nbBottesTotal = Math.max(nbBottes, Math.round(nbBottes + (1 + chance * 3) * mult));
+    ['as_volant','citerne','increvable','prioritaire'].forEach(b => { for (let i = 0; i < nbBottesTotal; i++) p.push(b); });
+}
 
     return p.sort(() => Math.random() - 0.5);
 }
