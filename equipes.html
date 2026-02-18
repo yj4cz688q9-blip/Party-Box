@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Équipes</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; overflow-y: auto; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 42px; color: #00e5cc; margin-bottom: 10px; margin-top: 20px; }
+        h2 { font-size: 26px; color: #00e5cc; margin-bottom: 20px; margin-top: 20px; }
+        .subtitle { font-size: 16px; color: #888; margin-bottom: 30px; }
+        .start-btn { background-color: #00e5cc; color: #0d0d0d; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .section-title { font-size: 13px; color: #00e5cc; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 8px; }
+        .option-row { display: flex; gap: 10px; align-items: center; margin: 6px 0; width: 100%; max-width: 340px; }
+        .option-input { flex: 1; background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 14px; color: white; font-size: 15px; }
+        .option-input:focus { border-color: #00e5cc; outline: none; }
+        .delete-btn { background-color: #2a0000; border: 2px solid #ff3b3b; border-radius: 10px; color: #ff3b3b; width: 40px; height: 40px; font-size: 18px; cursor: pointer; flex-shrink: 0; }
+        .add-btn { background-color: #1a1a1a; border: 2px dashed #00e5cc; border-radius: 12px; color: #00e5cc; padding: 12px; width: 100%; max-width: 340px; font-size: 15px; cursor: pointer; margin-top: 5px; }
+        .config-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .counter { display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .counter-btn { background-color: #00e5cc; color: #0d0d0d; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .counter-value { font-size: 32px; font-weight: bold; min-width: 50px; }
+
+        /* ÉQUIPES RÉSULTATS */
+        .equipe-card { border-radius: 20px; padding: 18px 20px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .equipe-titre { font-size: 18px; font-weight: bold; margin-bottom: 12px; }
+        .equipe-membre { background-color: #00000033; border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; font-size: 16px; }
+
+        /* TOURNOI */
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; }
+        .toggle-label { font-size: 15px; color: #ddd; }
+        .toggle { position: relative; width: 50px; height: 28px; cursor: pointer; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; border-radius: 28px; transition: 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .slider { background-color: #00e5cc; }
+        input:checked + .slider:before { transform: translateX(22px); }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>👥 Équipes</h1>
+        <p class="subtitle">Formez des équipes aléatoires !</p>
+        <button class="start-btn" onclick="showScreen('screen-config')">➕ Créer des équipes</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+
+        <p class="section-title">👤 Joueurs</p>
+        <div id="joueurs-liste"></div>
+        <button class="add-btn" onclick="ajouterJoueur()">+ Ajouter un joueur</button>
+
+        <p class="section-title">🏆 Nombre d'équipes</p>
+        <div class="config-box">
+            <div class="counter">
+                <button class="counter-btn" onclick="changeNbEquipes(-1)">−</button>
+                <span class="counter-value" id="nb-equipes-value">2</span>
+                <button class="counter-btn" onclick="changeNbEquipes(1)">+</button>
+            </div>
+        </div>
+
+        <p class="section-title">⚙️ Options</p>
+        <div class="config-box">
+            <div class="toggle-row">
+                <span class="toggle-label">🏷️ Nommer les équipes</span>
+                <label class="toggle"><input type="checkbox" id="toggle-noms" checked><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="genererEquipes()" style="margin-top:10px">🎲 Générer les équipes !</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- RÉSULTATS -->
+    <div class="screen" id="screen-resultats">
+        <h2>🎲 Équipes générées !</h2>
+        <div id="equipes-resultats" style="width:100%;max-width:340px"></div>
+        <button class="start-btn" onclick="genererEquipes()" style="margin-top:10px">🔀 Remélanger</button>
+        <button class="start-btn" onclick="showScreen('screen-config')" style="background-color:#1a1a1a;color:#00e5cc;border:2px solid #00e5cc;margin-top:10px">⚙️ Modifier</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Accueil</button>
+    </div>
+
+    <script>
+        let joueurs = ['Joueur 1', 'Joueur 2', 'Joueur 3', 'Joueur 4'];
+        let nbEquipes = 2;
+
+        const COULEURS = [
+            { bg: '#1a0a2e', border: '#a78bfa', text: '#a78bfa' },
+            { bg: '#002a20', border: '#00e5cc', text: '#00e5cc' },
+            { bg: '#2a1000', border: '#ff9500', text: '#ff9500' },
+            { bg: '#2a0000', border: '#ff3b3b', text: '#ff3b3b' },
+            { bg: '#001a2a', border: '#0099ff', text: '#0099ff' },
+            { bg: '#1a2a00', border: '#00cc44', text: '#00cc44' },
+        ];
+
+        const NOMS_EQUIPES = [
+            '🔥 Les Flammes', '⚡ Les Éclairs', '🌊 Les Vagues', '🌪️ Les Tornades',
+            '🦁 Les Lions', '🐺 Les Loups', '🦅 Les Aigles', '🐉 Les Dragons',
+            '💎 Les Diamants', '🏆 Les Champions', '🚀 Les Fusées', '🌟 Les Étoiles'
+        ];
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function renderJoueurs() {
+            const liste = document.getElementById('joueurs-liste');
+            liste.innerHTML = '';
+            joueurs.forEach((j, idx) => {
+                const row = document.createElement('div');
+                row.className = 'option-row';
+                row.innerHTML = `<input class="option-input" value="${j}" oninput="joueurs[${idx}]=this.value" placeholder="Joueur ${idx+1}">
+                <button class="delete-btn" onclick="supprimerJoueur(${idx})">✕</button>`;
+                liste.appendChild(row);
+            });
+        }
+
+        function ajouterJoueur() {
+            joueurs.push('Joueur ' + (joueurs.length + 1));
+            renderJoueurs();
+        }
+
+        function supprimerJoueur(idx) {
+            if (joueurs.length <= 2) { alert('Au moins 2 joueurs !'); return; }
+            joueurs.splice(idx, 1);
+            renderJoueurs();
+        }
+
+        function changeNbEquipes(delta) {
+            nbEquipes = Math.max(2, Math.min(6, nbEquipes + delta));
+            document.getElementById('nb-equipes-value').textContent = nbEquipes;
+        }
+
+        function genererEquipes() {
+            // Récupérer les valeurs actuelles
+            document.querySelectorAll('#joueurs-liste .option-input').forEach((inp, idx) => {
+                joueurs[idx] = inp.value.trim() || 'Joueur ' + (idx + 1);
+            });
+
+            if (joueurs.length < nbEquipes) {
+                alert('Il faut au moins autant de joueurs que d\'équipes !');
+                return;
+            }
+
+            // Mélanger les joueurs
+            const melanges = [...joueurs].sort(() => Math.random() - 0.5);
+
+            // Créer les équipes vides
+            const equipes = [];
+            const nomsDisponibles = [...NOMS_EQUIPES].sort(() => Math.random() - 0.5);
+            const useNoms = document.getElementById('toggle-noms').checked;
+
+            for (let i = 0; i < nbEquipes; i++) {
+                equipes.push({
+                    nom: useNoms ? nomsDisponibles[i] : 'Équipe ' + (i + 1),
+                    membres: [],
+                    couleur: COULEURS[i % COULEURS.length]
+                });
+            }
+
+            // Distribuer les joueurs
+            melanges.forEach((joueur, i) => {
+                equipes[i % nbEquipes].membres.push(joueur);
+            });
+
+            // Afficher
+            const container = document.getElementById('equipes-resultats');
+            container.innerHTML = '';
+            equipes.forEach(eq => {
+                const card = document.createElement('div');
+                card.className = 'equipe-card';
+                card.style.backgroundColor = eq.couleur.bg;
+                card.style.border = '2px solid ' + eq.couleur.border;
+                let html = `<div class="equipe-titre" style="color:${eq.couleur.text}">${eq.nom}</div>`;
+                eq.membres.forEach(m => {
+                    html += `<div class="equipe-membre">${m}</div>`;
+                });
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+
+            showScreen('screen-resultats');
+        }
+
+        renderJoueurs();
+    </script>
+</body>
+</html>
