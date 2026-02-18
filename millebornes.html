@@ -410,8 +410,7 @@ afficherMain();
             pioche = creerPioche();
             joueurs.forEach(j => { for (let i = 0; i < nbCartes; i++) { const c = piocher(); if (c) j.main.push(c); } });
             joueurActuel = 0;
-            afficherJeu();
-
+            afficherPassage();
 
             if (joueurs[joueurActuel].estBot) jouerBot();
             else afficherPassage();
