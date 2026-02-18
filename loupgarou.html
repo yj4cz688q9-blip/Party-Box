@@ -825,7 +825,7 @@
                 if(j.role==='ancien'&&ancienPremierAttaque){ ancienPremierAttaque=false; alertes.push('👴 L\'Ancien a survécu à l\'attaque des loups !'); }
                 else { const sup=tuerJoueur(victimeNuit); morts.push(j.nom); alertes.push(...sup); }
             }
-            if(empoisonneParSorciere!==null){ const sup=tuerJoueur(empoisonneParSorciere); morts.push(joueurs[empoisonneParSorciere].nom+' (empoisonné 🧙)'); alertes.push(...sup); empoisonneParSorciere=null; }
+            if(empoisonneParSorciere!==null){ const sup=tuerJoueur(empoisonneParSorciere); morts.push(joueurs[empoisonneParSorciere].nom+' (empoisonné)'); alertes.push(...sup); empoisonneParSorciere=null; }
             sauveParSorciere=false;
 
             const mortBox=document.getElementById('mort-annonce-box');
