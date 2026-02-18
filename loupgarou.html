@@ -614,28 +614,47 @@
         }
 
         function afficherPhaseVoyante() {
-            parler("La Voyante se réveille... Elle concentre ses pouvoirs mystiques...");
-            document.getElementById('phase-emoji').textContent='👁️';
-            document.getElementById('phase-titre').textContent='La Voyante se réveille';
-            document.getElementById('phase-narration').textContent='Choisissez un joueur pour voir son rôle secret.';
-            const action=document.getElementById('phase-action');
-            action.innerHTML='<div class="joueurs-grid" id="voyante-cibles"></div><div id="voyante-resultat" style="margin-top:15px;font-size:16px;color:#a78bfa;font-weight:bold"></div>';
-            const grid=document.getElementById('voyante-cibles');
-            joueurs.forEach((j,idx)=>{
-                if(!j.vivant) return;
-                const btn=document.createElement('button');
-                btn.className='joueur-btn'; btn.textContent=j.nom;
-                btn.onclick=()=>{
-                    const info=ROLES_INFO[j.role];
-                    document.getElementById('voyante-resultat').textContent=j.nom+' est '+info.emoji+' '+info.nom;
-                    document.querySelectorAll('#voyante-cibles .joueur-btn').forEach(b=>b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                };
-                grid.appendChild(btn);
-            });
-            document.getElementById('phase-btn').onclick=()=>phaseSuivante('La Voyante peut se rendormir...');
-            showScreen('screen-phase');
-        }
+    parler("La Voyante se réveille... Elle concentre ses pouvoirs mystiques...");
+    document.getElementById('phase-emoji').textContent = '👁️';
+    document.getElementById('phase-titre').textContent = 'La Voyante se réveille';
+    document.getElementById('phase-narration').textContent = 'Choisissez un joueur pour voir son rôle secret.';
+    const action = document.getElementById('phase-action');
+    action.innerHTML = '<div class="joueurs-grid" id="voyante-cibles"></div>';
+    const grid = document.getElementById('voyante-cibles');
+    let voyanteCible = null;
+    joueurs.forEach((j, idx) => {
+        if(!j.vivant || j.role==='voyante') return;
+        const btn = document.createElement('button');
+        btn.className = 'joueur-btn'; btn.textContent = j.nom;
+        btn.onclick = () => {
+            voyanteCible = idx;
+            document.querySelectorAll('#voyante-cibles .joueur-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        };
+        grid.appendChild(btn);
+    });
+    document.getElementById('phase-btn').onclick = () => {
+        if(voyanteCible === null) { alert('Choisissez un joueur !'); return; }
+        // Écran séparé pour voir le rôle
+        const j = joueurs[voyanteCible];
+        const info = ROLES_INFO[j.role];
+        document.getElementById('phase-emoji').textContent = info.emoji;
+        document.getElementById('phase-titre').textContent = j.nom + ' est...';
+        document.getElementById('phase-narration').textContent = '';
+        document.getElementById('phase-action').innerHTML = `
+            <div style="font-size:60px;margin-bottom:15px">${info.emoji}</div>
+            <div style="font-size:22px;font-weight:bold;color:#a78bfa;margin-bottom:10px">${info.nom}</div>
+            <div style="font-size:14px;color:#aaa">${info.equipeLabel}</div>
+        `;
+        document.getElementById('phase-btn').textContent = 'Fermer 👁️';
+        document.getElementById('phase-btn').onclick = () => {
+            document.getElementById('phase-btn').textContent = 'Confirmer ✅';
+            phaseSuivante('La Voyante peut se rendormir...');
+        };
+    };
+    showScreen('screen-phase');
+}
+
 
         function afficherPhaseRenard() {
             parler("Le Renard se réveille... Il flaire le danger dans l'obscurité...");
