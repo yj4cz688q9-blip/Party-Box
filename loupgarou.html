@@ -431,19 +431,22 @@
         }
 
         function distribuerRoles() {
-            let liste = [];
-            Object.entries(rolesConfig).forEach(([role,count]) => { for(let i=0;i<count;i++) liste.push(role); });
-            for(let i=liste.length-1;i>0;i--){
-                const j=Math.floor(Math.random()*(i+1));
-                [liste[i],liste[j]]=[liste[j],liste[i]];
-            }
-            joueurs = [];
-            for(let i=1;i<=nbJoueurs;i++) {
-                const nom = document.getElementById('nom-'+i).value.trim() || 'Joueur '+i;
-                joueurs.push({ nom, role:liste[i-1], vivant:true, amoureux:false, muet:false, ensorcele:false, ancienVie:true });
-            }
-            indexDistrib=0; afficherPassageRole();
+    let liste = [];
+    Object.entries(rolesConfig).forEach(([role,count]) => { for(let i=0;i<count;i++) liste.push(role); });
+    // Mélanger 3 fois pour être sûr
+    for(let k=0;k<3;k++){
+        for(let i=liste.length-1;i>0;i--){
+            const j=Math.floor(Math.random()*(i+1));
+            [liste[i],liste[j]]=[liste[j],liste[i]];
         }
+    }
+    joueurs = [];
+    for(let i=1;i<=nbJoueurs;i++) {
+        const nom = document.getElementById('nom-'+i).value.trim() || 'Joueur '+i;
+        joueurs.push({ nom, role:liste[i-1], vivant:true, amoureux:false, muet:false, ensorcele:false, ancienVie:true });
+    }
+    indexDistrib=0; afficherPassageRole();
+}
 
         function afficherPassageRole() {
             if (indexDistrib >= joueurs.length) { preparerDebut(); return; }
