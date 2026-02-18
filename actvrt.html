@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action ou Vérité</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 42px; color: #ff6b6b; margin-bottom: 10px; }
+        h2 { font-size: 26px; color: #ff6b6b; margin-bottom: 20px; }
+        .subtitle { font-size: 16px; color: #888; margin-bottom: 40px; }
+        .start-btn { background-color: #ff6b6b; color: white; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .option-row { display: flex; gap: 10px; align-items: center; margin: 6px 0; width: 100%; max-width: 340px; }
+        .option-input { flex: 1; background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 14px; color: white; font-size: 15px; }
+        .option-input:focus { border-color: #ff6b6b; outline: none; }
+        .delete-btn { background-color: #2a0000; border: 2px solid #ff3b3b; border-radius: 10px; color: #ff3b3b; width: 40px; height: 40px; font-size: 18px; cursor: pointer; flex-shrink: 0; }
+        .add-btn { background-color: #1a1a1a; border: 2px dashed #ff6b6b; border-radius: 12px; color: #ff6b6b; padding: 12px; width: 100%; max-width: 340px; font-size: 15px; cursor: pointer; margin-top: 5px; }
+        .section-title { font-size: 13px; color: #ff6b6b; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 5px; }
+        .config-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .toggle-label { font-size: 15px; color: #ddd; }
+        .toggle { position: relative; width: 50px; height: 28px; cursor: pointer; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; border-radius: 28px; transition: 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .slider { background-color: #ff6b6b; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* JOUEUR ACTUEL */
+        .joueur-actuel { font-size: 22px; font-weight: bold; color: #ff6b6b; margin-bottom: 30px; }
+
+        /* CHOIX ACTION OU VÉRITÉ */
+        .choix-container { display: flex; gap: 15px; width: 100%; max-width: 340px; margin-bottom: 30px; }
+        .choix-btn { flex: 1; padding: 30px 10px; border-radius: 20px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .choix-action { background-color: #ff6b6b; color: white; }
+        .choix-verite { background-color: #a78bfa; color: white; }
+        .choix-emoji { font-size: 40px; }
+
+        /* CARTE DÉFI */
+        .carte-defi { background: linear-gradient(135deg, #1a1a1a, #2a1a1a); border-radius: 24px; padding: 30px 25px; width: 100%; max-width: 340px; margin-bottom: 30px; }
+        .carte-type { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-weight: bold; }
+        .carte-type.action { color: #ff6b6b; }
+        .carte-type.verite { color: #a78bfa; }
+        .carte-emoji { font-size: 50px; margin-bottom: 15px; }
+        .carte-texte { font-size: 20px; line-height: 1.5; color: white; }
+        .carte-defi.action { border: 2px solid #ff6b6b; }
+        .carte-defi.verite { border: 2px solid #a78bfa; }
+
+        .suivant-btn { background-color: #1a1a1a; border: 2px solid #ff6b6b; color: #ff6b6b; border-radius: 20px; padding: 16px 40px; font-size: 18px; cursor: pointer; width: 100%; max-width: 340px; }
+        .relancer-btn { background-color: #ff6b6b; color: white; border: none; border-radius: 20px; padding: 16px 40px; font-size: 18px; cursor: pointer; width: 100%; max-width: 340px; margin-bottom: 10px; }
+
+        /* NIVEAUX */
+        .niveau-options { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .niveau-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; color: white; padding: 10px 16px; font-size: 14px; cursor: pointer; }
+        .niveau-btn.selected { border-color: #ff6b6b; color: #ff6b6b; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🎯 Action ou Vérité</h1>
+        <p class="subtitle">Osez tout dire, osez tout faire !</p>
+        <button class="start-btn" onclick="showScreen('screen-config')">🎮 Jouer</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+
+        <p class="section-title">👥 Joueurs</p>
+        <div id="joueurs-liste"></div>
+        <button class="add-btn" onclick="ajouterJoueur()">+ Ajouter un joueur</button>
+
+        <p class="section-title">🌶️ Niveau</p>
+        <div class="niveau-options">
+            <button class="niveau-btn selected" onclick="selectNiveau('soft', this)">😇 Soft</button>
+            <button class="niveau-btn" onclick="selectNiveau('medium', this)">😏 Medium</button>
+            <button class="niveau-btn" onclick="selectNiveau('hard', this)">🔥 Hard</button>
+        </div>
+
+        <p class="section-title">⚙️ Options</p>
+        <div class="config-box">
+            <div class="toggle-row">
+                <span class="toggle-label">🔀 Ordre aléatoire</span>
+                <label class="toggle"><input type="checkbox" id="toggle-aleatoire" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row" style="margin-bottom:0">
+                <span class="toggle-label">♻️ Rejouer les défis</span>
+                <label class="toggle"><input type="checkbox" id="toggle-rejouer"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="lancerJeu()" style="margin-top:10px">C'est parti ! 🎯</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- CHOIX ACTION OU VÉRITÉ -->
+    <div class="screen" id="screen-choix">
+        <p class="joueur-actuel" id="joueur-actuel-nom"></p>
+        <p style="color:#888;margin-bottom:30px">C'est ton tour ! Que choisis-tu ?</p>
+        <div class="choix-container">
+            <button class="choix-btn choix-action" onclick="tirerDefi('action')">
+                <span class="choix-emoji">💪</span>
+                Action
+            </button>
+            <button class="choix-btn choix-verite" onclick="tirerDefi('verite')">
+                <span class="choix-emoji">🗣️</span>
+                Vérité
+            </button>
+        </div>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Quitter</button>
+    </div>
+
+    <!-- DÉFI -->
+    <div class="screen" id="screen-defi">
+        <p class="joueur-actuel" id="defi-joueur-nom"></p>
+        <div class="carte-defi" id="carte-defi">
+            <div class="carte-type" id="carte-type"></div>
+            <div class="carte-emoji" id="carte-emoji"></div>
+            <div class="carte-texte" id="carte-texte"></div>
+        </div>
+        <button class="relancer-btn" onclick="relancerDefi()">🔀 Autre défi</button>
+        <button class="suivant-btn" onclick="joueurSuivant()">Joueur suivant ➡️</button>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Quitter</button>
+    </div>
+
+    <script>
+        let joueurs = ['Joueur 1', 'Joueur 2', 'Joueur 3'];
+        let niveau = 'soft';
+        let joueurIndex = 0;
+        let defisUtilisesAction = [];
+        let defisUtilisesVerite = [];
+        let typeActuel = '';
+
+        const DEFIS = {
+            action: {
+                soft: [
+                    {emoji:'🕺', texte:'Fais 10 secondes de danse sans t\'arrêter !'},
+                    {emoji:'🐸', texte:'Imite un animal pendant 15 secondes.'},
+                    {emoji:'😂', texte:'Fais rire quelqu\'un en 30 secondes sans les toucher.'},
+                    {emoji:'🎤', texte:'Chante le refrain d\'une chanson populaire.'},
+                    {emoji:'🤸', texte:'Fais 5 pompes !'},
+                    {emoji:'👃', texte:'Touche ton nez avec ta langue (ou essaie !).'},
+                    {emoji:'🚶', texte:'Marche à reculons jusqu\'au mur et retour.'},
+                    {emoji:'😶', texte:'Ne parle pas pendant 1 minute entière.'},
+                    {emoji:'🤣', texte:'Dis 3 blagues. Au moins une doit faire rire !'},
+                    {emoji:'🎭', texte:'Mime un film et fais deviner les autres.'},
+                    {emoji:'🦆', texte:'Marche comme un canard pendant 20 secondes.'},
+                    {emoji:'📸', texte:'Fais la pose la plus ridicule possible.'},
+                    {emoji:'🗣️', texte:'Parle avec un accent étranger pendant 1 minute.'},
+                    {emoji:'🤝', texte:'Invente une poignée de main secrète avec la personne à ta gauche.'},
+                    {emoji:'🎵', texte:'Fredonne une chanson et fais deviner laquelle.'},
+                ],
+                medium: [
+                    {emoji:'💃', texte:'Danse sur une chanson choisie par les autres pendant 30 secondes.'},
+                    {emoji:'📞', texte:'Appelle quelqu\'un et dis-lui que tu l\'appelles pour lui dire bonjour.'},
+                    {emoji:'🤪', texte:'Fais le tour de la pièce en rampant.'},
+                    {emoji:'😘', texte:'Fais un compliment sincère à chaque personne dans la pièce.'},
+                    {emoji:'🎬', texte:'Rejoue une scène de film célèbre avec quelqu\'un d\'autre.'},
+                    {emoji:'🥤', texte:'Bois un verre d\'eau sans utiliser tes mains.'},
+                    {emoji:'👁️', texte:'Fixe quelqu\'un dans les yeux sans rire pendant 1 minute.'},
+                    {emoji:'🤳', texte:'Fais une story ou une vidéo ridicule sur ton téléphone.'},
+                    {emoji:'🗺️', texte:'Explique où tu habites uniquement avec des gestes.'},
+                    {emoji:'🎪', texte:'Fais semblant d\'être un présentateur TV pendant 30 secondes.'},
+                ],
+                hard: [
+                    {emoji:'💋', texte:'Fais un bisou sur la joue de la personne à ta droite.'},
+                    {emoji:'🔥', texte:'Envoie un message bizarre à quelqu\'un de ton téléphone (au choix du groupe).'},
+                    {emoji:'😈', texte:'Dis ton secret le plus embarrassant... ou prends un gage !'},
+                    {emoji:'🤯', texte:'Laisse le groupe fouiller ta galerie photo pendant 30 secondes.'},
+                    {emoji:'🎭', texte:'Imite la personne à ta gauche pendant 2 minutes.'},
+                    {emoji:'📱', texte:'Envoie un message d\'amour à quelqu\'un choisi par le groupe.'},
+                ],
+            },
+            verite: {
+                soft: [
+                    {emoji:'❤️', texte:'Quelle est ta plus grande qualité selon toi ?'},
+                    {emoji:'😴', texte:'Quel est ton rêve le plus étrange ?'},
+                    {emoji:'🎮', texte:'Quelle est ta passion secrète ?'},
+                    {emoji:'🍕', texte:'Quel aliment tu détestes mais tu fais semblant d\'aimer ?'},
+                    {emoji:'👻', texte:'Tu crois aux fantômes ? Pourquoi ?'},
+                    {emoji:'🏆', texte:'Quelle est ta plus grande fierté ?'},
+                    {emoji:'😬', texte:'Quelle est la chose la plus gênante que tu aies faite ?'},
+                    {emoji:'🤫', texte:'Quel est ton péché mignon que personne ne sait ?'},
+                    {emoji:'🌍', texte:'Si tu pouvais vivre n\'importe où, où irais-tu ?'},
+                    {emoji:'⏰', texte:'Si tu pouvais remonter dans le temps, à quand irais-tu ?'},
+                    {emoji:'🦸', texte:'Quel super-pouvoir voudrais-tu avoir ?'},
+                    {emoji:'😂', texte:'Quelle est la blague que tu trouves drôle mais qui est nulle ?'},
+                    {emoji:'📚', texte:'Quel est le mensonge que tu répètes le plus souvent ?'},
+                    {emoji:'🎵', texte:'Quelle chanson honteuse tu connais par cœur ?'},
+                    {emoji:'💭', texte:'À quoi tu penses en ce moment même ?'},
+                ],
+                medium: [
+                    {emoji:'💔', texte:'Quel est ton plus grand regret dans la vie ?'},
+                    {emoji:'😡', texte:'Quelle personne ici t\'énerve le plus... et pourquoi ?'},
+                    {emoji:'🤥', texte:'Quel est le plus gros mensonge que tu aies jamais dit ?'},
+                    {emoji:'💸', texte:'Combien d\'argent tu as en ce moment sur toi ?'},
+                    {emoji:'👀', texte:'Qui dans cette pièce tu trouves le plus beau/belle ?'},
+                    {emoji:'😰', texte:'Quelle est ta plus grande peur inavouable ?'},
+                    {emoji:'🥺', texte:'Quelle est la dernière fois que tu as pleuré et pourquoi ?'},
+                    {emoji:'💬', texte:'Quel est le pire texto que tu aies jamais envoyé ?'},
+                    {emoji:'🤐', texte:'Quel secret gardes-tu depuis le plus longtemps ?'},
+                    {emoji:'💘', texte:'Tu as déjà eu le béguin pour quelqu\'un dans cette pièce ?'},
+                ],
+                hard: [
+                    {emoji:'🔥', texte:'Quelle est la chose la plus folle que tu aies faite pour quelqu\'un ?'},
+                    {emoji:'😈', texte:'Quel est le truc le plus interdit que tu aies fait ?'},
+                    {emoji:'💋', texte:'Décris ton premier baiser.'},
+                    {emoji:'🤯', texte:'Quelle est la chose dont tu as le plus honte dans ta vie ?'},
+                    {emoji:'👁️', texte:'Quelle est la pire pensée que tu aies eue sur quelqu\'un ici ?'},
+                    {emoji:'💣', texte:'Dis quelque chose que tu n\'as jamais osé dire à voix haute.'},
+                ],
+            }
+        };
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function selectNiveau(n, btn) {
+            niveau = n;
+            document.querySelectorAll('.niveau-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function renderJoueurs() {
+            const liste = document.getElementById('joueurs-liste');
+            liste.innerHTML = '';
+            joueurs.forEach((j, idx) => {
+                const row = document.createElement('div');
+                row.className = 'option-row';
+                row.innerHTML = `<input class="option-input" value="${j}" oninput="joueurs[${idx}]=this.value" placeholder="Joueur ${idx+1}">
+                <button class="delete-btn" onclick="supprimerJoueur(${idx})">✕</button>`;
+                liste.appendChild(row);
+            });
+        }
+
+        function ajouterJoueur() { joueurs.push('Joueur '+(joueurs.length+1)); renderJoueurs(); }
+        function supprimerJoueur(idx) { if(joueurs.length<=1){alert('Au moins 1 joueur !');return;} joueurs.splice(idx,1); renderJoueurs(); }
+
+        function lancerJeu() {
+            document.querySelectorAll('#joueurs-liste .option-input').forEach((inp,idx) => { joueurs[idx]=inp.value.trim()||'Joueur '+(idx+1); });
+            if(document.getElementById('toggle-aleatoire').checked) {
+                joueurs = joueurs.sort(() => Math.random() - 0.5);
+            }
+            joueurIndex = 0;
+            defisUtilisesAction = [];
+            defisUtilisesVerite = [];
+            afficherChoix();
+        }
+
+        function afficherChoix() {
+            document.getElementById('joueur-actuel-nom').textContent = '👤 ' + joueurs[joueurIndex % joueurs.length];
+            showScreen('screen-choix');
+        }
+
+        function tirerDefi(type) {
+            typeActuel = type;
+            const defis = DEFIS[type][niveau];
+            const rejouer = document.getElementById('toggle-rejouer').checked;
+            const utilises = type === 'action' ? defisUtilisesAction : defisUtilisesVerite;
+            let disponibles = defis.map((_,i)=>i).filter(i => rejouer || !utilises.includes(i));
+            if(disponibles.length === 0) { utilises.length = 0; disponibles = defis.map((_,i)=>i); }
+            const idx = disponibles[Math.floor(Math.random() * disponibles.length)];
+            utilises.push(idx);
+            afficherCarte(type, defis[idx]);
+        }
+
+        function afficherCarte(type, defi) {
+            document.getElementById('defi-joueur-nom').textContent = '👤 ' + joueurs[joueurIndex % joueurs.length];
+            const carte = document.getElementById('carte-defi');
+            carte.className = 'carte-defi ' + type;
+            document.getElementById('carte-type').className = 'carte-type ' + type;
+            document.getElementById('carte-type').textContent = type === 'action' ? '💪 ACTION' : '🗣️ VÉRITÉ';
+            document.getElementById('carte-emoji').textContent = defi.emoji;
+            document.getElementById('carte-texte').textContent = defi.texte;
+            showScreen('screen-defi');
+        }
+
+        function relancerDefi() { tirerDefi(typeActuel); }
+
+        function joueurSuivant() {
+            joueurIndex++;
+            afficherChoix();
+        }
+
+        renderJoueurs();
+    </script>
+</body>
+</html>
