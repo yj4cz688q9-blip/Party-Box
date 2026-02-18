@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qui est l'intrus ?</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; overflow-y: auto; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 36px; color: #ff9500; margin-bottom: 10px; margin-top: 20px; }
+        h2 { font-size: 24px; color: #ff9500; margin-bottom: 20px; margin-top: 20px; }
+        .subtitle { font-size: 15px; color: #888; margin-bottom: 30px; }
+        .start-btn { background-color: #ff9500; color: #0d0d0d; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .section-title { font-size: 13px; color: #ff9500; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 8px; }
+        .config-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .counter { display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .counter-btn { background-color: #ff9500; color: #0d0d0d; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .counter-value { font-size: 32px; font-weight: bold; min-width: 50px; }
+        .player-input { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 14px; color: white; font-size: 15px; width: 100%; max-width: 340px; margin: 5px 0; }
+        .player-input:focus { border-color: #ff9500; outline: none; }
+
+        /* DISTRIBUTION */
+        .dist-card { background: linear-gradient(135deg, #1a0f00, #1a1a1a); border: 2px solid #ff9500; border-radius: 24px; padding: 40px 30px; width: 100%; max-width: 320px; margin: 20px 0; }
+        .dist-nom { font-size: 22px; font-weight: bold; color: #ff9500; margin-bottom: 20px; }
+        .dist-mot { font-size: 42px; font-weight: bold; color: white; margin-bottom: 10px; }
+        .dist-role { font-size: 14px; color: #888; }
+        .dist-cache { filter: blur(20px); user-select: none; }
+        .voir-btn { background-color: #ff9500; color: #0d0d0d; border: none; border-radius: 16px; padding: 14px 30px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .countdown-dist { font-size: 80px; font-weight: bold; color: #ff9500; margin: 40px 0; }
+
+        /* VOTE */
+        .vote-joueur { background-color: #1a1a1a; border: 2px solid #333; border-radius: 14px; padding: 15px; width: 100%; max-width: 340px; margin-bottom: 10px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .vote-joueur.selected { border-color: #ff9500; color: #ff9500; font-weight: bold; }
+
+        /* RÉSULTAT */
+        .resultat-card { border-radius: 20px; padding: 25px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .joueur-final { background-color: #1a1a1a; border-radius: 14px; padding: 15px 20px; width: 100%; max-width: 340px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .joueur-final.intrus { border: 2px solid #ff3b3b; background-color: #2a0000; }
+        .joueur-final.villageois { border: 2px solid #00e5cc; background-color: #001a1a; }
+        .tag-intrus { color: #ff3b3b; font-size: 13px; font-weight: bold; }
+        .tag-villageois { color: #00e5cc; font-size: 13px; }
+
+        /* TOGGLE */
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; }
+        .toggle-label { font-size: 15px; color: #ddd; }
+        .toggle { position: relative; width: 50px; height: 28px; cursor: pointer; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; border-radius: 28px; transition: 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .slider { background-color: #ff9500; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* CATÉGORIES */
+        .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; max-width: 340px; margin-bottom: 10px; }
+        .cat-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 8px; color: white; font-size: 13px; cursor: pointer; }
+        .cat-btn.selected { border-color: #ff9500; color: #ff9500; }
+        .tout-btn { background-color: #1a1a1a; border: 2px solid #ff9500; border-radius: 12px; padding: 12px; color: #ff9500; font-size: 15px; cursor: pointer; width: 100%; max-width: 340px; margin-bottom: 8px; font-weight: bold; }
+        .tout-btn.selected { background-color: #ff9500; color: #0d0d0d; }
+
+        .mots-paire { font-size: 13px; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🕵️ Qui est l'intrus ?</h1>
+        <p class="subtitle">Un joueur a un mot différent... Trouvez-le !</p>
+        <button class="start-btn" onclick="showScreen('screen-config')">🎮 Jouer</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+
+        <p class="section-title">👥 Joueurs</p>
+        <div class="config-box">
+            <div class="counter">
+                <button class="counter-btn" onclick="changeNbJoueurs(-1)">−</button>
+                <span class="counter-value" id="nb-joueurs-value">4</span>
+                <button class="counter-btn" onclick="changeNbJoueurs(1)">+</button>
+            </div>
+        </div>
+        <div id="joueurs-inputs"></div>
+
+        <p class="section-title">🎯 Catégorie</p>
+        <button class="tout-btn selected" id="btn-tout" onclick="toggleTout()">🎲 Aléatoire</button>
+        <div class="cat-grid" id="cat-grid"></div>
+
+        <p class="section-title">⚙️ Options</p>
+        <div class="config-box">
+            <div class="toggle-row">
+                <span class="toggle-label">🔢 Nombre d'intrus</span>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <button class="counter-btn" style="width:34px;height:34px;font-size:18px" onclick="changeNbIntrus(-1)">−</button>
+                    <span id="nb-intrus-value" style="font-size:20px;font-weight:bold">1</span>
+                    <button class="counter-btn" style="width:34px;height:34px;font-size:18px" onclick="changeNbIntrus(1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="lancerPartie()">C'est parti ! 🕵️</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- PASSAGE -->
+    <div class="screen" id="screen-passage">
+        <p style="color:#888;font-size:14px;margin-top:30px">Passez le téléphone à</p>
+        <h2 id="passage-nom" style="font-size:28px;margin:10px 0">Joueur 1</h2>
+        <p style="color:#888;font-size:14px;margin-bottom:30px">Appuyez pour voir votre mot</p>
+        <div class="dist-card">
+            <div class="dist-nom" id="dist-nom">Joueur 1</div>
+            <div id="mot-container">
+                <div class="dist-mot dist-cache" id="dist-mot">???</div>
+                <button class="voir-btn" onclick="revelerMot()">👁️ Voir mon mot</button>
+            </div>
+        </div>
+        <button id="btn-passage-suivant" style="display:none" class="start-btn" onclick="passageSuivant()">Suivant ➡️</button>
+        <p class="mots-paire" id="mots-paire-info"></p>
+    </div>
+
+    <!-- COUNTDOWN -->
+    <div class="screen" id="screen-countdown">
+        <p style="color:#888;margin-top:60px">Le jeu commence dans</p>
+        <div class="countdown-dist" id="countdown-num">3</div>
+        <p style="color:#ff9500;font-size:16px">Tout le monde a vu son mot !</p>
+    </div>
+
+    <!-- JEU / DISCUSSION -->
+    <div class="screen" id="screen-jeu">
+        <h2>💬 Discussion !</h2>
+        <p style="color:#888;margin-bottom:30px;font-size:15px">Chacun donne un indice sur son mot sans le dire directement. Débattez et trouvez l'intrus !</p>
+        <div style="background-color:#1a1a1a;border-radius:20px;padding:20px;width:100%;max-width:340px;margin-bottom:20px">
+            <p style="color:#ff9500;font-weight:bold;margin-bottom:10px">🕹️ Règles</p>
+            <p style="color:#aaa;font-size:14px;line-height:1.6">Chaque joueur donne UN indice sur son mot. Pas le droit de dire le mot ! Ensuite, votez pour éliminer l'intrus.</p>
+        </div>
+        <button class="start-btn" onclick="showScreen('screen-vote')">🗳️ Voter !</button>
+        <button class="back-btn" onclick="nouvellePartie()">↩️ Nouvelle partie</button>
+    </div>
+
+    <!-- VOTE -->
+    <div class="screen" id="screen-vote">
+        <h2>🗳️ Qui est l'intrus ?</h2>
+        <p style="color:#888;margin-bottom:20px;font-size:14px">Votez pour éliminer le suspect !</p>
+        <div id="vote-liste"></div>
+        <button class="start-btn" onclick="confirmerVote()" style="margin-top:10px">Éliminer 💀</button>
+        <button class="back-btn" onclick="showScreen('screen-jeu')">← Retour</button>
+    </div>
+
+    <!-- RÉSULTAT -->
+    <div class="screen" id="screen-resultat">
+        <h2 id="resultat-titre">🎉 Résultat !</h2>
+        <p style="color:#888;margin-bottom:5px;font-size:14px" id="resultat-sous-titre"></p>
+        <div style="background-color:#1a1a1a;border-radius:16px;padding:15px 20px;width:100%;max-width:340px;margin:15px 0">
+            <p style="color:#888;font-size:12px;margin-bottom:8px">LES MOTS</p>
+            <p style="font-size:18px"><span style="color:#00e5cc">Villageois : </span><span id="mot-villageois" style="font-weight:bold"></span></p>
+            <p style="font-size:18px;margin-top:5px"><span style="color:#ff3b3b">Intrus : </span><span id="mot-intrus" style="font-weight:bold"></span></p>
+        </div>
+        <div id="joueurs-resultat" style="width:100%;max-width:340px"></div>
+        <button class="start-btn" onclick="nouvellePartie()" style="margin-top:15px">🔄 Nouvelle partie</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Accueil</button>
+    </div>
+
+    <script>
+        const PAIRES = {
+            animaux: [
+                ['Chien', 'Loup'], ['Chat', 'Tigre'], ['Dauphin', 'Requin'], ['Âne', 'Cheval'],
+                ['Mouton', 'Chèvre'], ['Poule', 'Canard'], ['Lion', 'Panthère'], ['Singe', 'Gorille'],
+                ['Lapin', 'Lièvre'], ['Cochon', 'Sanglier'], ['Vache', 'Bison'], ['Aigle', 'Faucon'],
+            ],
+            nourriture: [
+                ['Pizza', 'Tarte'], ['Burger', 'Sandwich'], ['Sushi', 'Maki'], ['Crêpe', 'Gaufre'],
+                ['Chocolat', 'Caramel'], ['Glace', 'Sorbet'], ['Croissant', 'Brioche'], ['Soupe', 'Bouillon'],
+                ['Steak', 'Côtelette'], ['Taco', 'Burrito'], ['Ramen', 'Pho'], ['Cookie', 'Brownie'],
+            ],
+            sport: [
+                ['Football', 'Rugby'], ['Tennis', 'Badminton'], ['Natation', 'Plongée'], ['Ski', 'Snowboard'],
+                ['Boxe', 'Karaté'], ['Vélo', 'Trottinette'], ['Golf', 'Croquet'], ['Surf', 'Kitesurf'],
+                ['Basket', 'Volley'], ['Handball', 'Water-polo'], ['Escalade', 'Alpinisme'], ['Judo', 'Lutte'],
+            ],
+            lieux: [
+                ['Plage', 'Piscine'], ['Montagne', 'Colline'], ['Forêt', 'Jungle'], ['Désert', 'Savane'],
+                ['Hôtel', 'Auberge'], ['Restaurant', 'Café'], ['Cinéma', 'Théâtre'], ['École', 'Université'],
+                ['Hôpital', 'Clinique'], ['Aéroport', 'Gare'], ['Marché', 'Supermarché'], ['Musée', 'Galerie'],
+            ],
+            objets: [
+                ['Téléphone', 'Tablette'], ['Voiture', 'Moto'], ['Avion', 'Hélicoptère'], ['Bateau', 'Canot'],
+                ['Chaise', 'Tabouret'], ['Table', 'Bureau'], ['Lit', 'Canapé'], ['Lampe', 'Bougie'],
+                ['Crayon', 'Stylo'], ['Livre', 'Magazine'], ['Sac', 'Valise'], ['Montre', 'Réveil'],
+            ],
+            metiers: [
+                ['Médecin', 'Chirurgien'], ['Professeur', 'Formateur'], ['Pompier', 'Policier'], ['Chef', 'Boulanger'],
+                ['Acteur', 'Chanteur'], ['Pilote', 'Astronaute'], ['Architecte', 'Ingénieur'], ['Avocat', 'Juge'],
+                ['Journaliste', 'Photographe'], ['Footballeur', 'Rugbyman'], ['Cuisinier', 'Pâtissier'], ['Dentiste', 'Opticien'],
+            ],
+            nature: [
+                ['Soleil', 'Lune'], ['Pluie', 'Neige'], ['Rivière', 'Lac'], ['Fleur', 'Arbre'],
+                ['Volcan', 'Geyser'], ['Arc-en-ciel', 'Aurore boréale'], ['Tempête', 'Ouragan'], ['Falaise', 'Grotte'],
+                ['Feuille', 'Branche'], ['Pierre', 'Roche'], ['Nuage', 'Brouillard'], ['Vague', 'Marée'],
+            ],
+            films: [
+                ['Horreur', 'Thriller'], ['Comédie', 'Humour'], ['Action', 'Aventure'], ['Romance', 'Drame'],
+                ['Animé', 'Dessin animé'], ['Documentaire', 'Reportage'], ['Science-fiction', 'Fantasy'], ['Western', 'Guerre'],
+            ],
+        };
+
+        const CAT_NOMS = {
+            animaux: '🐾 Animaux', nourriture: '🍕 Nourriture', sport: '💪 Sport',
+            lieux: '📍 Lieux', objets: '📦 Objets', metiers: '👔 Métiers',
+            nature: '🌿 Nature', films: '🎬 Films'
+        };
+
+        let nbJoueurs = 4;
+        let nbIntrus = 1;
+        let joueursNoms = [];
+        let joueurs = [];
+        let categorieSelectionnee = null;
+        let toutAleatoire = true;
+        let indexPassage = 0;
+        let motRevele = false;
+        let voteSelectionne = -1;
+        let paireCourante = null;
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function changeNbJoueurs(delta) {
+            nbJoueurs = Math.max(3, Math.min(12, nbJoueurs + delta));
+            document.getElementById('nb-joueurs-value').textContent = nbJoueurs;
+            renderInputs();
+            nbIntrus = Math.min(nbIntrus, Math.floor(nbJoueurs / 2));
+            document.getElementById('nb-intrus-value').textContent = nbIntrus;
+        }
+
+        function changeNbIntrus(delta) {
+            nbIntrus = Math.max(1, Math.min(Math.floor(nbJoueurs / 2), nbIntrus + delta));
+            document.getElementById('nb-intrus-value').textContent = nbIntrus;
+        }
+
+        function renderInputs() {
+            const container = document.getElementById('joueurs-inputs');
+            container.innerHTML = '';
+            for (let i = 1; i <= nbJoueurs; i++) {
+                const inp = document.createElement('input');
+                inp.className = 'player-input';
+                inp.placeholder = '🧑 Joueur ' + i;
+                inp.id = 'inp-' + i;
+                inp.value = joueursNoms[i-1] || '';
+                container.appendChild(inp);
+            }
+        }
+
+        function renderCats() {
+            const grid = document.getElementById('cat-grid');
+            grid.innerHTML = '';
+            Object.keys(CAT_NOMS).forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn';
+                btn.textContent = CAT_NOMS[cat];
+                btn.onclick = () => selectCat(cat, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        function toggleTout() {
+            toutAleatoire = true;
+            categorieSelectionnee = null;
+            document.getElementById('btn-tout').classList.add('selected');
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+        }
+
+        function selectCat(cat, btn) {
+            toutAleatoire = false;
+            categorieSelectionnee = cat;
+            document.getElementById('btn-tout').classList.remove('selected');
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function lancerPartie() {
+            joueursNoms = [];
+            for (let i = 1; i <= nbJoueurs; i++) {
+                const val = document.getElementById('inp-' + i).value.trim();
+                joueursNoms.push(val || 'Joueur ' + i);
+            }
+
+            // Choisir catégorie
+            const cats = Object.keys(PAIRES);
+            const cat = toutAleatoire ? cats[Math.floor(Math.random() * cats.length)] : categorieSelectionnee;
+            const paires = PAIRES[cat];
+            paireCourante = paires[Math.floor(Math.random() * paires.length)];
+
+            // Mélanger pour choisir qui sont les intrus
+            const indices = [...Array(nbJoueurs).keys()].sort(() => Math.random() - 0.5);
+            const intrusIndices = indices.slice(0, nbIntrus);
+
+            joueurs = joueursNoms.map((nom, i) => ({
+                nom,
+                estIntrus: intrusIndices.includes(i),
+                mot: intrusIndices.includes(i) ? paireCourante[1] : paireCourante[0],
+            }));
+
+            indexPassage = 0;
+            afficherPassage();
+            showScreen('screen-passage');
+        }
+
+        function afficherPassage() {
+            const j = joueurs[indexPassage];
+            document.getElementById('passage-nom').textContent = j.nom;
+            document.getElementById('dist-nom').textContent = j.nom;
+            document.getElementById('dist-mot').textContent = j.mot;
+            document.getElementById('dist-mot').classList.add('dist-cache');
+            document.getElementById('mot-container').innerHTML = `
+                <div class="dist-mot dist-cache" id="dist-mot">${j.mot}</div>
+                <button class="voir-btn" onclick="revelerMot()">👁️ Voir mon mot</button>
+            `;
+            document.getElementById('btn-passage-suivant').style.display = 'none';
+            document.getElementById('mots-paire-info').textContent = '';
+            motRevele = false;
+        }
+
+        function revelerMot() {
+            const j = joueurs[indexPassage];
+            document.getElementById('mot-container').innerHTML = `
+                <div class="dist-mot" id="dist-mot">${j.mot}</div>
+                <p style="color:#888;font-size:13px;margin-top:8px">${j.estIntrus ? '🔴 Tu es l\'intrus !' : '🟢 Tu es villageois'}</p>
+            `;
+            document.getElementById('btn-passage-suivant').style.display = 'block';
+            motRevele = true;
+        }
+
+        function passageSuivant() {
+            indexPassage++;
+            if (indexPassage >= joueurs.length) {
+                lancerCountdown();
+            } else {
+                afficherPassage();
+            }
+        }
+
+        function lancerCountdown() {
+            showScreen('screen-countdown');
+            let count = 3;
+            document.getElementById('countdown-num').textContent = count;
+            const interval = setInterval(() => {
+                count--;
+                if (count <= 0) { clearInterval(interval); showScreen('screen-jeu'); }
+                else document.getElementById('countdown-num').textContent = count;
+            }, 1000);
+        }
+
+        function afficherVote() {
+            voteSelectionne = -1;
+            const liste = document.getElementById('vote-liste');
+            liste.innerHTML = '';
+            joueurs.forEach((j, idx) => {
+                const div = document.createElement('div');
+                div.className = 'vote-joueur';
+                div.textContent = j.nom;
+                div.onclick = () => {
+                    voteSelectionne = idx;
+                    document.querySelectorAll('.vote-joueur').forEach(d => d.classList.remove('selected'));
+                    div.classList.add('selected');
+                };
+                liste.appendChild(div);
+            });
+            showScreen('screen-vote');
+        }
+
+        function confirmerVote() {
+            if (voteSelectionne === -1) { alert('Choisissez quelqu\'un !'); return; }
+            const elimine = joueurs[voteSelectionne];
+            const intrusTrouves = elimine.estIntrus;
+
+            // Titre
+            if (nbIntrus === 1) {
+                document.getElementById('resultat-titre').textContent = intrusTrouves ? '🎉 Bien joué !' : '😈 L\'intrus a gagné !';
+                document.getElementById('resultat-sous-titre').textContent = intrusTrouves ? 'Vous avez trouvé l\'intrus !' : 'Vous avez éliminé un innocent...';
+            } else {
+                const nbIntrustrouvés = joueurs.filter(j => j.estIntrus).length;
+                document.getElementById('resultat-titre').textContent = '🎯 Résultat !';
+                document.getElementById('resultat-sous-titre').textContent = elimine.estIntrus ? 'Vous avez éliminé un intrus !' : 'Vous avez éliminé un innocent...';
+            }
+
+            document.getElementById('mot-villageois').textContent = paireCourante[0];
+            document.getElementById('mot-intrus').textContent = paireCourante[1];
+
+            const container = document.getElementById('joueurs-resultat');
+            container.innerHTML = '';
+            joueurs.forEach(j => {
+                const div = document.createElement('div');
+                div.className = 'joueur-final ' + (j.estIntrus ? 'intrus' : 'villageois');
+                div.innerHTML = `<span>${j.nom} — <strong>${j.mot}</strong></span><span class="${j.estIntrus ? 'tag-intrus' : 'tag-villageois'}">${j.estIntrus ? '🔴 Intrus' : '🟢 Villageois'}</span>`;
+                container.appendChild(div);
+            });
+
+            showScreen('screen-resultat');
+        }
+
+        function nouvellePartie() {
+            showScreen('screen-config');
+        }
+
+        // Init
+        renderInputs();
+        renderCats();
+
+        // Override vote button
+        document.getElementById('btn-passage-suivant');
+        const voteBtn = document.querySelector('#screen-vote .start-btn');
+
+        // Fix vote screen button
+        document.querySelector('#screen-jeu .start-btn').onclick = () => afficherVote();
+    </script>
+</body>
+</html>
