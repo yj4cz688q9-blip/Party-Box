@@ -360,9 +360,20 @@
         };
 
         function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(id === 'screen-home') {
+        // Reset complet
+        joueurs=[]; indexDistrib=0; amoureux=[]; amoureuxTemp=[];
+        sorcierePotionVie=true; sorcierePotionMort=true;
+        sauveParSorciere=false; empoisonneParSorciere=null;
+        victimeNuit=null; phaseIndex=0; phases=[]; voteSelectionne=-1; numNuit=0;
+        ancienPremierAttaque=true; modeleEnfantSauvage=null; pereEnfantLoup=null;
+        chasseurCible=null; jugeUtilise=false; muetDemain=null; muetAujourdhui=null;
+        ensorcelés=[]; loupBlancPeutTuer=false;
+    }
+}
+
 
         function parler(texte) {
             if ('speechSynthesis' in window) {
