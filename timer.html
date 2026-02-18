@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Bungee&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 42px; color: #ffd166; margin-bottom: 10px; }
+        .subtitle { font-size: 16px; color: #888; margin-bottom: 30px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .start-btn { background-color: #ffd166; color: #0d0d0d; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; width: 100%; max-width: 300px; margin-top: 10px; }
+
+        /* STYLE SELECTOR */
+        .style-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 340px; margin-bottom: 20px; }
+        .style-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 14px; padding: 15px 10px; color: white; font-size: 13px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .style-btn.selected { border-color: #ffd166; color: #ffd166; }
+        .style-btn-emoji { font-size: 28px; }
+
+        /* TIME PICKER */
+        .time-picker { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .time-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .time-arrow { background: none; border: none; color: #ffd166; font-size: 28px; cursor: pointer; padding: 5px 15px; }
+        .time-display { font-size: 56px; font-weight: bold; color: white; min-width: 75px; }
+        .time-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .time-sep { font-size: 48px; font-weight: bold; color: #444; padding-bottom: 20px; }
+        .presets { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 25px; }
+        .preset-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; color: #aaa; padding: 8px 14px; font-size: 14px; cursor: pointer; }
+
+        /* CONTROLES */
+        .control-btns { display: flex; gap: 12px; width: 100%; max-width: 300px; margin-top: 20px; }
+        .pause-btn { flex: 1; background-color: #1a1a1a; border: 2px solid #ffd166; color: #ffd166; border-radius: 20px; padding: 16px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .reset-btn { flex: 1; background-color: #1a1a1a; border: 2px solid #555; color: #888; border-radius: 20px; padding: 16px; font-size: 18px; cursor: pointer; }
+
+        /* ===== STYLE 1 - CONFETTIS ===== */
+        #timer-confetti { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .confetti-time { font-family: 'Bungee', cursive; font-size: 90px; color: white; text-shadow: 0 0 30px #ffd166; z-index: 2; }
+        .confetti-piece { position: fixed; width: 10px; height: 10px; border-radius: 2px; animation: confettiFall linear infinite; pointer-events: none; }
+        @keyframes confettiFall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+        /* ===== STYLE 2 - DISCO NÉON ===== */
+        #timer-disco { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .disco-time { font-family: 'Pacifico', cursive; font-size: 100px; animation: discoColor 0.5s infinite; }
+        @keyframes discoColor {
+            0% { color: #ff0080; text-shadow: 0 0 20px #ff0080, 0 0 60px #ff0080; }
+            25% { color: #00ffcc; text-shadow: 0 0 20px #00ffcc, 0 0 60px #00ffcc; }
+            50% { color: #ffd166; text-shadow: 0 0 20px #ffd166, 0 0 60px #ffd166; }
+            75% { color: #a78bfa; text-shadow: 0 0 20px #a78bfa, 0 0 60px #a78bfa; }
+            100% { color: #ff0080; text-shadow: 0 0 20px #ff0080, 0 0 60px #ff0080; }
+        }
+        .disco-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; animation: discoBg 0.5s infinite; z-index: -1; }
+        @keyframes discoBg {
+            0% { background: radial-gradient(circle, #2a0020, #0d0d0d); }
+            25% { background: radial-gradient(circle, #002a20, #0d0d0d); }
+            50% { background: radial-gradient(circle, #2a2000, #0d0d0d); }
+            75% { background: radial-gradient(circle, #1a0030, #0d0d0d); }
+            100% { background: radial-gradient(circle, #2a0020, #0d0d0d); }
+        }
+
+        /* ===== STYLE 3 - COULEURS RYTHME ===== */
+        #timer-rythme { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .rythme-time { font-family: 'Orbitron', monospace; font-size: 80px; font-weight: 700; color: white; transition: color 1s; }
+        .rythme-circle { width: 250px; height: 250px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 1s, box-shadow 1s; margin-bottom: 20px; }
+
+        /* ===== STYLE 4 - CERCLE CLASSIQUE ===== */
+        #timer-cercle { position: relative; }
+        .cercle-time { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 52px; font-weight: bold; }
+        .cercle-time.urgent { color: #ff3b3b; }
+
+        /* ===== STYLE 5 - CHIFFRES GÉANTS ===== */
+        #timer-geant { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .geant-time { font-family: 'Orbitron', monospace; font-size: 110px; font-weight: 700; color: #ffd166; letter-spacing: -5px; transition: color 0.3s; }
+        .geant-time.urgent { color: #ff3b3b; animation: pulse 0.5s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+
+        /* ===== STYLE 6 - BARRE ===== */
+        #timer-barre { width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .barre-time { font-size: 72px; font-weight: bold; margin-bottom: 30px; }
+        .barre-container { width: 100%; max-width: 320px; height: 20px; background-color: #1a1a1a; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+        .barre-progress { height: 100%; border-radius: 10px; transition: width 0.5s linear, background-color 0.5s; }
+        .barre-pct { font-size: 14px; color: #888; }
+
+        /* ===== STYLE 7 - SABLIER ===== */
+        #timer-sablier { width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .sablier-svg { width: 160px; height: 200px; margin-bottom: 20px; }
+        .sablier-time { font-size: 52px; font-weight: bold; color: #ffd166; }
+
+        /* FIN */
+        .fin-emoji { font-size: 80px; margin-bottom: 20px; animation: finPulse 0.6s infinite alternate; }
+        @keyframes finPulse { from { transform: scale(1); } to { transform: scale(1.3); } }
+        .fin-texte { font-size: 28px; font-weight: bold; color: #ffd166; margin-bottom: 30px; }
+
+        /* SECTION TITLE */
+        .section-title { font-size: 13px; color: #ffd166; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL CONFIG -->
+    <div class="screen active" id="screen-config">
+        <h1>⏱️ Timer</h1>
+
+        <p class="section-title">🎨 Style d'affichage</p>
+        <div class="style-grid">
+            <button class="style-btn selected" onclick="selectStyle('confetti', this)">
+                <span class="style-btn-emoji">🎊</span>Confettis
+            </button>
+            <button class="style-btn" onclick="selectStyle('disco', this)">
+                <span class="style-btn-emoji">🪩</span>Disco Néon
+            </button>
+            <button class="style-btn" onclick="selectStyle('rythme', this)">
+                <span class="style-btn-emoji">🌈</span>Couleurs
+            </button>
+            <button class="style-btn" onclick="selectStyle('cercle', this)">
+                <span class="style-btn-emoji">⭕</span>Cercle
+            </button>
+            <button class="style-btn" onclick="selectStyle('geant', this)">
+                <span class="style-btn-emoji">🔢</span>Chiffres
+            </button>
+            <button class="style-btn" onclick="selectStyle('barre', this)">
+                <span class="style-btn-emoji">▬</span>Barre
+            </button>
+            <button class="style-btn" onclick="selectStyle('sablier', this)">
+                <span class="style-btn-emoji">⏳</span>Sablier
+            </button>
+        </div>
+
+        <p class="section-title">⏱️ Durée</p>
+        <div class="presets">
+            <button class="preset-btn" onclick="setPreset(0,30)">30s</button>
+            <button class="preset-btn" onclick="setPreset(1,0)">1 min</button>
+            <button class="preset-btn" onclick="setPreset(2,0)">2 min</button>
+            <button class="preset-btn" onclick="setPreset(3,0)">3 min</button>
+            <button class="preset-btn" onclick="setPreset(5,0)">5 min</button>
+            <button class="preset-btn" onclick="setPreset(10,0)">10 min</button>
+        </div>
+
+        <div class="time-picker">
+            <div class="time-col">
+                <button class="time-arrow" onclick="changeMin(1)">▲</button>
+                <div class="time-display" id="pick-min">00</div>
+                <div class="time-label">min</div>
+                <button class="time-arrow" onclick="changeMin(-1)">▼</button>
+            </div>
+            <div class="time-sep">:</div>
+            <div class="time-col">
+                <button class="time-arrow" onclick="changeSec(1)">▲</button>
+                <div class="time-display" id="pick-sec">30</div>
+                <div class="time-label">sec</div>
+                <button class="time-arrow" onclick="changeSec(-1)">▼</button>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="demarrer()">▶️ Démarrer</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- TIMER CONFETTI -->
+    <div class="screen" id="screen-confetti">
+        <div id="timer-confetti">
+            <p style="color:#888;font-size:14px;margin-bottom:10px">🎊 Soirée !</p>
+            <div class="confetti-time" id="confetti-time">00:30</div>
+        </div>
+        <div class="control-btns">
+            <button class="pause-btn" id="pause-btn-confetti" onclick="togglePause()">⏸️ Pause</button>
+            <button class="reset-btn" onclick="reset()">🔄</button>
+        </div>
+        <button class="back-btn" onclick="retourConfig()">← Retour</button>
+    </div>
+
+    <!-- TIMER DISCO -->
+    <div class="screen" id="screen-disco">
+        <div class="disco-bg"></div>
+        <div id="timer-disco">
+            <div class="disco-time" id="disco-time">00:30</div>
+        </div>
+        <div class="control-btns">
+            <button class="pause-btn" id="pause-btn-disco" onclick="togglePause()">⏸️ Pause</button>
+            <button class="reset-btn" onclick="reset()">🔄</button>
+        </div>
+        <button class="back-btn" onclick="retourConfig()">← Retour</button>
+    </div>
+
+    <!-- TIMER RYTHME -->
+    <div class="screen" id="screen-rythme">
+        <div id="timer-rythme">
+            <div class="rythme-circle" id="rythme-circle">
+                <div class="rythme-time" id="rythme-time">00:30</div>
+            </div>
+        </div>
+        <div class="control-btns">
+            <button class="pause-btn" id="pause-btn-rythme" onclick="togglePause()">⏸️ Pause</button>
+            <button class="reset-btn" onclick="reset()">🔄</button>
+        </div>
+        <button class="back-btn" onclick="retourConfig()">← Retour</button>
+    </div>
+
+    <!-- TIMER CERCLE -->
+    <div class="screen" id="screen-cercle">
+        <div style="position:relative;width:280px;height:280px;margin:0 auto 20px;">
+            <svg width="280" height="280" viewBox="0 0 280 280" style="transform:rotate(-90deg)">
+                <circle fill="none" stroke="#1a1a1a" stroke-width="12" cx="140" cy="140" r="120"/>
+                <circle fill="none" stroke="#ffd166" stroke-width="12" stroke-linecap="round" cx="140" cy="140" r="120" id="cercle-progress"/>
+            </svg>
+            <div class="cercle-time" id="cercle-time">00:30</div>
+        </div>
+        <div class="control-btns">
+            <button class="pause-btn" id="pause-btn-cercle" onclick="togglePause()">⏸️ Pause</button>
+            <button class="reset-btn" onclick="reset()">🔄</button>
+        </div>
+        <button class="back-btn" onclick="retourConfig()">← Retour</button>
+    </div>
+
+    <!-- TIMER GÉANT -->
+    <div class="screen" id="screen-geant">
+        <div id="timer-geant">
+            <div class="geant-time" id="geant-time">00:30</div>
+        </div>
+        <div class="control-btns">
+            <button class="pause-btn" id="pause-btn-geant" onclick="togglePause()">⏸️ Pause</button>
+            <button class="reset-btn" onclick="reset()">🔄</button>
+        </div>
+        <button class="back-btn" onclick="retourConfig()">← Retour</button>
+    </div>
+
+    <!-- TIMER BARRE -->
+    <div class="screen" id="screen-barre">
+        <div id="timer-barre">
+            <div class="barre-time" id="barre-time">00:30</div>
+            <div class="barre-container">
+                <div class="barre-progress" id="barre-progress" style="width:100%;background-color:#ffd166"></div>
+            </div>
+            <div class="barre-pct" id="barre-pct">100%</div>
+        </div>
+        <div class="control-btns">
+            <button class="pause-btn" id="pause-btn-barre" onclick="togglePause()">⏸️ Pause</button>
+            <button class="reset-btn" onclick="reset()">🔄</button>
+        </div>
+        <button class="back-btn" onclick="retourConfig()">← Retour</button>
+    </div>
+
+    <!-- TIMER SABLIER -->
+    <div class="screen" id="screen-sablier">
+        <div id="timer-sablier">
+            <svg class="sablier-svg" viewBox="0 0 100 130" id="sablier-svg">
+                <path d="M10,5 L90,5 L90,15 L55,55 L55,75 L90,115 L90,125 L10,125 L10,115 L45,75 L45,55 L10,15 Z" fill="#1a1a1a" stroke="#ffd166" stroke-width="3"/>
+                <clipPath id="topClip"><rect id="top-clip-rect" x="10" y="15" width="80" height="40"/></clipPath>
+                <clipPath id="botClip"><rect id="bot-clip-rect" x="10" y="75" width="80" height="40"/></clipPath>
+                <path d="M10,15 L90,15 L55,55 L45,55 Z" fill="#ffd166" opacity="0.8" clip-path="url(#topClip)" id="sable-haut"/>
+                <path d="M45,75 L55,75 L90,115 L10,115 Z" fill="#ffd166" opacity="0.8" clip-path="url(#botClip)" id="sable-bas"/>
+            </svg>
+            <div class="sablier-time" id="sablier-time">00:30</div>
+        </div>
+        <div class="control-btns">
+            <button class="pause-btn" id="pause-btn-sablier" onclick="togglePause()">⏸️ Pause</button>
+            <button class="reset-btn" onclick="reset()">🔄</button>
+        </div>
+        <button class="back-btn" onclick="retourConfig()">← Retour</button>
+    </div>
+
+    <!-- FIN -->
+    <div class="screen" id="screen-fin">
+        <div class="fin-emoji">⏰</div>
+        <div class="fin-texte">Temps écoulé !</div>
+        <button class="start-btn" onclick="rejouer()">🔄 Rejouer</button>
+        <button class="start-btn" onclick="retourConfig()" style="background-color:#1a1a1a;color:#ffd166;border:2px solid #ffd166;margin-top:10px">⚙️ Nouveau timer</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <script>
+        let minutes = 0, secondes = 30;
+        let totalSecondes = 30, restantes = 30;
+        let interval = null, enPause = false;
+        let styleActuel = 'confetti';
+        const CIRCONFERENCE = 2 * Math.PI * 120;
+
+        const COULEURS_RYTHME = ['#ff0080','#00e5cc','#ffd166','#a78bfa','#ff6b6b','#00cc66'];
+        let couleurIndex = 0;
+
+        function pad(n) { return String(n).padStart(2,'0'); }
+
+        function selectStyle(style, btn) {
+            styleActuel = style;
+            document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function changeMin(delta) {
+            minutes = Math.max(0, Math.min(99, minutes + delta));
+            document.getElementById('pick-min').textContent = pad(minutes);
+        }
+
+        function changeSec(delta) {
+            secondes = (secondes + delta + 60) % 60;
+            document.getElementById('pick-sec').textContent = pad(secondes);
+        }
+
+        function setPreset(m, s) {
+            minutes = m; secondes = s;
+            document.getElementById('pick-min').textContent = pad(m);
+            document.getElementById('pick-sec').textContent = pad(s);
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function demarrer() {
+            totalSecondes = minutes * 60 + secondes;
+            if (totalSecondes === 0) { alert('Réglez un temps !'); return; }
+            restantes = totalSecondes;
+            enPause = false;
+            updatePauseBtns();
+            updateAffichage();
+            showScreen('screen-' + styleActuel);
+            if (styleActuel === 'confetti') lancerConfettis();
+            lancerInterval();
+        }
+
+        function lancerInterval() {
+            clearInterval(interval);
+            interval = setInterval(() => {
+                if (enPause) return;
+                restantes--;
+                updateAffichage();
+                if (restantes <= 0) { clearInterval(interval); afficherFin(); }
+            }, 1000);
+        }
+
+        function updateAffichage() {
+            const m = Math.floor(restantes / 60);
+            const s = restantes % 60;
+            const texte = pad(m) + ':' + pad(s);
+            const progress = restantes / totalSecondes;
+            const urgent = restantes <= 10;
+
+            // Confetti
+            document.getElementById('confetti-time').textContent = texte;
+
+            // Disco
+            document.getElementById('disco-time').textContent = texte;
+
+            // Rythme
+            document.getElementById('rythme-time').textContent = texte;
+            if (restantes % 1 === 0) {
+                couleurIndex = Math.floor((1 - progress) * COULEURS_RYTHME.length) % COULEURS_RYTHME.length;
+                const c = urgent ? '#ff3b3b' : COULEURS_RYTHME[couleurIndex];
+                document.getElementById('rythme-circle').style.backgroundColor = c + '33';
+                document.getElementById('rythme-circle').style.boxShadow = '0 0 40px ' + c;
+                document.getElementById('rythme-time').style.color = c;
+            }
+
+            // Cercle
+            const cercleEl = document.getElementById('cercle-time');
+            cercleEl.textContent = texte;
+            cercleEl.className = 'cercle-time' + (urgent ? ' urgent' : '');
+            const offset = CIRCONFERENCE * (1 - progress);
+            const arc = document.getElementById('cercle-progress');
+            arc.style.strokeDasharray = CIRCONFERENCE;
+            arc.style.strokeDashoffset = offset;
+            arc.style.stroke = urgent ? '#ff3b3b' : '#ffd166';
+
+            // Géant
+            const geantEl = document.getElementById('geant-time');
+            geantEl.textContent = texte;
+            geantEl.className = 'geant-time' + (urgent ? ' urgent' : '');
+
+            // Barre
+            document.getElementById('barre-time').textContent = texte;
+            const pct = Math.round(progress * 100);
+            document.getElementById('barre-progress').style.width = pct + '%';
+            document.getElementById('barre-progress').style.backgroundColor = urgent ? '#ff3b3b' : '#ffd166';
+            document.getElementById('barre-pct').textContent = pct + '%';
+
+            // Sablier
+            document.getElementById('sablier-time').textContent = texte;
+            const hauteur = Math.round(progress * 40);
+            document.getElementById('top-clip-rect').setAttribute('height', hauteur);
+            document.getElementById('bot-clip-rect').setAttribute('y', 75 + (40 - hauteur));
+            document.getElementById('bot-clip-rect').setAttribute('height', hauteur);
+        }
+
+        function togglePause() {
+            enPause = !enPause;
+            updatePauseBtns();
+        }
+
+        function updatePauseBtns() {
+            const txt = enPause ? '▶️ Reprendre' : '⏸️ Pause';
+            ['confetti','disco','rythme','cercle','geant','barre','sablier'].forEach(s => {
+                const btn = document.getElementById('pause-btn-' + s);
+                if (btn) btn.textContent = txt;
+            });
+        }
+
+        function reset() {
+            restantes = totalSecondes;
+            enPause = false;
+            updatePauseBtns();
+            updateAffichage();
+        }
+
+        function retourConfig() {
+            clearInterval(interval);
+            stopConfettis();
+            showScreen('screen-config');
+        }
+
+        function afficherFin() {
+            stopConfettis();
+            vibrerFin();
+            jouerSon();
+            showScreen('screen-fin');
+        }
+
+        function vibrerFin() {
+            if ('vibrate' in navigator) navigator.vibrate([300,100,300,100,600]);
+        }
+
+        function jouerSon() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const notes = [523, 659, 784, 1047];
+                notes.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.value = freq;
+                    osc.type = 'sine';
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.2 + 0.3);
+                    osc.start(ctx.currentTime + i * 0.2);
+                    osc.stop(ctx.currentTime + i * 0.2 + 0.3);
+                });
+            } catch(e) {}
+        }
+
+        function rejouer() {
+            restantes = totalSecondes;
+            enPause = false;
+            updatePauseBtns();
+            updateAffichage();
+            showScreen('screen-' + styleActuel);
+            if (styleActuel === 'confetti') lancerConfettis();
+            lancerInterval();
+        }
+
+        // CONFETTIS
+        let confettiInterval = null;
+        const CONFETTI_COLORS = ['#ff0080','#00e5cc','#ffd166','#a78bfa','#ff6b6b','#00cc66','#ffffff'];
+
+        function lancerConfettis() {
+            stopConfettis();
+            confettiInterval = setInterval(() => {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.backgroundColor = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+                piece.style.width = (Math.random() * 8 + 6) + 'px';
+                piece.style.height = (Math.random() * 8 + 6) + 'px';
+                piece.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                piece.style.animationDelay = '0s';
+                document.getElementById('screen-confetti').appendChild(piece);
+                setTimeout(() => piece.remove(), 5000);
+            }, 150);
+        }
+
+        function stopConfettis() {
+            clearInterval(confettiInterval);
+            document.querySelectorAll('.confetti-piece').forEach(p => p.remove());
+        }
+
+        // Init
+        document.getElementById('cercle-progress').style.strokeDasharray = CIRCONFERENCE;
+        document.getElementById('cercle-progress').style.strokeDashoffset = 0;
+    </script>
+</body>
+</html>
