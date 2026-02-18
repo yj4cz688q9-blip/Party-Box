@@ -342,28 +342,39 @@
         }
 
         function creerPioche() {
-            const p = [];
-            const chance = chanceLevel / 100;
-            const kmPoids = [
-                { id: 'km25',  n: 10 },
-                { id: 'km50',  n: 10 },
-                { id: 'km75',  n: 10 },
-                { id: 'km100', n: 12 },
-                { id: 'km200', n: 4 + Math.round(chance * 8) },
-            ];
-            kmPoids.forEach(k => { for (let i = 0; i < k.n; i++) p.push(k.id); });
-            if (reglesAttaques) {
-                const nbA = Math.max(1, Math.round(5 - chance * 3));
-                ['accident','panne','crevaison','feu_rouge'].forEach(a => { for (let i = 0; i < nbA; i++) p.push(a); });
-                if (reglesLimite) for (let i = 0; i < nbA; i++) p.push('limite');
-            }
-            const nbP = Math.round(4 + chance * 4);
-            ['reparation','essence','roue'].forEach(par => { for (let i = 0; i < nbP; i++) p.push(par); });
-            for (let i = 0; i < nbP + 5; i++) p.push('feu_vert');
-            if (reglesLimite) for (let i = 0; i < nbP; i++) p.push('fin_limite');
-            if (reglesBottes) ['as_volant','citerne','increvable','prioritaire'].forEach(b => { for (let i = 0; i < nbBottes; i++) p.push(b); });
-            return p.sort(() => Math.random() - 0.5);
-        }
+    const p = [];
+    const chance = chanceLevel / 100;
+    const mult = nbJoueurs <= 3 ? 1 : nbJoueurs <= 4 ? 1.5 : 2;
+
+    // KM - toujours une bonne base, le 200 varie avec la chance
+    const kmPoids = [
+        { id: 'km25',  n: Math.round(10 * mult) },
+        { id: 'km50',  n: Math.round(10 * mult) },
+        { id: 'km75',  n: Math.round(8 * mult) },
+        { id: 'km100', n: Math.round(10 * mult) },
+        { id: 'km200', n: Math.round((2 + Math.round(chance * 8)) * mult) },
+    ];
+    kmPoids.forEach(k => { for (let i = 0; i < k.n; i++) p.push(k.id); });
+
+    // Attaques - moins ya de chance, plus ya d'attaques
+    if (reglesAttaques) {
+        const nbA = Math.round((2 + (1 - chance) * 4) * mult);
+        ['accident','panne','crevaison','feu_rouge'].forEach(a => { for (let i = 0; i < nbA; i++) p.push(a); });
+        if (reglesLimite) for (let i = 0; i < Math.round(nbA * 0.5); i++) p.push('limite');
+    }
+
+    // Parades - toujours suffisantes
+    const nbP = Math.round((5 + chance * 3) * mult);
+    ['reparation','essence','roue'].forEach(par => { for (let i = 0; i < nbP; i++) p.push(par); });
+
+    // Feu vert - toujours beaucoup
+    for (let i = 0; i < Math.round((nbP + 8) * mult); i++) p.push('feu_vert');
+
+    if (reglesLimite) for (let i = 0; i < Math.round(nbP * mult); i++) p.push('fin_limite');
+    if (reglesBottes) ['as_volant','citerne','increvable','prioritaire'].forEach(b => { for (let i = 0; i < nbBottes; i++) p.push(b); });
+
+    return p.sort(() => Math.random() - 0.5);
+}
 
         function piocher() { return pioche.length > 0 ? pioche.pop() : null; }
 
