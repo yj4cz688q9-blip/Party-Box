@@ -8,24 +8,13 @@
     <title>Party Box</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #0d0d0d;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 100vh; padding: 20px; }
         .screen.active { display: flex; }
         h1 { font-size: 48px; color: #00e5cc; margin-bottom: 10px; }
         h2 { font-size: 28px; color: #00e5cc; margin-bottom: 30px; }
         .subtitle { font-size: 16px; color: #888; margin-bottom: 60px; }
-      .game-btn { background-color: #1a1a1a; color: white; border: 2px solid #00e5cc; border-radius: 16px; padding: 20px 10px; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; aspect-ratio: 1; }
+        .game-btn { background-color: #1a1a1a; color: white; border: 2px solid #00e5cc; border-radius: 16px; padding: 20px 10px; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 130px; width: 100%; }
         .config-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 320px; margin-bottom: 20px; }
         .config-label { font-size: 16px; color: #888; margin-bottom: 10px; }
         .counter { display: flex; align-items: center; justify-content: center; gap: 20px; }
@@ -48,34 +37,30 @@
         .score-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 320px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .score-team { font-size: 18px; }
         .score-points { font-size: 24px; font-weight: bold; color: #00e5cc; }
-
-        /* RÈGLES */
         .regle-box { background-color: #1a1a1a; border-radius: 24px; padding: 30px; width: 100%; max-width: 320px; margin-bottom: 30px; }
         .regle-emoji { font-size: 60px; margin-bottom: 15px; }
         .regle-titre { font-size: 22px; font-weight: bold; color: #00e5cc; margin-bottom: 10px; }
         .regle-desc { font-size: 16px; color: #aaa; line-height: 1.5; }
-
-        /* COMPTE À REBOURS */
         .countdown-number { font-size: 120px; font-weight: bold; color: #00e5cc; }
+        .mots-restants { font-size: 13px; color: #888; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <!-- ACCUEIL -->
     <div class="screen active" id="screen-home">
-        <h1><img src="F1CE1FF7-8FC2-440D-8100-49C689144B20.png" style="width:200px; border-radius:20px; margin-bottom:20px;">
-</h1>
+        <h1><img src="F1CE1FF7-8FC2-440D-8100-49C689144B20.png" style="width:200px; border-radius:20px; margin-bottom:20px;"></h1>
         <p class="subtitle">Choisis ton jeu !</p>
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:340px;margin-top:20px">
-    <button class="game-btn" onclick="showScreen('screen-config')">⏱️<br>Time's Up</button>
-    <button class="game-btn" onclick="window.location.href='millebornes.html'">🚗<br>Mille Bornes</button>
-    <button class="game-btn" onclick="window.location.href='tiktaktoe.html'">❌⭕<br>Tic Tac Toe</button>
-    <button class="game-btn" onclick="window.location.href='actvrt.html'">🎯<br>Action ou Vérité</button>
-    <button class="game-btn" onclick="window.location.href='loupgarou.html'">🐺<br>Loup Garou</button>
-    <button class="game-btn" onclick="window.location.href='roue.html'">🎡<br>Roue</button>
-    <button class="game-btn" onclick="window.location.href='votes.html'">🗳️<br>Votes</button>
-</div>
-
+            <button class="game-btn" onclick="showScreen('screen-config')">⏱️<br>Time's Up</button>
+            <button class="game-btn" onclick="window.location.href='millebornes.html'">🚗<br>Mille Bornes</button>
+            <button class="game-btn" onclick="window.location.href='tiktaktoe.html'">❌⭕<br>Tic Tac Toe</button>
+            <button class="game-btn" onclick="window.location.href='actvrt.html'">🎯<br>Action ou Vérité</button>
+            <button class="game-btn" onclick="window.location.href='loupgarou.html'">🐺<br>Loup Garou</button>
+            <button class="game-btn" onclick="window.location.href='roue.html'">🎡<br>Roue</button>
+            <button class="game-btn" onclick="window.location.href='votes.html'">🗳️<br>Votes</button>
+            <button class="game-btn" onclick="window.location.href='timer.html'">⏱️<br>Timer</button>
+        </div>
     </div>
 
     <!-- CONFIG -->
@@ -95,6 +80,14 @@
                 <button class="counter-btn" onclick="changeTimer(-5)">−</button>
                 <span class="counter-value" id="timer-value">30</span>
                 <button class="counter-btn" onclick="changeTimer(5)">+</button>
+            </div>
+        </div>
+        <div class="config-box">
+            <p class="config-label">📝 Nombre de mots par manche</p>
+            <div class="counter">
+                <button class="counter-btn" onclick="changeNbMots(-5)">−</button>
+                <span class="counter-value" id="nbmots-value">20</span>
+                <button class="counter-btn" onclick="changeNbMots(5)">+</button>
             </div>
         </div>
         <button class="start-btn" onclick="showTeamNames()">Suivant ➡️</button>
@@ -140,6 +133,7 @@
         <p class="manche-info" id="jeu-manche"></p>
         <p class="team-info" id="jeu-team"></p>
         <div class="timer-circle" id="timer-display">30</div>
+        <p class="mots-restants" id="mots-restants"></p>
         <div class="word-card">
             <p class="word-text" id="word-display">...</p>
         </div>
@@ -151,7 +145,7 @@
 
     <!-- FIN DE TOUR -->
     <div class="screen" id="screen-fintour">
-        <h2>⏰ Temps écoulé !</h2>
+        <h2 id="fintour-titre">⏰ Temps écoulé !</h2>
         <p style="color:#888; margin-bottom:30px" id="fintour-info"></p>
         <div id="scores-list"></div>
         <button class="start-btn" onclick="tourSuivant()" style="margin-top:20px" id="btn-suivant">Tour suivant ➡️</button>
@@ -209,12 +203,14 @@
 
         let nbTeams = 2;
         let timerDuration = 30;
+        let nbMotsManche = 20;
         let teamNames = [];
         let scores = [];
         let mancheActuelle = 1;
         let equipeActuelle = 0;
         let motIndex = 0;
         let motsMelangés = [];
+        let motsSelection = [];
         let timerInterval = null;
         let tempsRestant = 0;
 
@@ -231,6 +227,11 @@
         function changeTimer(delta) {
             timerDuration = Math.min(120, Math.max(10, timerDuration + delta));
             document.getElementById('timer-value').textContent = timerDuration;
+        }
+
+        function changeNbMots(delta) {
+            nbMotsManche = Math.min(50, Math.max(5, nbMotsManche + delta));
+            document.getElementById('nbmots-value').textContent = nbMotsManche;
         }
 
         function showTeamNames() {
@@ -256,7 +257,10 @@
             }
             mancheActuelle = 1;
             equipeActuelle = 0;
-            motsMelangés = [...mots].sort(() => Math.random() - 0.5);
+            // Sélection fixe de mots pour toutes les manches
+            const melange = [...mots].sort(() => Math.random() - 0.5);
+            motsSelection = melange.slice(0, nbMotsManche);
+            motsMelangés = [...motsSelection].sort(() => Math.random() - 0.5);
             motIndex = 0;
             afficherRegles();
         }
@@ -309,10 +313,11 @@
 
         function afficherMot() {
             if (motIndex >= motsMelangés.length) {
-                motsMelangés = [...mots].sort(() => Math.random() - 0.5);
-                motIndex = 0;
+                finDeManche();
+                return;
             }
             document.getElementById('word-display').textContent = motsMelangés[motIndex];
+            document.getElementById('mots-restants').textContent = '📝 ' + (motsMelangés.length - motIndex) + ' mots restants';
         }
 
         function updateTimer() {
@@ -336,22 +341,47 @@
 
         function finDeTour() {
             clearInterval(timerInterval);
-            document.getElementById('fintour-info').textContent = teamNames[equipeActuelle] + ' a joué !';
+            document.getElementById('fintour-titre').textContent = '⏰ Temps écoulé !';
+            document.getElementById('fintour-info').textContent = teamNames[equipeActuelle] + ' a joué ! Il reste ' + (motsMelangés.length - motIndex) + ' mots.';
             afficherScores('scores-list');
             equipeActuelle++;
 
             const btn = document.getElementById('btn-suivant');
             if (equipeActuelle >= nbTeams) {
-                if (mancheActuelle >= 3) {
-                    btn.textContent = '🏆 Voir les résultats';
-                    btn.onclick = finDePartie;
+                // Toutes les équipes ont joué, on revérifie si tous les mots sont passés
+                if (motIndex >= motsMelangés.length) {
+                    if (mancheActuelle >= 3) {
+                        btn.textContent = '🏆 Voir les résultats';
+                        btn.onclick = finDePartie;
+                    } else {
+                        btn.textContent = 'Manche suivante ➡️';
+                        btn.onclick = mancheSuivante;
+                    }
                 } else {
-                    btn.textContent = 'Manche suivante ➡️';
-                    btn.onclick = mancheSuivante;
+                    // Il reste des mots, on recommence un tour avec toutes les équipes
+                    equipeActuelle = 0;
+                    btn.textContent = 'Continuer ➡️';
+                    btn.onclick = afficherPreTour;
                 }
             } else {
                 btn.textContent = 'Tour suivant ➡️';
                 btn.onclick = afficherPreTour;
+            }
+            showScreen('screen-fintour');
+        }
+
+        function finDeManche() {
+            clearInterval(timerInterval);
+            document.getElementById('fintour-titre').textContent = '🎉 Tous les mots joués !';
+            document.getElementById('fintour-info').textContent = 'La manche ' + mancheActuelle + ' est terminée !';
+            afficherScores('scores-list');
+            const btn = document.getElementById('btn-suivant');
+            if (mancheActuelle >= 3) {
+                btn.textContent = '🏆 Voir les résultats';
+                btn.onclick = finDePartie;
+            } else {
+                btn.textContent = 'Manche suivante ➡️';
+                btn.onclick = mancheSuivante;
             }
             showScreen('screen-fintour');
         }
@@ -374,7 +404,7 @@
         function mancheSuivante() {
             mancheActuelle++;
             equipeActuelle = 0;
-            motsMelangés = [...mots].sort(() => Math.random() - 0.5);
+            motsMelangés = [...motsSelection].sort(() => Math.random() - 0.5);
             motIndex = 0;
             afficherRegles();
         }
