@@ -566,7 +566,6 @@
             if(joueurs.some(j=>j.role==='flute'&&j.vivant)) phases.push('flute');
             if(joueurs.some(j=>(j.role==='loup'||j.role==='grandloup')&&j.vivant)) phases.push('loups');
             if(joueurs.some(j=>j.role==='loupblanc'&&j.vivant)&&loupBlancPeutTuer) phases.push('loupblanc');
-            if(joueurs.some(j=>j.role==='petitefille'&&j.vivant)) phases.push('petitefille');
             if(joueurs.some(j=>j.role==='sorciere'&&j.vivant)) phases.push('sorciere');
         }
 
