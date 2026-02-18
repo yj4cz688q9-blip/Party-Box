@@ -402,7 +402,7 @@
             // Ajuster villageois
             let total = Object.values(rolesConfig).reduce((a,b)=>a+b,0);
             rolesConfig.villageois = Math.max(0, rolesConfig.villageois + (n - total));
-            Object.keys(rolesConfig).forEach(r => document.getElementById('count-'+r).textContent = rolesConfig[r]);
+            Object.keys(rolesConfig).forEach(r => { const el = document.getElementById('count-'+r); if(el) el.textContent = rolesConfig[r]; });
             updateTotal();
         }
 
