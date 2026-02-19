@@ -44,30 +44,154 @@
         .regle-desc { font-size: 16px; color: #aaa; line-height: 1.5; }
         .countdown-number { font-size: 120px; font-weight: bold; color: #00e5cc; }
         .mots-restants { font-size: 13px; color: #888; margin-bottom: 10px; }
-
-        /* CATÉGORIES */
         .cat-tabs { display: flex; gap: 10px; width: 100%; max-width: 340px; margin-bottom: 20px; }
         .cat-tab { flex: 1; padding: 12px; border-radius: 14px; border: 2px solid #333; background-color: #1a1a1a; color: #888; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
         .cat-tab.active-jeux { border-color: #00e5cc; color: #00e5cc; background-color: #001a1a; }
         .cat-tab.active-tools { border-color: #a78bfa; color: #a78bfa; background-color: #1a0a2e; }
-        .section-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin-bottom: 10px; }
-        .section-label.jeux { color: #00e5cc; }
-        .section-label.tools { color: #a78bfa; }
+
+        /* MENU BURGER */
+        .burger-btn { position: fixed; top: 18px; right: 18px; background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; width: 44px; height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; z-index: 1000; }
+        .burger-line { width: 22px; height: 2px; background-color: white; border-radius: 2px; transition: all 0.3s; }
+
+        /* OVERLAY */
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 999; display: none; }
+        .menu-overlay.active { display: block; }
+
+        /* DRAWER */
+        .menu-drawer { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background-color: #111; z-index: 1001; transition: right 0.3s ease; padding: 30px 20px; display: flex; flex-direction: column; }
+        .menu-drawer.active { right: 0; }
+        .menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+        .menu-title { font-size: 22px; font-weight: bold; color: #00e5cc; }
+        .menu-close { background: none; border: none; color: #888; font-size: 28px; cursor: pointer; }
+        .menu-item { display: flex; align-items: center; gap: 14px; padding: 16px 14px; border-radius: 14px; cursor: pointer; margin-bottom: 8px; background-color: #1a1a1a; border: 2px solid #222; font-size: 16px; color: white; text-align: left; }
+        .menu-item:hover { border-color: #00e5cc; }
+        .menu-item-emoji { font-size: 22px; }
+        .menu-version { margin-top: auto; font-size: 12px; color: #444; text-align: center; padding-top: 20px; }
+
+        /* POPUP MENU */
+        .popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .popup.active { display: flex; }
+        .popup-content { background-color: #111; border-radius: 24px; padding: 30px 25px; width: 100%; max-width: 340px; border: 2px solid #333; }
+        .popup-title { font-size: 22px; font-weight: bold; color: #00e5cc; margin-bottom: 15px; }
+        .popup-text { font-size: 15px; color: #aaa; line-height: 1.7; text-align: left; margin-bottom: 20px; }
+        .popup-close { background-color: #00e5cc; color: #0d0d0d; border: none; border-radius: 14px; padding: 14px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
+        .popup-close-grey { background: none; border: none; color: #888; font-size: 15px; margin-top: 12px; cursor: pointer; width: 100%; }
+        .info-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #222; font-size: 15px; }
+        .info-row:last-child { border-bottom: none; }
+        .info-emoji { font-size: 20px; }
+        .os-btns { display: flex; gap: 10px; margin-bottom: 15px; }
+        .os-btn { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid #333; background-color: #1a1a1a; color: white; font-size: 14px; cursor: pointer; }
+        .os-btn.selected { border-color: #00e5cc; color: #00e5cc; }
+        .install-steps { background-color: #1a1a1a; border-radius: 14px; padding: 15px; text-align: left; margin-bottom: 15px; }
+        .install-step { font-size: 14px; color: #aaa; padding: 6px 0; line-height: 1.5; }
     </style>
 </head>
 <body>
+
+    <!-- BOUTON BURGER -->
+    <button class="burger-btn" onclick="ouvrirMenu()">
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+    </button>
+
+    <!-- OVERLAY -->
+    <div class="menu-overlay" id="menu-overlay" onclick="fermerMenu()"></div>
+
+    <!-- DRAWER -->
+    <div class="menu-drawer" id="menu-drawer">
+        <div class="menu-header">
+            <span class="menu-title">🎉 Party Box</span>
+            <button class="menu-close" onclick="fermerMenu()">✕</button>
+        </div>
+        <button class="menu-item" onclick="fermerMenu(); ouvrirPopup('popup-install')">
+            <span class="menu-item-emoji">📲</span> Installer sur l'écran d'accueil
+        </button>
+        <button class="menu-item" onclick="fermerMenu(); ouvrirPopup('popup-contact')">
+            <span class="menu-item-emoji">📬</span> Contactez-nous
+        </button>
+        <button class="menu-item" onclick="fermerMenu(); ouvrirPopup('popup-apropos')">
+            <span class="menu-item-emoji">ℹ️</span> À propos
+        </button>
+        <button class="menu-item" onclick="fermerMenu(); ouvrirPopup('popup-confidentialite')">
+            <span class="menu-item-emoji">🔒</span> Confidentialité
+        </button>
+        <button class="menu-item" onclick="fermerMenu(); noterSite()">
+            <span class="menu-item-emoji">⭐</span> Notez Party Box !
+        </button>
+        <div class="menu-version">Party Box v1.0 • Fait avec ❤️ pour les soirées</div>
+    </div>
+
+    <!-- POPUP INSTALLER -->
+    <div class="popup" id="popup-install">
+        <div class="popup-content">
+            <div class="popup-title">📲 Installer Party Box</div>
+            <div class="os-btns">
+                <button class="os-btn selected" id="btn-ios" onclick="selectOS('ios')">🍎 iPhone</button>
+                <button class="os-btn" id="btn-android" onclick="selectOS('android')">🤖 Android</button>
+            </div>
+            <div id="install-content-ios" class="install-steps">
+                <div class="install-step">1️⃣ Appuie sur le bouton partage <strong>⬆️</strong> en bas de Safari</div>
+                <div class="install-step">2️⃣ Descends et appuie sur <strong>"Sur l'écran d'accueil"</strong></div>
+                <div class="install-step">3️⃣ Appuie sur <strong>"Ajouter"</strong> en haut à droite</div>
+            </div>
+            <div id="install-content-android" class="install-steps" style="display:none">
+                <div class="install-step">1️⃣ Appuie sur le menu <strong>⋮</strong> en haut à droite de Chrome</div>
+                <div class="install-step">2️⃣ Appuie sur <strong>"Ajouter à l'écran d'accueil"</strong></div>
+                <div class="install-step">3️⃣ Appuie sur <strong>"Ajouter"</strong></div>
+            </div>
+            <button class="popup-close" id="btn-compris-install" onclick="comprisInstall()">Compris ✅</button>
+            <button class="popup-close-grey" onclick="fermerPopup('popup-install')">Fermer</button>
+        </div>
+    </div>
+
+    <!-- POPUP CONTACT -->
+    <div class="popup" id="popup-contact">
+        <div class="popup-content">
+            <div class="popup-title">📬 Contactez-nous</div>
+            <p class="popup-text">Une idée de jeu ? Un bug ? Une suggestion ? On adore avoir des retours !</p>
+            <button class="popup-close" onclick="window.location.href='mailto:partybox.mail@icloud.com?subject=Party Box - Contact'">✉️ Envoyer un email</button>
+            <button class="popup-close-grey" onclick="fermerPopup('popup-contact')">Fermer</button>
+        </div>
+    </div>
+
+    <!-- POPUP À PROPOS -->
+    <div class="popup" id="popup-apropos">
+        <div class="popup-content">
+            <div class="popup-title">ℹ️ À propos</div>
+            <p class="popup-text">Party Box est l'application de soirée ultime ! Jeux, outils et animations pour rendre chaque fête inoubliable. 🎉</p>
+            <div class="info-row"><span class="info-emoji">🎮</span> 7 jeux disponibles</div>
+            <div class="info-row"><span class="info-emoji">🛠️</span> 5 outils de soirée</div>
+            <div class="info-row"><span class="info-emoji">📱</span> 100% gratuit</div>
+            <div class="info-row"><span class="info-emoji">🔒</span> Aucune donnée collectée</div>
+            <div class="info-row"><span class="info-emoji">❤️</span> Fait avec passion pour les fêtes</div>
+            <div class="info-row"><span class="info-emoji">🚀</span> Version 1.0</div>
+            <button class="popup-close" style="margin-top:20px" onclick="fermerPopup('popup-apropos')">Super ! ✅</button>
+        </div>
+    </div>
+
+    <!-- POPUP CONFIDENTIALITÉ -->
+    <div class="popup" id="popup-confidentialite">
+        <div class="popup-content">
+            <div class="popup-title">🔒 Confidentialité</div>
+            <div class="info-row"><span class="info-emoji">✅</span> Aucune donnée personnelle collectée</div>
+            <div class="info-row"><span class="info-emoji">✅</span> Aucun compte requis</div>
+            <div class="info-row"><span class="info-emoji">✅</span> Tout reste sur votre appareil</div>
+            <div class="info-row"><span class="info-emoji">✅</span> Aucune publicité</div>
+            <div class="info-row"><span class="info-emoji">✅</span> Aucun tracking</div>
+            <div class="info-row"><span class="info-emoji">✅</span> Fonctionne sans connexion</div>
+            <button class="popup-close" style="margin-top:20px" onclick="fermerPopup('popup-confidentialite')">Compris ✅</button>
+        </div>
+    </div>
 
     <!-- ACCUEIL -->
     <div class="screen active" id="screen-home">
         <h1><img src="F1CE1FF7-8FC2-440D-8100-49C689144B20.png" style="width:180px; border-radius:20px; margin-bottom:10px; margin-top:20px;"></h1>
         <p class="subtitle">Choisis ton jeu !</p>
-
         <div class="cat-tabs">
             <button class="cat-tab active-jeux" id="tab-jeux" onclick="showCat('jeux')">🎮 Jeux</button>
             <button class="cat-tab" id="tab-tools" onclick="showCat('tools')">🛠️ Outils</button>
         </div>
-
-        <!-- JEUX -->
         <div id="grid-jeux" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:340px">
             <button class="game-btn" onclick="showScreen('screen-config')">⏱️<br>Time's Up</button>
             <button class="game-btn" onclick="window.location.href='millebornes.html'">🚗<br>Mille Bornes</button>
@@ -77,8 +201,6 @@
             <button class="game-btn" onclick="window.location.href='susceptible.html'">🤔<br>Susceptible</button>
             <button class="game-btn" onclick="window.location.href='intrus.html'">🕵️<br>L'Intrus</button>
         </div>
-
-        <!-- OUTILS -->
         <div id="grid-tools" style="display:none;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:340px">
             <button class="game-btn tool-btn" onclick="window.location.href='roue.html'">🎡<br>Roue</button>
             <button class="game-btn tool-btn" onclick="window.location.href='votes.html'">🗳️<br>Votes</button>
@@ -86,7 +208,6 @@
             <button class="game-btn tool-btn" onclick="window.location.href='score.html'">🏆<br>Scores</button>
             <button class="game-btn tool-btn" onclick="window.location.href='equipes.html'">👥<br>Équipes</button>
         </div>
-
         <div style="height:30px"></div>
     </div>
 
@@ -187,6 +308,57 @@
     </div>
 
     <script>
+        // MENU BURGER
+        function ouvrirMenu() {
+            document.getElementById('menu-drawer').classList.add('active');
+            document.getElementById('menu-overlay').classList.add('active');
+        }
+
+        function fermerMenu() {
+            document.getElementById('menu-drawer').classList.remove('active');
+            document.getElementById('menu-overlay').classList.remove('active');
+        }
+
+        function ouvrirPopup(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function fermerPopup(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        let osSelectionne = 'ios';
+        function selectOS(os) {
+            osSelectionne = os;
+            document.getElementById('btn-ios').className = 'os-btn' + (os === 'ios' ? ' selected' : '');
+            document.getElementById('btn-android').className = 'os-btn' + (os === 'android' ? ' selected' : '');
+            document.getElementById('install-content-ios').style.display = os === 'ios' ? 'block' : 'none';
+            document.getElementById('install-content-android').style.display = os === 'android' ? 'block' : 'none';
+        }
+
+        function comprisInstall() {
+            if (osSelectionne === 'ios') {
+                if (navigator.share) {
+                    navigator.share({ title: 'Party Box', url: window.location.href })
+                        .catch(() => {});
+                }
+            }
+            fermerPopup('popup-install');
+        }
+
+        function noterSite() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Party Box 🎉',
+                    text: 'Découvrez Party Box, le site de soirée ultime !',
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                alert('Partagez Party Box avec vos amis ! 🎉\n' + window.location.href);
+            }
+        }
+
+        // CATÉGORIES
         function showCat(cat) {
             if (cat === 'jeux') {
                 document.getElementById('grid-jeux').style.display = 'grid';
@@ -201,6 +373,7 @@
             }
         }
 
+        // TIME'S UP
         const mots = [
             "Chat","Chien","Voiture","Pizza","Football","Guitare","Plage","Montagne",
             "Avion","Train","Vélo","Soleil","Lune","Étoile","Forêt","Rivière",
