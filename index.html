@@ -117,6 +117,9 @@
         <button class="menu-item" onclick="fermerMenu(); ouvrirPopup('popup-confidentialite')">
             <span class="menu-item-emoji">🔒</span> Confidentialité
         </button>
+        <button class="menu-item" onclick="fermerMenu(); partageSite()">
+    <span class="menu-item-emoji">📤</span> Partager Party Box
+</button>
         <button class="menu-item" onclick="fermerMenu(); noterSite()">
             <span class="menu-item-emoji">⭐</span> Notez Party Box !
         </button>
@@ -348,6 +351,18 @@
             }
             fermerPopup('popup-install');
         }
+        
+function partageSite() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Party Box 🎉',
+            text: 'Découvrez Party Box, le site de soirée ultime ! Jeux, timer, votes et plus encore !',
+            url: window.location.href
+        }).catch(() => {});
+    } else {
+        prompt('Copie le lien pour partager Party Box !', window.location.href);
+    }
+}
 
         function noterSite() {
             if (navigator.share) {
