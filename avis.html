@@ -58,4 +58,102 @@
 
     <button class="start-btn" onclick="window.location.href='index.html'">🏠 Retour à Party Box</button>
     <br>
-    <a href="https://docs​​​​​​​​​​​​​​​​
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfsmXkpEBQtWusTaHL-6yg7kNaPoJi2JDOmYLsawNhvt1iLTA/viewform" target="_blank" style="color:#ffd166;font-size:15px;margin-top:10px">✏️ Laisser un avis</a>
+    <div style="height:30px"></div>
+
+    <script>
+        const SHEET_ID = '1MpjT4UhMuDQtoAaUbTlBltbBjmfGLsNS2S5kUfV2bOE';
+        const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+        function etoiles(note) {
+            const n = Math.round(note);
+            return '⭐'.repeat(n) + '☆'.repeat(5 - n);
+        }
+
+        function anonymiserEmail(email) {
+            if (!email || email === '') return 'Anonyme';
+            const parts = email.split('@');
+            if (parts.length < 2) return 'Anonyme';
+            const nom = parts[0];
+            return nom.substring(0, 2) + '***@' + parts[1];
+        }
+
+        function formaterDate(horodateur) {
+            try {
+                const d = new Date(horodateur);
+                return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            } catch(e) { return ''; }
+        }
+
+        async function chargerAvis() {
+            try {
+                const response = await fetch(URL);
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                const rows = json.table.rows;
+
+                if (!rows || rows.length === 0) {
+                    document.getElementById('loading').textContent = 'Aucun avis pour le moment 😢';
+                    return;
+                }
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('stats-box').style.display = 'block';
+
+                const avis = rows.map(row => ({
+                    horodateur: row.c[0]?.v || '',
+                    email: row.c[1]?.v || '',
+                    note: parseFloat(row.c[2]?.v) || 0,
+                    commentaire: row.c[3]?.v || ''
+                })).filter(a => a.note > 0);
+
+                // Stats
+                const total = avis.length;
+                const moyenne = avis.reduce((s, a) => s + a.note, 0) / total;
+                document.getElementById('note-globale').textContent = moyenne.toFixed(1);
+                document.getElementById('etoiles-globales').textContent = etoiles(moyenne);
+                document.getElementById('nb-avis').textContent = total + ' avis';
+
+                // Barres par note
+                const barres = document.getElementById('barres-notes');
+                barres.innerHTML = '';
+                for (let i = 5; i >= 1; i--) {
+                    const count = avis.filter(a => Math.round(a.note) === i).length;
+                    const pct = total > 0 ? (count / total * 100) : 0;
+                    barres.innerHTML += `
+                        <div class="barre-row">
+                            <div class="barre-label">${i}⭐</div>
+                            <div class="barre-bg"><div class="barre-fill" style="width:${pct}%"></div></div>
+                            <div class="barre-count">${count}</div>
+                        </div>
+                    `;
+                }
+
+                // Liste avis (du plus récent au plus ancien)
+                const liste = document.getElementById('avis-liste');
+                [...avis].reverse().forEach(a => {
+                    if (!a.commentaire) return;
+                    const card = document.createElement('div');
+                    card.className = 'avis-card';
+                    card.innerHTML = `
+                        <div class="avis-header">
+                            <div class="avis-email">${anonymiserEmail(a.email)}</div>
+                            <div class="avis-etoiles">${etoiles(a.note)}</div>
+                        </div>
+                        <div class="avis-commentaire">"${a.commentaire}"</div>
+                        <div class="avis-date">${formaterDate(a.horodateur)}</div>
+                    `;
+                    liste.appendChild(card);
+                });
+
+            } catch(e) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('erreur').style.display = 'block';
+                console.error(e);
+            }
+        }
+
+        chargerAvis();
+    </script>
+</body>
+</html>
