@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compteur de points</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; overflow-y: auto; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 38px; color: #a78bfa; margin-bottom: 10px; margin-top: 20px; }
+        h2 { font-size: 24px; color: #a78bfa; margin-bottom: 20px; margin-top: 20px; }
+        .subtitle { font-size: 15px; color: #888; margin-bottom: 30px; }
+        .start-btn { background-color: #a78bfa; color: #0d0d0d; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .section-title { font-size: 13px; color: #a78bfa; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 8px; }
+        .config-box { background-color: #1a1a1a; border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 15px; }
+        .counter { display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .counter-btn { background-color: #a78bfa; color: #0d0d0d; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .counter-value { font-size: 32px; font-weight: bold; min-width: 50px; }
+        .player-input { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 14px; color: white; font-size: 15px; width: 100%; max-width: 340px; margin: 5px 0; }
+        .player-input:focus { border-color: #a78bfa; outline: none; }
+
+        /* SCORES */
+        .score-card { border-radius: 20px; padding: 18px 20px; width: 100%; max-width: 340px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .score-nom { font-size: 18px; font-weight: bold; text-align: left; flex: 1; }
+        .score-btns { display: flex; align-items: center; gap: 10px; }
+        .score-moins { background-color: #2a0000; border: 2px solid #ff3b3b; color: #ff3b3b; border-radius: 12px; width: 44px; height: 44px; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .score-plus { background-color: #002a00; border: 2px solid #00cc66; color: #00cc66; border-radius: 12px; width: 44px; height: 44px; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .score-val { font-size: 32px; font-weight: bold; min-width: 60px; text-align: center; }
+        .score-card.leader { border: 2px solid gold; }
+        .leader-badge { font-size: 18px; margin-left: 6px; }
+
+        /* PODIUM */
+        .podium-card { border-radius: 20px; padding: 20px; width: 100%; max-width: 340px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .podium-rang { font-size: 28px; }
+        .podium-nom { font-size: 18px; font-weight: bold; flex: 1; text-align: left; margin-left: 15px; }
+        .podium-pts { font-size: 24px; font-weight: bold; }
+
+        /* STEP CONFIG */
+        .step-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+        .step-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; color: #aaa; padding: 10px 16px; font-size: 15px; cursor: pointer; }
+        .step-btn.selected { border-color: #a78bfa; color: #a78bfa; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🏆 Scores</h1>
+        <p class="subtitle">Comptez les points de n'importe quel jeu !</p>
+        <button class="start-btn" onclick="showScreen('screen-config')">➕ Nouvelle partie</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="screen" id="screen-config">
+        <h2>⚙️ Configuration</h2>
+
+        <p class="section-title">👥 Nombre de joueurs/équipes</p>
+        <div class="config-box">
+            <div class="counter">
+                <button class="counter-btn" onclick="changeNb(-1)">−</button>
+                <span class="counter-value" id="nb-value">2</span>
+                <button class="counter-btn" onclick="changeNb(1)">+</button>
+            </div>
+        </div>
+        <div id="noms-inputs"></div>
+
+        <p class="section-title">➕ Valeur des boutons + et −</p>
+        <div class="step-grid">
+            <button class="step-btn selected" onclick="selectStep(1, this)">1 pt</button>
+            <button class="step-btn" onclick="selectStep(2, this)">2 pts</button>
+            <button class="step-btn" onclick="selectStep(5, this)">5 pts</button>
+            <button class="step-btn" onclick="selectStep(10, this)">10 pts</button>
+        </div>
+
+        <button class="start-btn" onclick="lancerCompteur()" style="margin-top:15px">C'est parti ! 🏆</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Retour</button>
+    </div>
+
+    <!-- COMPTEUR -->
+    <div class="screen" id="screen-compteur">
+        <h2 style="margin-bottom:10px">🏆 Scores</h2>
+        <div id="scores-liste" style="width:100%;max-width:340px"></div>
+        <button class="start-btn" onclick="afficherPodium()" style="margin-top:20px">🥇 Voir le podium</button>
+        <button class="start-btn" onclick="resetScores()" style="background-color:#1a1a1a;color:#a78bfa;border:2px solid #a78bfa;margin-top:10px">🔄 Remettre à zéro</button>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Modifier</button>
+    </div>
+
+    <!-- PODIUM -->
+    <div class="screen" id="screen-podium">
+        <h2>🥇 Podium !</h2>
+        <div id="podium-liste" style="width:100%;max-width:340px"></div>
+        <button class="start-btn" onclick="showScreen('screen-compteur')" style="margin-top:20px">← Continuer</button>
+        <button class="start-btn" onclick="showScreen('screen-config')" style="background-color:#1a1a1a;color:#a78bfa;border:2px solid #a78bfa;margin-top:10px">🔄 Nouvelle partie</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Accueil</button>
+    </div>
+
+    <script>
+        let nb = 2, step = 1;
+        let joueurs = [];
+
+        const COULEURS = [
+            { bg: '#1a0a2e', border: '#a78bfa' },
+            { bg: '#002a20', border: '#00e5cc' },
+            { bg: '#2a1000', border: '#ff9500' },
+            { bg: '#2a0000', border: '#ff3b3b' },
+            { bg: '#001a2a', border: '#0099ff' },
+            { bg: '#1a2a00', border: '#00cc44' },
+            { bg: '#2a2a00', border: '#ffd166' },
+            { bg: '#2a002a', border: '#ff6bff' },
+        ];
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function changeNb(delta) {
+            nb = Math.max(2, Math.min(8, nb + delta));
+            document.getElementById('nb-value').textContent = nb;
+            renderInputs();
+        }
+
+        function renderInputs() {
+            const c = document.getElementById('noms-inputs');
+            c.innerHTML = '';
+            for (let i = 1; i <= nb; i++) {
+                const inp = document.createElement('input');
+                inp.className = 'player-input';
+                inp.placeholder = '🏆 Équipe ' + i;
+                inp.id = 'inp-' + i;
+                c.appendChild(inp);
+            }
+        }
+
+        function selectStep(val, btn) {
+            step = val;
+            document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function lancerCompteur() {
+            joueurs = [];
+            for (let i = 1; i <= nb; i++) {
+                const nom = document.getElementById('inp-' + i).value.trim() || 'Équipe ' + i;
+                joueurs.push({ nom, score: 0 });
+            }
+            renderScores();
+            showScreen('screen-compteur');
+        }
+
+        function renderScores() {
+            const maxScore = Math.max(...joueurs.map(j => j.score));
+            const liste = document.getElementById('scores-liste');
+            liste.innerHTML = '';
+            joueurs.forEach((j, idx) => {
+                const c = COULEURS[idx % COULEURS.length];
+                const isLeader = j.score === maxScore && j.score > 0;
+                const card = document.createElement('div');
+                card.className = 'score-card' + (isLeader ? ' leader' : '');
+                card.style.backgroundColor = c.bg;
+                card.style.border = '2px solid ' + (isLeader ? 'gold' : c.border);
+                card.innerHTML = `
+                    <div class="score-nom">${j.nom}${isLeader ? '<span class="leader-badge">👑</span>' : ''}</div>
+                    <div class="score-btns">
+                        <button class="score-moins" onclick="changerScore(${idx}, -${step})">−</button>
+                        <div class="score-val" style="color:${c.border}">${j.score}</div>
+                        <button class="score-plus" onclick="changerScore(${idx}, ${step})">+</button>
+                    </div>
+                `;
+                liste.appendChild(card);
+            });
+        }
+
+        function changerScore(idx, delta) {
+            joueurs[idx].score = Math.max(0, joueurs[idx].score + delta);
+            renderScores();
+        }
+
+        function resetScores() {
+            if (confirm('Remettre tous les scores à zéro ?')) {
+                joueurs.forEach(j => j.score = 0);
+                renderScores();
+            }
+        }
+
+        function afficherPodium() {
+            const tries = [...joueurs].sort((a, b) => b.score - a.score);
+            const emojis = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣'];
+            const liste = document.getElementById('podium-liste');
+            liste.innerHTML = '';
+            tries.forEach((j, i) => {
+                const c = COULEURS[joueurs.indexOf(j) % COULEURS.length];
+                const card = document.createElement('div');
+                card.className = 'podium-card';
+                card.style.backgroundColor = c.bg;
+                card.style.border = '2px solid ' + c.border;
+                card.innerHTML = `
+                    <div class="podium-rang">${emojis[i]}</div>
+                    <div class="podium-nom">${j.nom}</div>
+                    <div class="podium-pts" style="color:${c.border}">${j.score} pts</div>
+                `;
+                liste.appendChild(card);
+            });
+            showScreen('screen-podium');
+        }
+
+        renderInputs();
+    </script>
+</body>
+</html>
