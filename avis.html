@@ -79,11 +79,18 @@
         }
 
         function formaterDate(horodateur) {
-            try {
-                const d = new Date(horodateur);
-                return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-            } catch(e) { return ''; }
+    try {
+        if (!horodateur) return '';
+        const str = horodateur.toString();
+        // Format Google Sheets : "Date(2024,0,15,10,30,0)"
+        const match = str.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+)/);
+        if (match) {
+            const d = new Date(match[1], match[2], match[3], match[4], match[5]);
+            return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
         }
+        return '';
+    } catch(e) { return ''; }
+}
 
         async function chargerAvis() {
             try {
