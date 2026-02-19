@@ -136,12 +136,13 @@
                     const card = document.createElement('div');
                     card.className = 'avis-card';
                     card.innerHTML = `
-                        <div class="avis-header">
-                            <div class="avis-email">${anonymiserEmail(a.email)}</div>
-                            <div class="avis-etoiles">${etoiles(a.note)}</div>
-                        </div>
-                        <div class="avis-commentaire">"${a.commentaire}"</div>
-                        <div class="avis-date">${formaterDate(a.horodateur)}</div>
+    <div class="avis-header">
+        ${a.prenom ? `<div style="font-size:16px;font-weight:bold;color:white">${a.prenom}</div>` : ''}
+        <div class="avis-etoiles">${etoiles(a.note)}</div>
+    </div>
+    ${a.prenom ? `<div style="font-size:12px;color:#888;margin-bottom:8px">${anonymiserEmail(a.email)}</div>` : ''}
+    <div class="avis-commentaire">"${a.commentaire}"</div>
+    <div class="avis-date">${formaterDate(a.horodateur)}</div>
                     `;
                     liste.appendChild(card);
                 });
