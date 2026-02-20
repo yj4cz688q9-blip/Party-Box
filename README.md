@@ -1,2 +1,1 @@
-# Party-Box
-It will be a game
+# PartyBox - jeux de soirés en français
