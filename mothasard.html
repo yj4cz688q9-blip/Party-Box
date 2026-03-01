@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mot Hasard - Party Box</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; overflow-y: auto; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 36px; color: #ff9500; margin-bottom: 5px; margin-top: 20px; }
+        .subtitle { font-size: 15px; color: #888; margin-bottom: 25px; }
+        .start-btn { background-color: #ff9500; color: white; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .section-title { font-size: 13px; color: #ff9500; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 15px 0 8px; }
+
+        /* CATÉGORIES */
+        .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 340px; margin-bottom: 10px; }
+        .cat-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 14px; padding: 14px 10px; color: white; font-size: 14px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: all 0.2s; }
+        .cat-btn.selected { border-color: #ff9500; color: #ff9500; background-color: #2a1500; }
+        .cat-emoji { font-size: 26px; }
+        .tout-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 14px; padding: 12px; width: 100%; max-width: 340px; color: white; font-size: 15px; cursor: pointer; margin-bottom: 10px; }
+        .tout-btn.selected { border-color: #ff9500; color: #ff9500; background-color: #2a1500; }
+
+        /* MOT */
+        .mot-card { background: linear-gradient(135deg, #1a1a1a, #2a1500); border: 2px solid #ff9500; border-radius: 24px; padding: 50px 30px; width: 100%; max-width: 340px; margin: 20px 0; }
+        .mot-texte { font-size: 38px; font-weight: bold; color: white; margin-bottom: 10px; }
+        .mot-categorie { font-size: 14px; color: #ff9500; }
+        .compteur { font-size: 13px; color: #888; margin-bottom: 15px; }
+        .progress-bg { width: 100%; max-width: 340px; height: 6px; background: #1a1a1a; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #ff9500; border-radius: 3px; transition: width 0.3s; }
+    </style>
+</head>
+<body>
+
+    <!-- CONFIG -->
+    <div class="screen active" id="screen-config">
+        <h1>🎲 Mot Hasard</h1>
+        <p class="subtitle">Tire un mot aléatoire !</p>
+
+        <p class="section-title">📚 Catégories</p>
+        <button class="tout-btn" id="btn-tout" onclick="toggleTout()">🎲 Tout mélanger</button>
+        <div class="cat-grid" id="cat-grid"></div>
+
+        <button class="start-btn" onclick="lancerJeu()">C'est parti ! 🎲</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour</button>
+    </div>
+
+    <!-- JEU -->
+    <div class="screen" id="screen-jeu">
+        <h1>🎲 Mot Hasard</h1>
+        <p class="compteur" id="compteur">0 mots restants</p>
+        <div class="progress-bg"><div class="progress-fill" id="progress"></div></div>
+        <div class="mot-card">
+            <div class="mot-texte" id="mot-texte">?</div>
+            <div class="mot-categorie" id="mot-categorie"></div>
+        </div>
+        <button class="start-btn" onclick="motSuivant()">Mot suivant 🎲</button>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Changer les catégories</button>
+    </div>
+
+    <!-- FIN -->
+    <div class="screen" id="screen-fin">
+        <div style="font-size:80px;margin-top:60px">🎉</div>
+        <h1 style="margin-top:20px">Tous les mots !</h1>
+        <p style="color:#888;margin:15px 0 30px">Vous avez épuisé tous les mots des catégories sélectionnées !</p>
+        <button class="start-btn" onclick="relancer()">🔄 Relancer</button>
+        <button class="back-btn" onclick="showScreen('screen-config')">← Changer les catégories</button>
+    </div>
+
+    <script>
+        const CATEGORIES = {
+            animaux: {
+                emoji: '🐾', nom: 'Animaux',
+                mots: ['Chien','Chat','Lion','Tigre','Éléphant','Girafe','Zèbre','Hippopotame','Rhinocéros','Crocodile','Alligator','Serpent','Python','Boa','Cobra','Lézard','Caméléon','Gecko','Tortue','Grenouille','Crapaud','Salamandre','Axolotl','Requin','Dauphin','Baleine','Orque','Cachalot','Narval','Pieuvre','Poulpe','Méduse','Homard','Crabe','Crevette','Moule','Huître','Palourde','Oursin','Étoile de mer','Aigle','Faucon','Hibou','Chouette','Perroquet','Toucan','Flamant','Pingouin','Manchot','Autruche','Émeu','Kiwi','Pélican','Cigogne','Héron','Spatule','Ibis','Colibri','Pie','Corbeau','Hirondelle','Moineau','Rouge-gorge','Mésange','Pinson','Geai','Pic','Canard','Oie','Cygne','Perdrix','Faisan','Paon','Dindon','Poule','Coq','Lapin','Lièvre','Écureuil','Castor','Loutre','Raton laveur','Renard','Loup','Ours','Panda','Koala','Kangourou','Wallaby','Wombat','Ornithorynque','Hérisson','Taupe','Musaraigne','Chauve-souris','Martre','Belette','Furet','Vison','Blaireau','Sanglier','Cerf','Chevreuil','Renne','Élan','Bison','Buffle','Bœuf','Vache','Cheval','Âne','Mulet','Zèbre','Chameau','Dromadaire','Lama','Alpaga','Vigogne','Cochon','Mouton','Chèvre','Brebis','Bélier','Agneau','Phoque','Morse','Otarie','Dugong','Lamentin','Tamanoir','Paresseux','Tatou','Capybara','Tapir','Pécari','Jaguar','Puma','Guépard','Lynx','Ocelot','Serval','Caracal','Civette','Genette','Mangouste','Hyène','Lycaon','Dingo','Coyote','Chacal','Fennec','Zorille','Pangolin','Aye-aye','Indri','Lémur','Babouin','Mandrill','Gorille','Chimpanzé','Bonobo','Orang-outan','Gibbon','Macaque','Ouistiti','Tamarin','Capucin','Singe araignée','Potto','Loris','Galago','Musaraigne éléphant','Tenrec','Daman','Carcajou','Vautour','Condor','Marabout','Macareux','Albatros','Pétrel','Fou de Bassan','Cormoran','Anhinga','Frégate','Phaéton','Sterne','Mouette','Goéland','Avocette','Bécassine','Courlis','Chevalier','Plongeon','Grèbe','Fuligule','Harelde','Eider','Macreuse','Harle','Érismature','Bernache']
+            },
+            nourriture: {
+                emoji: '🍕', nom: 'Nourriture',
+                mots: ['Pizza','Burger','Sushi','Tacos','Kebab','Ramen','Pho','Pad Thaï','Curry','Biryani','Paella','Risotto','Lasagne','Ravioli','Gnocchi','Carbonara','Bolognaise','Pesto','Bruschetta','Focaccia','Ciabatta','Baguette','Croissant','Brioche','Pain perdu','Crêpe','Gaufre','Macaron','Éclair','Mille-feuille','Tarte Tatin','Clafoutis','Soufflé','Crème brûlée','Mousse au chocolat','Profiterole','Paris-Brest','Saint-Honoré','Opéra','Forêt noire','Tiramisu','Panna cotta','Cannoli','Sfogliatelle','Gelato','Granita','Baklava','Halva','Loukoum','Kanafeh','Couscous','Tagine','Pastilla','Harira','Shakshuka','Falafel','Houmous','Taboulé','Fattoush','Moutabal','Labneh','Msabbaha','Fatteh','Mansaf','Kabsa','Mandi','Jollof','Egusi','Fufu','Injera','Doro wat','Bunna','Ugali','Sadza','Nshima','Pap','Bobotie','Biltong','Bunny chow','Boerewors','Potjiekos','Gatsby','Vetkoek','Rusks','Melktert','Koeksisters','Chakalaka','Umngqusho','UmBhaqanga','Ispanaki','Köfte','Börek','Dolma','Meze','Hummus','Pide','Simit','Lahmacun','Mantı','Çorba','Pilav','Iskender','Adana','Urfa','Çiğ köfte','Bulgur','Mercimek','Midye','Balık ekmek','Kumru','Gevrek','Ayran','Boza','Salep','Çay','Gözleme','Güllaç','Aşure','Lokum','Helva','Revani','Kadayıf','Muhallebi','Kazandibi','Helvası','Jambon','Fromage','Beurre','Yaourt','Kéfir','Quiche','Ratatouille','Bouillabaisse','Cassoulet','Pot-au-feu','Blanquette','Bœuf bourguignon','Coq au vin','Gratin dauphinois','Vichyssoise','Soupe à l\'oignon','Fondue','Raclette','Choucroute','Flammeküche','Bretzel','Knack','Presskopf','Baeckeoffe','Kougelhopf','Manele','Bredele','Schäufele','Lewerknepfle','Spätzle','Fleischkäse','Weisswurst','Bratwurst','Leberwurst','Knödel','Sauerkraut','Strudel','Sachertorte','Apfelstrudel','Kaiserschmarrn','Palatschinken','Gulasch','Tafelspitz']
+            },
+            pays: {
+                emoji: '🌍', nom: 'Pays & Villes',
+                mots: ['France','Allemagne','Italie','Espagne','Portugal','Belgique','Suisse','Autriche','Pays-Bas','Danemark','Suède','Norvège','Finlande','Islande','Irlande','Royaume-Uni','Pologne','Tchéquie','Slovaquie','Hongrie','Roumanie','Bulgarie','Grèce','Turquie','Russie','Ukraine','Biélorussie','Moldavie','Serbie','Croatie','Slovénie','Bosnie','Monténégro','Albanie','Macédoine','Kosovo','Chypre','Malte','Luxembourg','Liechtenstein','Monaco','Andorre','San Marin','Vatican','États-Unis','Canada','Mexique','Guatemala','Honduras','Salvador','Nicaragua','Costa Rica','Panama','Cuba','Haïti','Jamaïque','Trinidad','Barbade','Bahamas','Colombie','Venezuela','Équateur','Pérou','Bolivie','Brésil','Paraguay','Uruguay','Argentine','Chili','Guyana','Surinam','Maroc','Algérie','Tunisie','Libye','Égypte','Mauritanie','Mali','Niger','Sénégal','Guinée','Sierra Leone','Liberia','Côte d\'Ivoire','Ghana','Togo','Bénin','Nigeria','Cameroun','Tchad','Soudan','Éthiopie','Somalie','Kenya','Tanzanie','Mozambique','Zimbabwe','Zambie','Angola','Congo','Gabon','Ouganda','Rwanda','Burundi','Malawi','Madagascar','Maurice','Seychelles','Réunion','Afrique du Sud','Namibie','Botswana','Lesotho','Eswatini','Chine','Japon','Corée du Sud','Corée du Nord','Mongolie','Taïwan','Vietnam','Thaïlande','Cambodge','Laos','Myanmar','Malaisie','Singapour','Indonésie','Philippines','Brunei','Timor oriental','Inde','Pakistan','Bangladesh','Sri Lanka','Népal','Bhoutan','Maldives','Afghanistan','Iran','Irak','Syrie','Liban','Jordanie','Israël','Palestine','Arabie saoudite','Émirats','Qatar','Koweït','Bahreïn','Oman','Yémen','Azerbaïdjan','Arménie','Géorgie','Kazakhstan','Ouzbékistan','Turkménistan','Kirghizstan','Tadjikistan','Paris','Londres','Berlin','Madrid','Rome','Lisbonne','Bruxelles','Amsterdam','Vienne','Zurich','Stockholm','Oslo','Copenhague','Helsinki','Dublin','Varsovie','Prague','Budapest','Bucarest','Sofia','Athènes','Istanbul','Moscou','Kiev','Belgrade','Zagreb','Sarajevo','Tirana','New York','Los Angeles','Chicago','Houston','Philadelphie','San Francisco','Seattle','Miami','Boston','Washington','Toronto','Montréal','Vancouver','Mexico','Bogota','Lima','Buenos Aires','Santiago','São Paulo','Rio de Janeiro','Le Caire','Casablanca','Lagos','Nairobi','Johannesburg','Beijing','Shanghai','Tokyo','Séoul','Mumbai','Delhi','Karachi','Dhaka','Bangkok','Jakarta','Manille','Singapour','Dubaï','Riyad','Téhéran']
+            },
+            sport: {
+                emoji: '🏆', nom: 'Sports',
+                mots: ['Football','Basketball','Tennis','Volleyball','Rugby','Baseball','Handball','Hockey','Natation','Athlétisme','Cyclisme','Ski','Snowboard','Surf','Boxe','Judo','Karaté','Taekwondo','Lutte','Escrime','Tir à l\'arc','Équitation','Golf','Badminton','Squash','Ping-pong','Pétanque','Bowling','Billard','Fléchettes','Curling','Patinage','Biathlon','Triathlon','Pentathlon','Décathlon','Heptathlon','Marathon','Sprint','Saut en hauteur','Saut en longueur','Triple saut','Saut à la perche','Lancer du disque','Lancer du marteau','Lancer du javelot','Shot put','Aviron','Canoë','Kayak','Voile','Planche à voile','Kitesurf','Plongée','Water-polo','Natation synchronisée','Saut dans l\'eau','Escalade','Alpinisme','VTT','BMX','Skateboard','Roller','Trottinette','Parachutisme','Deltaplane','Parapente','Base jump','Wingsuit','Motocross','Karting','Formule 1','MotoGP','Rallye','Enduro','Trial','Bobsleigh','Luge','Skeleton','Combiné nordique','Saut à ski','Ski de fond','Ski alpin','Slalom','Descente','Super-G','Géant','Freestyle','Halfpipe','Slopestyle','Biathlon','Cross-country','Orienteering','Triathlon','Duathlon','Aquathlon','Ironman','CrossFit','Haltérophilie','Powerlifting','Strongman','Bodybuilding','Yoga','Pilates','Zumba','Aérobic','Danse sportive','Gym rythmique','Gym artistique','Acrobatie','Trampoline','Parkour','Capoeira','Muay Thaï','MMA','Kickboxing','Savate','Sumo','Sambo','Krav Maga','Aïkido','Kendo','Iaïdo','Kobudo','Capoeira','Wushu','Kung-fu','Tai-chi','Qi gong','Pétanque','Boules','Croquet','Polo','Crosse','Hurling','Gaélique','Aussie rules','Netball','Lacrosse','Ultimate frisbee','Disc golf','Footvolley','Sepak takraw','Kabaddi','Kho-kho','Gilli-danda','Buzkashi','Tchoukball','Floorball','Bandy','Rink hockey','Inline hockey','Deck hockey','Polo sur glace']
+            },
+            metiers: {
+                emoji: '👔', nom: 'Métiers',
+                mots: ['Médecin','Chirurgien','Dentiste','Pharmacien','Infirmier','Kinésithérapeute','Sage-femme','Radiologue','Cardiologue','Neurologue','Psychiatre','Pédiatre','Gériatre','Urgentiste','Anesthésiste','Ophtalmologue','ORL','Dermatologue','Rhumatologue','Pneumologue','Gastro-entérologue','Endocrinologue','Hématologue','Oncologue','Urologue','Gynécologue','Orthopédiste','Ostéopathe','Chiropracteur','Acupuncteur','Naturopathe','Vétérinaire','Avocat','Notaire','Juge','Procureur','Huissier','Greffier','Policier','Gendarme','Pompier','Militaire','Pilote','Steward','Contrôleur aérien','Ingénieur','Architecte','Urbaniste','Géomètre','Topographe','Géologue','Physicien','Chimiste','Biologiste','Mathématicien','Statisticien','Informaticien','Développeur','Designer','Graphiste','Webmaster','Réalisateur','Producteur','Scénariste','Acteur','Musicien','Chanteur','Compositeur','Chef d\'orchestre','Danseur','Chorégraphe','Photographe','Journaliste','Rédacteur','Correcteur','Traducteur','Interprète','Bibliothécaire','Archiviste','Muséographe','Conservateur','Enseignant','Professeur','Formateur','Conseiller','Psychologue','Sociologue','Anthropologue','Archéologue','Historien','Géographe','Économiste','Comptable','Financier','Banquier','Assureur','Courtier','Commercial','Marketeur','Publicitaire','Relations publiques','Ressources humaines','Recruteur','Coach','Manager','Directeur','PDG','Entrepreneur','Consultant','Auditeur','Contrôleur','Boulanger','Pâtissier','Boucher','Charcutier','Poissonnier','Fromager','Caviste','Sommelier','Cuisinier','Chef cuisinier','Serveur','Barman','Maître d\'hôtel','Hôtelier','Réceptionniste','Concierge','Femme de chambre','Agent de voyage','Guide touristique','Coiffeur','Esthéticienne','Maquilleur','Barbier','Masseur','Manucure','Pédicure','Tatoueur','Plombier','Électricien','Menuisier','Charpentier','Maçon','Peintre','Carreleur','Couvreur','Serrurier','Soudeur','Mécanicien','Garagiste','Carrossier','Électronicien','Horloger','Bijoutier','Opticien','Prothésiste','Orthophoniste','Orthoptiste','Ergothérapeute','Psychomotricien']
+            },
+            nature: {
+                emoji: '🌿', nom: 'Nature',
+                mots: ['Forêt','Jungle','Savane','Désert','Toundra','Taïga','Prairie','Steppe','Pampa','Mangrove','Tourbière','Marais','Lac','Étang','Rivière','Fleuve','Torrent','Cascade','Source','Geyser','Volcan','Montagne','Colline','Vallée','Canyon','Gorge','Falaise','Grotte','Caverne','Île','Presqu\'île','Péninsule','Cap','Baie','Golfe','Fjord','Estuaire','Delta','Lagune','Récif','Atoll','Plaine','Plateau','Dune','Oasis','Glacier','Banquise','Iceberg','Avalanche','Séisme','Tremblement de terre','Tsunami','Ouragan','Cyclone','Typhon','Tornade','Torrent','Orage','Foudre','Grêle','Neige','Verglas','Brouillard','Arc-en-ciel','Aurore boréale','Eclipse','Comète','Météorite','Étoile filante','Chêne','Hêtre','Châtaignier','Frêne','Érable','Tilleul','Peuplier','Saule','Bouleau','Aulne','Charme','Noyer','Cerisier','Pommier','Poirier','Prunier','Pêcher','Abricotier','Olivier','Figuier','Vigne','Rosier','Lavande','Tournesol','Coquelicot','Bleuet','Marguerite','Pissenlit','Orchidée','Tulipe','Rose','Lis','Iris','Jonquille','Crocus','Jacinthe','Muguet','Violette','Myosotis','Capucine','Géranium','Bégonia','Azalée','Rhododendron','Magnolia','Glycine','Lilas','Forsythia','Hortensie','Pivoine','Dahlia','Chrysanthème','Glaïeul','Anémone','Clémentine','Mandarine','Orange','Citron','Pamplemousse','Bergamote','Kumquat','Yuzu','Cédrat','Chêne liège','Pin','Sapin','Épicéa','Mélèze','Cèdre','Séquoia','Baobab','Acacia','Eucalyptus','Palmier','Bambou','Fougère','Mousse','Lichen','Champignon','Truffe','Morille','Cèpe','Girolles','Chanterelle','Pleurote','Shiitake','Enoki','Portobello','Bolet','Amanite','Lactaire','Russule','Cortinaire','Inocybe','Coprin','Lépiote','Volvaire','Clitocybe']
+            },
+            musique: {
+                emoji: '🎵', nom: 'Musique',
+                mots: ['Rock','Pop','Jazz','Blues','Soul','Funk','R&B','Hip-hop','Rap','Reggae','Ska','Dancehall','Afrobeat','Afropop','Highlife','Rumba','Salsa','Merengue','Bachata','Cumbia','Vallenato','Bossa nova','Samba','Forro','Axé','Baião','Maracatu','Pagode','Sertanejo','Funk carioca','Lambada','Zouk','Kompa','Gwoka','Biguine','Mazurka','Valse','Polka','Tango','Milonga','Flamenco','Pasodoble','Fado','Morna','Coladera','Batuque','Funaná','Tabanka','Gumboot','Isicathamiya','Mbube','Mbaqanga','Jive','Marabi','Kwela','Tsaba-tsaba','Soukous','Lingala','Coupé-décalé','Zouglou','Mapouka','Ndombolo','Makossa','Bikutsi','Mbalax','Jùjú','Fuji','Apala','Waka','Ikorodu','Classical','Baroque','Renaissance','Romantique','Contemporain','Minimaliste','Sérielle','Atonale','Microtonale','Spectrale','Concrète','Électronique','Techno','House','Trance','Drum and bass','Jungle','Dubstep','Grime','Garage','Ambient','New age','Chillout','Lounge','Downtempo','Trip-hop','IDM','Glitch','Noise','Industrial','EBM','Gothic','Darkwave','Synth-pop','New wave','Post-punk','Punk','Hardcore','Metal','Heavy metal','Thrash','Death','Black','Doom','Stoner','Sludge','Prog','Art rock','Psychédélique','Shoegaze','Dream pop','Indie','Alternative','Grunge','Emo','Post-rock','Math rock','Krautrock','Avant-garde','Free jazz','Fusion','Latin jazz','Cool jazz','Bebop','Swing','Dixieland','Ragtime','Boogie-woogie','Country','Bluegrass','Hillbilly','Honky-tonk','Rockabilly','Surf','Garage rock','Doo-wop','Motown','Gospel','Spiritual','Work song','Field holler','Delta blues','Chicago blues','Electric blues','Boogie blues','Rhythm and blues','Soul','Northern soul','Southern soul','Memphis soul','Disco','Hi-NRG','Eurodisco','Italo disco','Nu-disco','Funk','P-funk','Jazz-funk','Electro','Breakdance','Breakbeat']
+            },
+            cinema: {
+                emoji: '🎬', nom: 'Cinéma & Séries',
+                mots: ['Action','Comédie','Drame','Thriller','Horreur','Science-fiction','Fantasy','Animation','Documentaire','Biopic','Romance','Aventure','Policier','Espionnage','Western','Musical','Guerre','Historique','Mystère','Suspense','Superhéros','Manga','Anime','Comédie romantique','Film noir','Néo-noir','Slasher','Survival','Found footage','Mockumentaire','Road movie','Film catastrophe','Dystopie','Post-apocalyptique','Steampunk','Cyberpunk','Space opera','Heroic fantasy','Dark fantasy','Urban fantasy','Paranormal','Surnaturel','Fantôme','Vampire','Loup-garou','Zombie','Alien','Robot','Intelligence artificielle','Voyage temporel','Multivers','Réalité virtuelle','Espionnage','Polar','Procédural','Soap opera','Telenovela','Sitcom','Sketch','Talk show','Téléréalité','Jeu','Magazine','Reportage','Enquête','Portrait','Interview','Débat','Plateau','Émission','Série','Mini-série','Anthologie','Podcast','Websérie','Courts-métrages','Clip','Pub','Teaser','Trailer','Avant-première','Projection','Cinéma','Multiplexe','Salle art et essai','Drive-in','Cinémathèque','Festival','Cannes','Venise','Berlin','Sundance','Tribeca','Toronto','Deauville','Angoulême','Annecy','César','Oscar','Golden Globe','BAFTA','Palme d\'Or','Lion d\'Or','Ours d\'Or','Grand Prix','Prix du jury','Caméra d\'Or','Prix d\'interprétation','Prix de la mise en scène','Prix du scénario','Réalisateur','Acteur','Actrice','Producteur','Scénariste','Directeur de la photographie','Chef opérateur','Monteur','Compositeur','Costumier','Décorateur','Maquilleur','Cascadeur','Doublure','Figurant','Comparse','Star','Vedette','Célébrité','Icône','Légende','Classique','Culte','Chef-d\'œuvre','Blockbuster','Film d\'auteur','Indépendant','Expérimental']
+            }
+        }
+
+        let motsDispo = []
+        let totalMots = 0
+        let categoriesSelectionnees = []
+        let toutSelectionne = false
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+            document.getElementById(id).classList.add('active')
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('cat-grid')
+            grid.innerHTML = ''
+            Object.entries(CATEGORIES).forEach(([key, cat]) => {
+                const btn = document.createElement('button')
+                btn.className = 'cat-btn'
+                btn.id = 'cat-' + key
+                btn.innerHTML = `<span class="cat-emoji">${cat.emoji}</span>${cat.nom}`
+                btn.onclick = () => toggleCat(key, btn)
+                grid.appendChild(btn)
+            })
+        }
+
+        function toggleCat(key, btn) {
+            toutSelectionne = false
+            document.getElementById('btn-tout').classList.remove('selected')
+            if (categoriesSelectionnees.includes(key)) {
+                categoriesSelectionnees = categoriesSelectionnees.filter(k => k !== key)
+                btn.classList.remove('selected')
+            } else {
+                categoriesSelectionnees.push(key)
+                btn.classList.add('selected')
+            }
+        }
+
+        function toggleTout() {
+            toutSelectionne = !toutSelectionne
+            categoriesSelectionnees = []
+            document.getElementById('btn-tout').classList.toggle('selected', toutSelectionne)
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'))
+        }
+
+        function lancerJeu() {
+            const cats = toutSelectionne ? Object.keys(CATEGORIES) : categoriesSelectionnees
+            if (cats.length === 0) { alert('Sélectionne au moins une catégorie !'); return; }
+            motsDispo = []
+            cats.forEach(key => {
+                CATEGORIES[key].mots.forEach(mot => {
+                    motsDispo.push({ mot, categorie: CATEGORIES[key].emoji + ' ' + CATEGORIES[key].nom })
+                })
+            })
+            motsDispo = motsDispo.sort(() => Math.random() - 0.5)
+            totalMots = motsDispo.length
+            showScreen('screen-jeu')
+            motSuivant()
+        }
+
+        function motSuivant() {
+            if (motsDispo.length === 0) { showScreen('screen-fin'); return; }
+            const item = motsDispo.pop()
+            document.getElementById('mot-texte').textContent = item.mot
+            document.getElementById('mot-categorie').textContent = item.categorie
+            document.getElementById('compteur').textContent = motsDispo.length + ' mots restants'
+            const pct = ((totalMots - motsDispo.length) / totalMots * 100)
+            document.getElementById('progress').style.width = pct + '%'
+        }
+
+        function relancer() {
+            lancerJeu()
+        }
+
+        renderCategories()
+    </script>
+</body>
+</html>
