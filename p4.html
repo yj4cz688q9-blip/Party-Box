@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puissance 4 - Party Box</title>
+    <link rel="icon" type="image/png" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <link rel="apple-touch-icon" href="F1CE1FF7-8FC2-440D-8100-49C689144B20.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0d0d0d; color: white; font-family: Arial, sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; overflow-y: auto; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; }
+        .screen.active { display: flex; }
+        h1 { font-size: 36px; color: #ffd166; margin-bottom: 5px; margin-top: 20px; }
+        .subtitle { font-size: 15px; color: #888; margin-bottom: 25px; }
+        .start-btn { background-color: #ffd166; color: #0d0d0d; border: none; border-radius: 20px; padding: 18px 40px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; max-width: 340px; }
+        .back-btn { background: none; border: none; color: #888; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .player-input { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 12px 16px; color: white; font-size: 16px; width: 100%; max-width: 340px; margin: 6px 0; }
+        .player-input:focus { border-color: #ffd166; outline: none; }
+        .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 340px; margin-bottom: 20px; }
+        .mode-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 14px; color: white; padding: 15px 8px; font-size: 14px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .mode-btn.selected { border-color: #ffd166; color: #ffd166; }
+        .mode-emoji { font-size: 26px; }
+        .diff-options { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+        .diff-btn { background-color: #1a1a1a; border: 2px solid #333; border-radius: 12px; color: white; padding: 10px 16px; font-size: 14px; cursor: pointer; }
+        .diff-btn.selected { border-color: #ffd166; color: #ffd166; font-weight: bold; }
+        .section-title { font-size: 13px; color: #ffd166; text-transform: uppercase; letter-spacing: 1px; text-align: left; width: 100%; max-width: 340px; margin: 12px 0 6px; }
+
+        /* SCORE */
+        .score-box { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
+        .score-item { background-color: #1a1a1a; border-radius: 14px; padding: 12px 20px; }
+        .score-nom { font-size: 11px; color: #888; margin-bottom: 4px; }
+        .score-pts { font-size: 24px; font-weight: bold; }
+        .score-item.j1 .score-pts { color: #ff3b3b; }
+        .score-item.j2 .score-pts { color: #ffd166; }
+        .score-item.nul .score-pts { color: #888; }
+
+        /* TOUR */
+        .tour-info { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+
+        /* GRILLE */
+        .grille-container { background: #1a1a2e; border-radius: 16px; padding: 10px; margin-bottom: 15px; }
+        .colonnes-fleches { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 100%; max-width: 350px; margin-bottom: 5px; }
+        .fleche-col { height: 30px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border-radius: 8px; transition: background 0.2s; color: #555; }
+        .fleche-col:hover { background: rgba(255,255,255,0.1); color: white; }
+        .grille { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 100%; max-width: 350px; }
+        .cell { aspect-ratio: 1; border-radius: 50%; background-color: #0d0d1a; border: 2px solid #333; transition: all 0.3s; }
+        .cell.j1 { background: radial-gradient(circle, #ff6b6b, #cc0000); border-color: #ff3b3b; box-shadow: 0 0 8px rgba(255,59,59,0.5); }
+        .cell.j2 { background: radial-gradient(circle, #ffe066, #cc9900); border-color: #ffd166; box-shadow: 0 0 8px rgba(255,209,102,0.5); }
+        .cell.gagnante { box-shadow: 0 0 20px white; border-color: white; transform: scale(1.1); }
+
+        .rejouer-btn { background-color: #1a1a1a; border: 2px solid #ffd166; color: #ffd166; border-radius: 20px; padding: 14px 30px; font-size: 16px; cursor: pointer; margin-top: 10px; width: 100%; max-width: 340px; }
+    </style>
+</head>
+<body>
+
+    <!-- ACCUEIL -->
+    <div class="screen active" id="screen-home">
+        <h1>🔴🟡 Puissance 4</h1>
+        <p class="subtitle">Aligne 4 jetons pour gagner !</p>
+
+        <p class="section-title">🎮 Mode de jeu</p>
+        <div class="mode-grid">
+            <button class="mode-btn selected" id="mode-local" onclick="selectMode('local')">
+                <span class="mode-emoji">👥</span>2 Joueurs
+            </button>
+            <button class="mode-btn" id="mode-solo" onclick="selectMode('solo')">
+                <span class="mode-emoji">🤖</span>vs Bot
+            </button>
+        </div>
+
+        <div id="config-local">
+            <input class="player-input" id="nom-j1" placeholder="🔴 Joueur 1">
+            <input class="player-input" id="nom-j2" placeholder="🟡 Joueur 2">
+        </div>
+
+        <div id="config-solo" style="display:none">
+            <input class="player-input" id="nom-solo" placeholder="🔴 Ton nom">
+            <p style="color:#888;font-size:14px;margin-top:15px">Difficulté</p>
+            <div class="diff-options">
+                <button class="diff-btn" onclick="selectDiff('facile',this)">😴 Facile</button>
+                <button class="diff-btn selected" onclick="selectDiff('normal',this)">😐 Normal</button>
+                <button class="diff-btn" onclick="selectDiff('difficile',this)">🔥 Difficile</button>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="startGame()" style="margin-top:25px">C'est parti ! 🚀</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Retour à Party Box</button>
+    </div>
+
+    <!-- JEU -->
+    <div class="screen" id="screen-jeu">
+        <div class="score-box">
+            <div class="score-item j1">
+                <div class="score-nom" id="score-nom-j1">Joueur 1</div>
+                <div class="score-pts" id="score-j1">0</div>
+            </div>
+            <div class="score-item nul">
+                <div class="score-nom">🤝 Nul</div>
+                <div class="score-pts" id="score-nul">0</div>
+            </div>
+            <div class="score-item j2">
+                <div class="score-nom" id="score-nom-j2">Joueur 2</div>
+                <div class="score-pts" id="score-j2">0</div>
+            </div>
+        </div>
+
+        <div class="tour-info" id="tour-info"></div>
+
+        <div class="colonnes-fleches" id="fleches"></div>
+        <div class="grille-container">
+            <div class="grille" id="grille"></div>
+        </div>
+
+        <button class="rejouer-btn" onclick="resetGrille()">🔄 Rejouer</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Quitter</button>
+    </div>
+
+    <script>
+        const ROWS = 6, COLS = 7;
+        let plateau = [];
+        let joueurCourant = 0;
+        let scores = [0, 0, 0];
+        let noms = ['Joueur 1', 'Joueur 2'];
+        let modeJeu = 'local';
+        let diffBot = 'normal';
+        let partieTerminee = false;
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function selectMode(mode) {
+            modeJeu = mode;
+            document.getElementById('mode-local').classList.toggle('selected', mode === 'local');
+            document.getElementById('mode-solo').classList.toggle('selected', mode === 'solo');
+            document.getElementById('config-local').style.display = mode === 'local' ? 'block' : 'none';
+            document.getElementById('config-solo').style.display = mode === 'solo' ? 'block' : 'none';
+        }
+
+        function selectDiff(diff, btn) {
+            diffBot = diff;
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function startGame() {
+            if (modeJeu === 'local') {
+                noms = [
+                    document.getElementById('nom-j1').value.trim() || 'Joueur 1',
+                    document.getElementById('nom-j2').value.trim() || 'Joueur 2'
+                ];
+            } else {
+                noms = [
+                    document.getElementById('nom-solo').value.trim() || 'Joueur',
+                    '🤖 Bot'
+                ];
+            }
+            document.getElementById('score-nom-j1').textContent = noms[0];
+            document.getElementById('score-nom-j2').textContent = noms[1];
+            scores = [0, 0, 0];
+            resetGrille();
+            showScreen('screen-jeu');
+        }
+
+        function resetGrille() {
+            plateau = Array.from({length: ROWS}, () => Array(COLS).fill(null));
+            joueurCourant = 0;
+            partieTerminee = false;
+            renderGrille();
+            majTourInfo();
+        }
+
+        function majTourInfo() {
+            const info = document.getElementById('tour-info');
+            const symbole = joueurCourant === 0 ? '🔴' : '🟡';
+            info.textContent = 'Tour de ' + symbole + ' ' + noms[joueurCourant];
+            info.style.color = joueurCourant === 0 ? '#ff3b3b' : '#ffd166';
+        }
+
+        function renderGrille() {
+            // Flèches
+            const fleches = document.getElementById('fleches');
+            fleches.innerHTML = '';
+            for (let c = 0; c < COLS; c++) {
+                const div = document.createElement('div');
+                div.className = 'fleche-col';
+                div.textContent = '▼';
+                div.onclick = () => jouerCoup(c);
+                fleches.appendChild(div);
+            }
+
+            // Grille
+            const grille = document.getElementById('grille');
+            grille.innerHTML = '';
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const cell = document.createElement('div');
+                    const val = plateau[r][c];
+                    cell.className = 'cell' + (val !== null ? ' j' + (val + 1) : '');
+                    cell.id = 'cell-' + r + '-' + c;
+                    cell.onclick = () => jouerCoup(c);
+                    grille.appendChild(cell);
+                }
+            }
+        }
+
+        function jouerCoup(col) {
+            if (partieTerminee) return;
+            if (modeJeu === 'solo' && joueurCourant === 1) return;
+
+            const row = trouverRangee(col);
+            if (row === -1) return;
+
+            plateau[row][col] = joueurCourant;
+            renderGrille();
+
+            const gagnant = verifierGagnant();
+            if (gagnant !== null) { finPartie(gagnant); return; }
+            if (plateau[0].every(c => c !== null)) { finPartie(-1); return; }
+
+            joueurCourant = joueurCourant === 0 ? 1 : 0;
+            majTourInfo();
+
+            if (modeJeu === 'solo' && joueurCourant === 1) setTimeout(jouerBot, 500);
+        }
+
+        function trouverRangee(col) {
+            for (let r = ROWS - 1; r >= 0; r--) {
+                if (plateau[r][col] === null) return r;
+            }
+            return -1;
+        }
+
+        function verifierGagnant() {
+            const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (plateau[r][c] === null) continue;
+                    for (const [dr, dc] of dirs) {
+                        const combo = [];
+                        for (let k = 0; k < 4; k++) {
+                            const nr = r + dr * k, nc = c + dc * k;
+                            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) break;
+                            if (plateau[nr][nc] !== plateau[r][c]) break;
+                            combo.push([nr, nc]);
+                        }
+                        if (combo.length === 4) {
+                            combo.forEach(([nr, nc]) => {
+                                document.getElementById('cell-' + nr + '-' + nc).classList.add('gagnante');
+                            });
+                            return plateau[r][c];
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        function finPartie(gagnant) {
+            partieTerminee = true;
+            const info = document.getElementById('tour-info');
+            if (gagnant === -1) {
+                scores[2]++;
+                document.getElementById('score-nul').textContent = scores[2];
+                info.textContent = '🤝 Match nul !';
+                info.style.color = '#888';
+            } else {
+                scores[gagnant]++;
+                document.getElementById('score-j' + (gagnant + 1)).textContent = scores[gagnant];
+                info.textContent = '🎉 ' + noms[gagnant] + ' gagne !';
+                info.style.color = gagnant === 0 ? '#ff3b3b' : '#ffd166';
+            }
+        }
+
+        function jouerBot() {
+            if (partieTerminee) return;
+            let col = -1;
+
+            if (diffBot === 'facile') {
+                const libres = [];
+                for (let c = 0; c < COLS; c++) if (trouverRangee(c) !== -1) libres.push(c);
+                col = libres[Math.floor(Math.random() * libres.length)];
+            } else if (diffBot === 'normal') {
+                col = trouverCoupGagnantBot(1) ?? trouverCoupGagnantBot(0) ?? coupCentral();
+            } else {
+                col = minimaxP4(plateau, 5, true).col;
+            }
+
+            if (col !== -1 && col !== undefined && col !== null) {
+                const row = trouverRangee(col);
+                if (row !== -1) {
+                    plateau[row][col] = 1;
+                    renderGrille();
+                    const gagnant = verifierGagnant();
+                    if (gagnant !== null) { finPartie(gagnant); return; }
+                    if (plateau[0].every(c => c !== null)) { finPartie(-1); return; }
+                    joueurCourant = 0;
+                    majTourInfo();
+                }
+            }
+        }
+
+        function trouverCoupGagnantBot(joueur) {
+            for (let c = 0; c < COLS; c++) {
+                const r = trouverRangee(c);
+                if (r === -1) continue;
+                plateau[r][c] = joueur;
+                const gagne = verifierGagnant() !== null;
+                plateau[r][c] = null;
+                if (gagne) return c;
+            }
+            return null;
+        }
+
+        function coupCentral() {
+            const ordre = [3, 2, 4, 1, 5, 0, 6];
+            for (const c of ordre) if (trouverRangee(c) !== -1) return c;
+            return 0;
+        }
+
+        function scorePosition(board) {
+            let score = 0;
+            if (board[Math.floor(ROWS/2)][Math.floor(COLS/2)] === 1) score += 3;
+            return score;
+        }
+
+        function minimaxP4(board, depth, isMax) {
+            const gagnant = verifierGagnantBoard(board);
+            if (gagnant === 1) return { score: 100 + depth };
+            if (gagnant === 0) return { score: -100 - depth };
+            if (depth === 0 || board[0].every(c => c !== null)) return { score: 0 };
+
+            const cols = [];
+            for (let c = 0; c < COLS; c++) {
+                const r = trouverRangeeBoard(board, c);
+                if (r === -1) continue;
+                const newBoard = board.map(row => [...row]);
+                newBoard[r][c] = isMax ? 1 : 0;
+                const result = minimaxP4(newBoard, depth - 1, !isMax);
+                cols.push({ col: c, score: result.score });
+            }
+
+            if (cols.length === 0) return { score: 0 };
+            return isMax
+                ? cols.reduce((a, b) => a.score > b.score ? a : b)
+                : cols.reduce((a, b) => a.score < b.score ? a : b);
+        }
+
+        function verifierGagnantBoard(board) {
+            const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c] === null) continue;
+                    for (const [dr, dc] of dirs) {
+                        let count = 0;
+                        for (let k = 0; k < 4; k++) {
+                            const nr = r + dr * k, nc = c + dc * k;
+                            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) break;
+                            if (board[nr][nc] !== board[r][c]) break;
+                            count++;
+                        }
+                        if (count === 4) return board[r][c];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function trouverRangeeBoard(board, col) {
+            for (let r = ROWS - 1; r >= 0; r--) {
+                if (board[r][col] === null) return r;
+            }
+            return -1;
+        }
+    </script>
+</body>
+</html>
