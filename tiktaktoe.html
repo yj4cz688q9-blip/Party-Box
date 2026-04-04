@@ -48,8 +48,9 @@
         .cell-3.gagnante { background-color: #003d2e; }
 
         /* GRILLE 8x8 */
-        .grille-8 { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; width: 100%; max-width: 360px; margin-bottom: 20px; }
-        .cell-8 { background-color: #1a1a1a; border: 1px solid #333; border-radius: 8px; aspect-ratio: 1; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; }
+        .grille-8 { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; width: 100%; max-width: 340px; margin-bottom: 20px; }
+.cell-8 { background-color: #1a1a1a; border: 1px solid #333; border-radius: 6px; width: 100%; padding-bottom: 100%; position: relative; cursor: pointer; transition: background-color 0.2s; }
+.cell-8 span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; }
         .cell-8:active { background-color: #2a2a2a; }
         .cell-8.j1 { border-color: #00e5cc; }
         .cell-8.j2 { border-color: #ff6b6b; }
